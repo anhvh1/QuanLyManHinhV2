@@ -1,0 +1,12 @@
+const actions = {
+  GIATRI_GET_INIT_DATA_REQUEST: 'GIATRI_GET_INIT_DATA_REQUEST',
+  GIATRI_GET_INIT_DATA_REQUEST_SUCCESS: 'GIATRI_GET_INIT_DATA_REQUEST_SUCCESS',
+  GIATRI_GET_INIT_DATA_REQUEST_ERROR: 'GIATRI_GET_INIT_DATA_REQUEST_ERROR',
+
+  getData: (filterData) => ({
+    type: actions.GIATRI_GET_INIT_DATA_REQUEST,
+    payload: {filterData},
+  }),
+};
+
+export default actions;

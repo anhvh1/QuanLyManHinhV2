@@ -1,0 +1,433 @@
+import {Modal, Table, Tooltip, message} from 'antd';
+import actions from '../../../redux/DanhMuc/QLNhanLucThuVien/actions';
+import React, {useState, useEffect} from 'react';
+// import {connect} from 'react-redux';
+import LayoutWrapper from '../../../../components/utility/layoutWrapper';
+import PageHeader from '../../../../components/utility/pageHeader';
+import PageAction from '../../../../components/utility/pageAction';
+import Box from '../../../../components/utility/box';
+import BoxFilter from '../../../../components/utility/boxFilter';
+import BoxTable from '../../../../components/utility/boxTable';
+// import actionsThuVien from '../../../redux/DanhMuc/DMThuVien/actions';
+import {TreeSelect} from '../../../../components/uielements/exportComponent';
+import {
+  Button,
+  InputSearch,
+  Select,
+} from '../../../../components/uielements/exportComponent';
+import Checkbox from '../../../../components/uielements/checkbox';
+import Switches from '../../../../components/uielements/switch';
+import {
+  changeUrlFilter,
+  exportExcel,
+  getDefaultPageSize,
+  getFilterData,
+  getRoleByKey,
+} from '../../../../helpers/utility';
+import {useKey} from '../../../CustomHook/useKey';
+import queryString from 'query-string';
+import api from './config';
+import {apiUrl} from './config';
+
+import moment from 'moment';
+import ModalAddEdit from './modalAddEdit';
+import {Upload} from 'antd';
+import {
+  DeleteOutlined,
+  EditOutlined,
+  PlusOutlined,
+  FileAddOutlined,
+} from '@ant-design/icons';
+import {connect, useDispatch, useSelector} from 'react-redux';
+import {formDataCaller} from '../../../../api/formDataCaller';
+import PageWrap from '../../../../components/utility/PageWrap';
+const QLNhanLucThuVien = (props) => {
+  const [filterData, setFilterData] = useState(
+    queryString.parse(props.location.search),
+  );
+  const [dataModalAddEdit, setDataModalAddEdit] = useState({});
+  const [visibleModalAddEdit, setVisibleModalAddEdit] = useState(false);
+  const [action, setAction] = useState('');
+  const [modalKey, inceaseModalKey] = useKey();
+  const [selectedRowsKey, setSelectedRowsKey] = useState([]);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  // const {DanhSachAllQLThuVien} = useSelector((state) => state.DMThuVien);
+  const dispatch = useDispatch();
+  document.title = 'QUẢN LÝ NHÂN LỰC THƯ VIỆN';
+
+  useEffect(() => {
+    changeUrlFilter(filterData);
+    props.getList(filterData);
+  }, [filterData]);
+
+  useEffect(() => {
+    props.getList(filterData);
+    dispatch(actions.getAll());
+  }, []);
+  const onTableChange = (pagination, filters, sorter) => {
+    let oldFilterData = filterData;
+    let onOrder = {pagination, filters, sorter};
+    let newFilterData = getFilterData(oldFilterData, null, onOrder);
+
+    setFilterData(newFilterData);
+    setSelectedRowsKey([]);
+  };
+
+  const onFilter = (value, property) => {
+    let oldFilterData = filterData;
+    let onFilter = {value, property};
+    let newfilterData = getFilterData(oldFilterData, onFilter, null);
+    //get filter data
+    setFilterData(newfilterData);
+    setSelectedRowsKey([]);
+  };
+
+  const showModalAdd = () => {
+    setAction('add');
+    setDataModalAddEdit({});
+    inceaseModalKey();
+    setVisibleModalAddEdit(true);
+  };
+
+  const showDownload = async () => {
+    api
+      .Download()
+      .then(async (res) => {
+        try {
+          const url = window.URL.createObjectURL(new Blob([res.data]));
+          console.log(url, 'url');
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', `mẫu.xlsx`);
+          document.body.appendChild(link);
+          link.click();
+          link.parentNode.removeChild(link);
+        } catch (error) {
+          console.log('Error downloading file:', error);
+        }
+      })
+      .catch((err) => {
+        message.destroy();
+        message.warning(err.toString());
+      });
+  };
+  const handleSubmitFile = (base64, file) => {
+    const formDataFile = new FormData();
+    formDataFile.append('file', file);
+    formDataCaller(apiUrl.importexcel, formDataFile).then((res) => {
+      if (res.data.Status > 0) {
+        console.log(res, 'res');
+        message.destroy();
+        message.success(res.data.Message);
+      } else {
+        message.destroy();
+        message.warning(res.data.Message);
+      }
+    });
+  };
+  const handleUpload = (file) => {
+    if (file.size / 1024 / 1024 > 5) {
+      message.error('File quá lớn');
+      return false;
+    }
+    // if (!file.type.startsWith('image/')) {
+    //   message.error('Chỉ cho phép tải lên ảnh');
+    //   return false;
+    // }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      // reader.result chứa chuỗi base64 của file
+      handleSubmitFile(reader.result, file);
+    };
+    reader.readAsDataURL(file);
+
+    // Trả về false để ngăn chặn Upload từ tự động tải lên file
+    return false;
+  };
+  const deleteModalAddEdit = (ID) => {
+    Modal.confirm({
+      title: 'Xóa Dữ Liệu',
+      content: 'Bạn có muốn xóa chức vụ này không?',
+      cancelText: 'Không',
+      okText: 'Có',
+      onOk: () => {
+        setConfirmLoading(true);
+        api
+          .xoaNhanLucThuVien(ID, {})
+          .then((res) => {
+            if (res.data.Status > 0) {
+              setConfirmLoading(false);
+              props.getList({
+                ...filterData,
+                PageNumber:
+                  Math.ceil((TotalRow - 1) / filterData.PageSize) <
+                  filterData.PageNumber
+                    ? Math.ceil((TotalRow - 1) / filterData.PageSize)
+                    : filterData.PageNumber,
+              });
+              message.destroy();
+              message.success(res.data.Message);
+              setFilterData({
+                ...filterData,
+                PageNumber:
+                  Math.ceil((TotalRow - 1) / filterData.PageSize) <
+                  filterData.PageNumber
+                    ? Math.ceil((TotalRow - 1) / filterData.PageSize)
+                    : filterData.PageNumber,
+              });
+            } else {
+              message.destroy();
+              message.error(res.data.Message);
+            }
+          })
+          .catch((error) => {
+            message.destroy();
+            message.error(error.toString());
+          });
+      },
+    });
+  };
+
+  const showModalEdit = (id) => {
+    const ID = id;
+    setAction('edit');
+    api
+      .chiTietNhanLucThuVien({ID})
+      .then((res) => {
+        if (res.data.Status > 0) {
+          setDataModalAddEdit(res.data.Data);
+          inceaseModalKey();
+          setVisibleModalAddEdit(true);
+        } else {
+          message.destroy();
+          message.error(res.data.Message);
+        }
+      })
+      .catch((error) => {
+        message.destroy();
+        message.error(error.toString());
+      });
+  };
+
+  const hideModalAddEdit = () => {
+    setSelectedRowsKey([]);
+    setDataModalAddEdit({});
+    setVisibleModalAddEdit(false);
+  };
+
+  const submitModalAddEdit = (data) => {
+    setConfirmLoading(true);
+    if (action === 'add') {
+      api
+        .themNhanLucThuVien(data)
+        .then((res) => {
+          setConfirmLoading(false);
+          if (res.data.Status > 0) {
+            message.destroy();
+            message.success(res.data.Message);
+            hideModalAddEdit();
+            props.getList(filterData);
+          } else {
+            setConfirmLoading(false);
+            message.destroy();
+            message.error(res.data.Message);
+          }
+        })
+        .catch((error) => {
+          setConfirmLoading(false);
+          message.destroy();
+          message.error(error.toString());
+        });
+    }
+    if (action === 'edit') {
+      api
+        .suaNhanLucThuVien(data)
+        .then((res) => {
+          if (res.data.Status > 0) {
+            setConfirmLoading(false);
+            message.destroy();
+            message.success(res.data.Message);
+            hideModalAddEdit();
+            props.getList(filterData);
+          } else {
+            setConfirmLoading(false);
+            message.destroy();
+            message.error(res.data.Message);
+          }
+        })
+        .catch((error) => {
+          setConfirmLoading(false);
+          message.destroy();
+          message.error(error.toString());
+        });
+    }
+  };
+
+  const renderThaoTac = (record) => {
+    return (
+      <div className={'action-btn'}>
+        {/* {role?.edit ? ( */}
+        <Tooltip title={'Sửa'}>
+          <EditOutlined onClick={() => showModalEdit(record.NhanVienID)} />
+        </Tooltip>
+        {/* ) : ( */}
+        {/* '' */}
+        {/* )} */}
+        {/* {role?.delete ? ( */}
+        <Tooltip title={'Xóa'}>
+          <DeleteOutlined onClick={() => deleteModalAddEdit(record.NhanVienID)} />
+        </Tooltip>
+        {/* ) : (
+          ''
+        )} */}
+      </div>
+    );
+  };
+  const {DanhSachNhanLuc,DanhSachAllQLThuVien, TotalRow, role} = props;
+  const PageNumber = filterData.PageNumber
+    ? parseInt(filterData.PageNumber)
+    : 1;
+  const PageSize = filterData.PageSize
+    ? parseInt(filterData.PageSize)
+    : getDefaultPageSize();
+
+  const columns = [
+    {
+      title: 'Số thứ tự',
+      width: '7%',
+      align: 'center',
+      render: (text, record, index) => (
+        <span>{(PageNumber - 1) * PageSize + (index + 1)}</span>
+      ),
+    },
+    {
+      title: 'Tên cán bộ',
+      dataIndex: 'TenNhanVien',
+      align: 'left',
+      width: '30%',
+    },
+    {
+      title: 'Ngày sinh',
+      dataIndex: 'NgaySinh',
+      align: 'left',
+      width: '23%',
+      render: (text, record) => {
+        // Kiểm tra nếu dữ liệu NgaySinh tồn tại
+        if (record.NgaySinh) {
+          // Sử dụng moment để định dạng lại ngày sinh
+          return moment(record.NgaySinh).format('DD/MM/YYYY');
+        } else {
+          // Trả về một dấu gạch nếu không có dữ liệu
+          return;
+        }
+      },
+    },
+    {
+      title: 'Thư viện',
+      dataIndex: 'TenThuVien',
+      align: 'left',
+      width: '30%',
+    },
+    {
+      title: 'Thao tác',
+      width: '10%',
+      align: 'center',
+      margin: '10px',
+      render: (text, record) => renderThaoTac(record),
+    },
+  ];
+  return (
+    <LayoutWrapper>
+      <PageWrap>
+        <PageHeader>QUẢN LÝ NHÂN LỰC THƯ VIỆN</PageHeader>
+        <PageAction>
+          {/* {role ? (
+            role.add ? ( */}
+          <Button type="primary" onClick={showDownload}>
+            <PlusOutlined />
+            Tải file mẫu
+          </Button>
+          <Upload
+            beforeUpload={(file) => handleUpload(file)}
+            // onChange={({file}) => changeInfoConfigure({HinhNenDangNhap: {file}})}
+            showUploadList={false}
+            // accept=".png,.jpg,.gif"
+          >
+            <Button type="primary">
+              <FileAddOutlined /> Nhập tệp
+            </Button>
+          </Upload>
+          <Button type="primary" onClick={showModalAdd}>
+            <PlusOutlined />
+            Thêm mới
+          </Button>
+          {/* ) : (
+              ''
+            )
+          ) : (
+            ''
+          )} */}
+        </PageAction>
+      </PageWrap>
+      <Box>
+        <BoxFilter>
+          <InputSearch
+            defaultValue={filterData.Keyword}
+            placeholder={'Nhập tên cán bộ thư viện'}
+            style={{width: 300}}
+            onSearch={(value) => onFilter(value, 'Keyword')}
+            allowClear
+          />
+          <Select
+            showSearch
+            defaultValue={filterData.ThuVienID ? filterData.ThuVienID : null}
+            onChange={(value) => onFilter(value, 'ThuVienID')}
+            style={{width: 300}}
+            placeholder="Chọn thư viện"
+            allowClear
+          >
+            {DanhSachAllQLThuVien
+              ? DanhSachAllQLThuVien.map((item) => (
+                  <Option value={item.ID?.toString()}>{item.TenThuVien}</Option>
+                ))
+              : null}
+          </Select>
+        </BoxFilter>
+        <BoxTable
+          columns={columns}
+          dataSource={DanhSachNhanLuc}
+          onChange={onTableChange}
+          pagination={{
+            showSizeChanger: true,
+            showTotal: (total, range) =>
+              `Từ ${range[0]} đến ${range[1]} trên ${total} kết quả`,
+            total: TotalRow,
+            current: PageNumber,
+            pageSize: PageSize,
+          }}
+          rowKey={(record) => record.ID}
+        />
+      </Box>
+      <ModalAddEdit
+        visible={visibleModalAddEdit}
+        dataEdit={dataModalAddEdit}
+        action={action}
+        loading={confirmLoading}
+        key={modalKey}
+        onCreate={submitModalAddEdit}
+        onCancel={hideModalAddEdit}
+        DanhSachAllQLThuVien={DanhSachAllQLThuVien}
+      />
+    </LayoutWrapper>
+  );
+};
+
+function mapStateToProps(state) {
+  return {
+    ...state.QLNhanLucThuVien,
+    role: getRoleByKey(state.Auth.role, 'danh-muc-chuc-vu'),
+  };
+}
+
+export default connect(mapStateToProps, actions)(QLNhanLucThuVien);

@@ -1,0 +1,313 @@
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  ITEM_LAYOUT2,
+  ITEM_LAYOUT,
+  ITEM_LAYOUT_SMALL_2,
+  REQUIRED,
+} from '../../../../settings/constants';
+import {Form, Space, Select, DatePicker} from 'antd';
+import {
+  Button,
+  Modal,
+  InputFormatSpecific,
+  Input,
+  Radio,
+} from '../../../../components/uielements/exportComponent';
+import {BorderOutlined, CheckSquareOutlined} from '@ant-design/icons';
+import DatePickerFormat from '../../../../components/uielements/datePickerFormat';
+// import DatePicker from '../../../../components/uielements/datePickerFormat';
+import {checkInputNumber} from '../../../../helpers/utility';
+import TextArea from 'antd/lib/input/TextArea';
+import moment from 'moment';
+import api from './config';
+import dayjs from 'dayjs';
+
+import {
+  _debounce,
+  getInfoFromToken,
+  getLocalKey,
+} from '../../../../helpers/utility';
+const {Item, useForm} = Form;
+
+export default (props) => {
+  const [form] = useForm();
+  // const [isFormSuccess, setIsFormSuccess] = useState(true);
+  const {
+    dataEdit,
+    loading,
+    visible,
+    action,
+    DanhSachLoaiSuKien,
+    DanhSachMediaOrPhat,
+    DanhSachManHinhOrNhomManHinh,
+  } = props;
+  const [DanhSachMenu, setDanhSachMenu] = useState([]);
+  const [fromTime, setFromTime] = useState('');
+  const [ChiaNgay, setChiaNgay] = useState(false);
+  useEffect(() => {
+    if (dataEdit && dataEdit.LichPhatID) {
+      const LoaiSuKienValue = dataEdit.LoaiSuKien;
+      const newNgayKetThuc = dayjs(dataEdit.NgayKetThuc).format(
+        'DD/MM/YYYY HH:mm:ss',
+      );
+      const newNgayBatDau = dayjs(dataEdit.NgayBatDau).format(
+        'DD/MM/YYYY HH:mm:ss',
+      );
+      setSelectedLoaiSuKien(LoaiSuKienValue);
+      const ListManHinhOrNhomManHinhs = dataEdit.ListManHinhOrNhomManHinh;
+      form &&
+        form.setFieldsValue({
+          ...dataEdit,
+          NgayKetThuc:
+            dataEdit && dataEdit.NgayKetThuc
+              ? dayjs(newNgayKetThuc, 'DD/MM/YYYY HH:mm:ss ')
+              : '',
+              NgayBatDau:
+              dataEdit && dataEdit.NgayBatDau
+                ? dayjs(newNgayBatDau, 'DD/MM/YYYY HH:mm:ss ')
+                : '',
+          // CoQuanID: ListChucNang,
+          ListManHinhOrNhomManHinh: ListManHinhOrNhomManHinhs.map(
+            (item) => item.ID,
+          ),
+        });
+        setChiaNgay(dataEdit.ChiaNgay);
+    }
+  }, []);
+  // useEffect(() => {
+  //   if (dataEdit && dataEdit.ListManHinhOrNhomManHinh) {
+  //     const ListManHinhOrNhomManHinhs = dataEdit.ListManHinhOrNhomManHinh;
+  //     form.setFieldsValue({
+  //       ...dataEdit,
+  //       NgayKetThuc: dayjs('05/12/2003', 'DD/MM/YYYY HH:mm:ss'),
+  //       ListManHinhOrNhomManHinh: ListManHinhOrNhomManHinhs.map(
+  //         (item) => item.ID,
+  //       ), // Preselect values if needed
+  //     });
+  //   }
+  // }, [dataEdit]);
+  const access_token = getLocalKey('access_token');
+  const dataUnzip = getInfoFromToken(access_token);
+  const ListChucNang = dataUnzip?.NguoiDung?.CoQuanID;
+  useEffect(() => {
+    fetchData();
+  }, []);
+  const fetchData = async () => {
+    try {
+      const res = await api.DanhSachNguoiDung(/* Tham số */);
+      if (res.data.Status > 0) {
+        setDanhSachMenu(res.data.Data);
+      }
+    } catch (error) {
+      console.error('Lỗi khi lấy danh sách cấp xếp hạng:', error);
+    }
+  };
+  const onOk = async (e) => {
+    e.preventDefault();
+    try {
+      const values = await form.validateFields();
+      const transformedList = values.ListManHinhOrNhomManHinh?.map(id => {
+        const selectedItem = DanhSachManHinhOrNhomManHinh.find(item => item.ID === id);
+        return {
+          ID: selectedItem.ID,
+          Ten: selectedItem.Ten,
+          Title: selectedItem.Title,
+        };
+      });
+  
+      const selectedMediaOrPlaylist = danhSachMauPhieuSuggest.find(item => item.ID === values.MediaORDanhSachPhat);
+  
+      const payload = {
+        ...values,
+        CoQuanID: ListChucNang,
+        ListManHinhOrNhomManHinh: transformedList,
+        TitleMediaORDanhSachPhat: selectedMediaOrPlaylist?.Title,
+      };
+  
+      // Only include NgayBatDau and NgayKetThuc if ChiaNgay is true
+      if (ChiaNgay) {
+        payload.NgayBatDau = values.NgayBatDau && values.NgayBatDau.format('YYYY-MM-DDTHH:mm:ss.SSS');
+        payload.NgayKetThuc = values.NgayKetThuc && values.NgayKetThuc.format('YYYY-MM-DDTHH:mm:ss.SSS');
+      }
+  
+      props.onCreate(payload);
+    } catch (errorInfo) {
+      console.error('Validation failed:', errorInfo);
+    }
+  };
+  
+  
+  
+
+  const [danhSachMauPhieuSuggest, setDanhSachMauPhieuSuggest] = useState([]);
+  const [selectedLoaiSuKien, setSelectedLoaiSuKien] = useState(null);
+  useEffect(() => {
+    handleGetListSuggest(selectedLoaiSuKien);
+  }, [selectedLoaiSuKien]);
+
+  const handleGetListSuggest = async (LoaiSuKien) => {
+    if (!LoaiSuKien) return;
+    try {
+      const res = await api.danhSachMediaorPhat({title: LoaiSuKien});
+      if (res.data.Status > 0) {
+        setDanhSachMauPhieuSuggest(res.data.Data);
+      } else {
+        message.destroy();
+        message.warning(res.data.Message);
+      }
+    } catch (error) {
+      message.destroy();
+      message.error('An error occurred while fetching data');
+    } finally {
+    }
+  };
+  const handleChangeNgaySinh = (value, strValue) => {
+    setFromTime(value);
+  };
+  return (
+    <Modal
+      title={`${action === 'edit' ? 'Sửa' : 'Thêm mới'} lịch phát`}
+      width={750}
+      visible={visible}
+      onCancel={props.onCancel}
+      footer={[
+        <Button key="back" onClick={props.onCancel}>
+          Hủy
+        </Button>,
+        <Button
+          key="submit"
+          htmlType="submit"
+          type="primary"
+          form="formDiSanTuLieu"
+          // loading={loading}
+          onClick={onOk}
+          // disabled={isFormSuccess}
+        >
+          Lưu
+        </Button>,
+      ]}
+    >
+      <Form form={form} name={'formDiSanTuLieu'}>
+      {action !== 'add' ? <Item name="LichPhatID" hidden {...REQUIRED}></Item> : null}
+        <Item name="CoQuanID" hidden {...REQUIRED}></Item>
+        <Item
+          label="Chọn khách hàng"
+          name={'NguoiDungID'}
+          {...ITEM_LAYOUT}
+          rules={[REQUIRED]}
+        >
+          <Select
+            allowClear
+            // style={{width: '200px'}}
+          >
+            {DanhSachMenu?.map((item) => (
+              <Option value={item.ID}>{item.Ten}</Option>
+            ))}
+          </Select>
+        </Item>
+        <Item label="Tên danh sách phát" name={'TenLichPhat'} {...ITEM_LAYOUT}>
+          <Input />
+        </Item>
+        <Item
+          label="Loại thư viện"
+          name={'LoaiSuKien'}
+          {...ITEM_LAYOUT}
+          rules={[REQUIRED]}
+        >
+          <Select
+            allowClear
+            onChange={(value) => setSelectedLoaiSuKien(value)}
+            // style={{width: '200px'}}
+          >
+            {DanhSachLoaiSuKien?.map((item) => (
+              <Option value={item.ID}>{item.TenSuKien}</Option>
+            ))}
+          </Select>
+        </Item>
+        <Item
+          label="Media/Danh sách phát"
+          name={'MediaORDanhSachPhat'}
+          {...ITEM_LAYOUT}
+          rules={[REQUIRED]}
+        >
+          <Select
+            allowClear
+            // style={{width: '200px'}}
+          >
+            {danhSachMauPhieuSuggest?.map((item) => (
+              <Option value={item.ID}>{item.Ten}</Option>
+            ))}
+          </Select>
+        </Item>
+        <Item
+          label="Màn hình/Nhóm màn hình "
+          name={'ListManHinhOrNhomManHinh'}
+          {...ITEM_LAYOUT}
+          rules={[REQUIRED]}
+        >
+          <Select
+            mode="multiple"
+            allowClear
+            // style={{width: '200px'}}
+          >
+            {DanhSachManHinhOrNhomManHinh?.map((item) => (
+              <Option value={item.ID}>{item.Ten}</Option>
+            ))}
+          </Select>
+        </Item>
+        <Item
+          label="Chia ngày"
+          name={'ChiaNgay'}
+          {...ITEM_LAYOUT}
+          rules={[REQUIRED]}
+        >
+          <Select onChange={value => setChiaNgay(value)}>
+            <Option value={true}>Tùy chỉnh</Option>
+            <Option value={false}>Luôn Luôn</Option>
+          </Select>
+        </Item>
+        {ChiaNgay && (
+          <>
+            <Item
+              label="Bắt đầu"
+              name="NgayBatDau"
+              {...ITEM_LAYOUT}
+              rules={[REQUIRED]}
+            >
+              <DatePicker
+                format="DD/MM/YYYY HH:mm:ss"
+                showTime
+                placeholder=""
+                style={{ width: '100%' }}
+              />
+            </Item>
+            <Item
+              label="Kết thúc"
+              name="NgayKetThuc"
+              {...ITEM_LAYOUT}
+              rules={[REQUIRED]}
+            >
+              <DatePicker
+                format="DD/MM/YYYY HH:mm:ss"
+                showTime
+                placeholder=""
+                style={{ width: '100%' }}
+              />
+            </Item>
+          </>
+        )}
+        <Item
+          label="Trạng thái"
+          name={'TrangThai'}
+          {...ITEM_LAYOUT}
+          rules={[REQUIRED]}
+        >
+          <Select>
+            <Option value={true}>Hoạt động</Option>
+            <Option value={false}>Không hoạt</Option>
+          </Select>
+        </Item>
+      </Form>
+    </Modal>
+  );
+};

@@ -1,0 +1,79 @@
+import {all, takeEvery, put, call} from 'redux-saga/effects';
+import api from '../../../containers/DanhMuc/DMTieuChi/config';
+import actions from './actions';
+import {formatTreeDataCoQuan} from '../../../../helpers/utility';
+import {LOAICOT} from '../../../../settings/constants';
+
+function* getInitData({payload}) {
+  try {
+    //data co quan
+    const response = yield call(api.AllTieuChi, payload.filterData);
+    let resultData = {
+      DanhSachTieuChi: [],
+      expandedKeys: [],
+    };
+    if (response.data.Data) {
+      resultData = yield formatTreeDataCoQuan(response.data.Data);
+    }
+    yield put({
+      type: actions.DMTIEUCHI_GET_INIT_DATA_REQUEST_SUCCESS,
+      payload: {
+        DanhSachTieuChi: resultData.DanhSachCoQuan,
+        expandedKeys: resultData.expandedKeys,
+      },
+    });
+  } catch (e) {
+    yield put({
+      type: actions.DMTIEUCHI_GET_INIT_DATA_REQUEST_ERROR,
+    });
+  }
+}
+
+function* getList({payload}) {
+  try {
+    const response = yield api.AllTieuChi(payload.filterData);
+    const listData = response.data.Data;
+    const ListTieuChiFilter = listData.filter(
+      (item) => item.LoaiCot === LOAICOT.PhanTieuChi,
+    );
+    const ListDauBaoCaoFilter = listData.filter(
+      (item) => item.LoaiCot === LOAICOT.PhanDauBaoCao,
+    );
+    const ListCuoiBaoCaoFilter = listData.filter(
+      (item) => item.LoaiCot === LOAICOT.PhanCuoiBaoCao,
+    );
+    let DanhSachTieuChi = {};
+    let DanhSachDauBaoCao = {};
+    let DanhSachCuoiBaoCao = {};
+    if (ListTieuChiFilter) {
+      DanhSachTieuChi = yield formatTreeDataCoQuan(ListTieuChiFilter);
+    }
+    if (ListDauBaoCaoFilter) {
+      DanhSachDauBaoCao = yield formatTreeDataCoQuan(ListDauBaoCaoFilter);
+    }
+    if (ListCuoiBaoCaoFilter) {
+      DanhSachCuoiBaoCao = yield formatTreeDataCoQuan(ListCuoiBaoCaoFilter);
+    }
+    yield put({
+      type: actions.DMTIEUCHI_GET_LIST_REQUEST_SUCCESS,
+      payload: {
+        DanhSachTieuChi: DanhSachTieuChi.ListData,
+        DanhSachDauBaoCao: DanhSachDauBaoCao.ListData,
+        DanhSachCuoiBaoCao: DanhSachCuoiBaoCao.ListData,
+        // expandedKeys: resultData.expandedKeys,
+      },
+    });
+  } catch (e) {
+    console.log(e, 'error');
+    yield put({
+      type: actions.DMTIEUCHI_GET_LIST_REQUEST_ERROR,
+    });
+  }
+}
+
+export default function* rootSaga() {
+  yield all([
+    yield takeEvery(actions.DMTIEUCHI_GET_INIT_DATA_REQUEST, getInitData),
+  ]);
+  yield all([yield takeEvery(actions.DMTIEUCHI_GET_LIST_REQUEST, getList)]);
+}

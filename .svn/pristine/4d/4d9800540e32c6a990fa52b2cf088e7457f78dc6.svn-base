@@ -1,0 +1,50 @@
+.even-row {
+    background-color: white;
+    width: 29.1%;
+    margin-top: -15px;
+  }
+  
+  .odd-row {
+    background-color: rgb(242,242,242);
+    width: 29.1%;
+    padding-top: 5px;
+  }
+  
+  .upload-button {
+    color: white;
+    background: rgb(51,122,183);
+    border: 1px solid rgb(51,122,183);
+    border-radius: 5px;
+    padding: 5px 0px 0px 7px;
+    height: 30px;
+    width: 30px;
+    margin-left: 20%;
+    padding-top: 5px;
+
+  }
+  
+  .cancel-button {
+    color: white;
+    background: rgb(255,193,7);
+    border: 1px solid rgb(255,193,7);
+    border-radius: 5px;
+    padding: 5px 0px 0px 7px;
+    height: 30px;
+    width: 30px;
+    padding-top: 5px;
+  }
+  /* :where(.css-dev-only-do-not-override-p7e5j5).ant-tree.ant-tree-directory .ant-tree-treenode .ant-tree-node-content-wrapper.ant-tree-node-selected {
+    color: black;
+    background: white;
+}
+:where(.css-dev-only-do-not-override-p7e5j5).ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-node-content-wrapper {
+    color: black;
+    background: white;
+}
+:where(.css-dev-only-do-not-override-p7e5j5).ant-tree.ant-tree-directory .ant-tree-treenode-selected .ant-tree-switcher {
+  color: black;
+  background: white;
+}
+:where(.css-dev-only-do-not-override-p7e5j5).ant-tree.ant-tree-directory .ant-tree-treenode >* {
+  background: white;
+} */
