@@ -69,11 +69,11 @@ export default (props) => {
           ...dataEdit,
           StartDate:
             dataEdit && dataEdit.NgayDangKy
-              ? dayjs(dataEdit.NgayDangKy, 'MM/DD/YYYY')
+              ? dayjs(dataEdit.NgayDangKy, 'DD/MM/YYYY')
               : '',
           EndDate:
             dataEdit && dataEdit.NgayHetHan
-              ? dayjs(dataEdit.NgayHetHan, 'MM/DD/YYYY')
+              ? dayjs(dataEdit.NgayHetHan, 'DD/MM/YYYY')
               : '',
           DisplayName: dataEdit && dataEdit.TenManHinh,
         });
@@ -151,8 +151,8 @@ export default (props) => {
       Status: TrangThai,
     };
     console.log(StartDate, EndDate,newValue.StartDate, newValue.EndDate);
-    newValue.StartDate = StartDate ? dayjs(StartDate).format('YYYY-DD-MM') : null;
-    newValue.EndDate = EndDate ? dayjs(EndDate).format('YYYY-DD-MM') : null;
+    newValue.StartDate = StartDate ? dayjs(StartDate).format('YYYY-MM-DD') : null;
+    newValue.EndDate = EndDate ? dayjs(EndDate).format('YYYY-MM-DD') : null;
     const { onCreate } = props;
     onCreate(newValue);
   });
@@ -258,7 +258,7 @@ export default (props) => {
           {...ITEM_LAYOUT}
           rules={[REQUIRED]}
         >
-          <DatePickerFormat format={'MM/DD/YYYY'}></DatePickerFormat>
+          <DatePickerFormat format={'DD/MM/YYYY'}></DatePickerFormat>
         </Item>
         <Item
           label="Ngày kết thúc"
@@ -266,7 +266,7 @@ export default (props) => {
           {...ITEM_LAYOUT}
           rules={[REQUIRED]}
         >
-          <DatePickerFormat format={'MM/DD/YYYY'}></DatePickerFormat>
+          <DatePickerFormat format={'DD/MM/YYYY'}></DatePickerFormat>
         </Item>
         <div style={{textAlign: 'right', marginBottom: '20px'}}>
           <Button onClick={CreateLicense}>Tạo lisence</Button>

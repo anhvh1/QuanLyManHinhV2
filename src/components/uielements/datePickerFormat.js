@@ -38,7 +38,7 @@ class DatePickerFormat extends React.PureComponent {
   render() {
     return (
       <DatePicker
-        format={'MM/DD/YYYY'}
+        format={'DD/MM/YYYY'}
         style={{
           ...this.props.style,
           // , width: '100%'
@@ -60,7 +60,7 @@ class RangeDatePickerFormat extends React.PureComponent {
     return (
       <RangePicker
         {...this.props}
-        format={'MM/DD/YYYY'}
+        format={'DD/MM/YYYY'}
         placeholder={this.props.placeholder ? this.props.placeholder : ''}
         onOpenChange={(open) =>
           onOpenDatePickerChange(open, 'ant-picker-focused')
