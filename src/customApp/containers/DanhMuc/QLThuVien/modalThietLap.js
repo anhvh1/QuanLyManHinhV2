@@ -639,7 +639,7 @@ export default (props) => {
                     flexDirection: 'column',
                     alignItems: 'center',
                     width: 'calc(50% - 10px)', // Adjust width to account for gap
-                    cursor: 'move',
+                    cursor: 'pointer',
                   }}
                   draggable="true"
                   onDragStart={(event) => handleDragStart(event, item)}
