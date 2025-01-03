@@ -1,14 +1,14 @@
-import React from 'react';
-import {Redirect, Route} from 'react-router-dom';
-import {ConnectedRouter} from 'connected-react-router';
-import {connect} from 'react-redux';
-import App from './containers/App/App';
-import asyncComponent from './helpers/AsyncFunc';
-import {emptyCache, isFullLocalStorage} from './helpers/utility';
+import React from "react";
+import { Redirect, Route } from "react-router-dom";
+import { ConnectedRouter } from "connected-react-router";
+import { connect } from "react-redux";
+import App from "./containers/App/App";
+import asyncComponent from "./helpers/AsyncFunc";
+import { emptyCache, isFullLocalStorage } from "./helpers/utility";
 
 const localStorageNotNull = isFullLocalStorage();
 
-const RestrictedRoute = ({component: Component, isLoggedIn, ...rest}) => {
+const RestrictedRoute = ({ component: Component, isLoggedIn, ...rest }) => {
   return (
     <Route
       {...rest}
@@ -18,8 +18,8 @@ const RestrictedRoute = ({component: Component, isLoggedIn, ...rest}) => {
         ) : (
           <Redirect
             to={{
-              pathname: '/signin',
-              state: {from: props.location},
+              pathname: "/signin",
+              state: { from: props.location },
             }}
           />
         )
@@ -27,43 +27,43 @@ const RestrictedRoute = ({component: Component, isLoggedIn, ...rest}) => {
     />
   );
 };
-const PublicRoutes = ({history, isLoggedIn}) => {
+const PublicRoutes = ({ history, isLoggedIn }) => {
   return (
     <ConnectedRouter history={history}>
       <div>
         <Route
           exact
-          path={'/'}
+          path={"/"}
           component={asyncComponent(() =>
-            import('./customApp/containers/HeThong/DangNhap'),
+            import("./customApp/containers/HeThong/LandingPage")
           )}
         />
         <Route
           exact
-          path={'/404'}
-          component={asyncComponent(() => import('./containers/Page/404'))}
+          path={"/404"}
+          component={asyncComponent(() => import("./containers/Page/404"))}
         />
         <Route
-          path={'/500'}
-          component={asyncComponent(() => import('./containers/Page/500'))}
+          path={"/500"}
+          component={asyncComponent(() => import("./containers/Page/500"))}
         />
         <Route
-          path={'/signin'}
+          path={"/signin"}
           component={asyncComponent(() =>
-            import('./customApp/containers/HeThong/DangNhap'),
+            import("./customApp/containers/HeThong/DangNhap")
           )}
         />
         <Route
           exact
-          path={'/quen-mat-khau'}
+          path={"/quen-mat-khau"}
           component={asyncComponent(() =>
-            import('./customApp/containers/HeThong/DangNhap/forgotPassword'),
+            import("./customApp/containers/HeThong/DangNhap/forgotPassword")
           )}
         />
         <Route
-          path={'/resetpassword'}
+          path={"/resetpassword"}
           component={asyncComponent(() =>
-            import('./containers/Page/resetPassword'),
+            import("./containers/Page/resetPassword")
           )}
         />
         <RestrictedRoute
