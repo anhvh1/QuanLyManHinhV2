@@ -617,7 +617,7 @@ const DMChiTieu = (props) => {
       width: '12%',
       render: (TrangThai) => {
         if (TrangThai === true) {
-          return <span>Đã sử dụng</span>;
+          return <span>Đang sử dụng</span>;
         } else if (TrangThai === false) {
           return <span>Không sử dụng</span>;
         } else {
