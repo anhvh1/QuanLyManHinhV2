@@ -108,7 +108,7 @@ export function* logout() {
     clearToken();
     const id_token_hint = JSON.parse(localStorage.getItem('user'))?.id_token;
     if (!id_token_hint) {
-      yield put(push('/'));
+      yield put(push('/signin'));
     }
   });
 }
@@ -184,7 +184,7 @@ export function* checkAuthorization(key) {
       } else {
         clearToken();
         if (window.location.pathname !== '/quen-mat-khau') {
-          yield put(push('/'));
+          yield put(push('/signin'));
         }
       }
     } catch (err) {

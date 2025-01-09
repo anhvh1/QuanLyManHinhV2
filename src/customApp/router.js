@@ -14,7 +14,7 @@ const routes = [
   },
   {
     path: 'danh-muc-co-quan',
-    component: asyncComponent(() => import('./containers/DanhMuc/QLHienVatBaoTang')),
+    component: asyncComponent(() => import('./containers/DanhMuc/DMKhachHang')),
   },
 
   {
@@ -45,33 +45,7 @@ const routes = [
     path: 'phan-quyen',
     component: asyncComponent(() => import('./containers/HeThong/QLPhanQuyen')),
   },
-  {
-    path: 'quan-ly-media',
-    component: asyncComponent(() => import('./containers/DanhMuc/DMChiTieu')),
-  },
-  {
-    path: 'danh-muc-cot',
-    component: asyncComponent(() => import('./containers/DanhMuc/DMTieuChi')),
-  },
-  {
-    path: 'danh-muc-gia-tri',
-    component: asyncComponent(() => import('./containers/DanhMuc/DMPhanLoai')),
-  },
-
-  {
-    path: 'danh-muc-ky-bao-cao',
-    component: asyncComponent(() => import('./containers/DanhMuc/DMThoiGian')),
-  },
-
-  {
-    path: 'danh-muc-pham-vi',
-    component: asyncComponent(() => import('./containers/DanhMuc/DMPhamVi')),
-  },
-
-  {
-    path: 'danh-muc-gia-tri',
-    component: asyncComponent(() => import('./containers/DanhMuc/DMGiaTri')),
-  },
+ 
   {
     path: 'quan-ly-man-hinh-a',
     component: asyncComponent(() => import('./containers/DanhMuc/QuanLyManHinh')),
@@ -83,22 +57,6 @@ const routes = [
   //   ),
   // },
   {
-    path: 'danh-muc-cap-di-tich-xep-hang',
-    component: asyncComponent(() =>
-      import('./containers/DanhMuc/DMCapDiTichXepHang'),
-    ),
-  },
-  {
-    path: 'danh-muc-loai-di-tich',
-    component: asyncComponent(() =>
-      import('./containers/DanhMuc/DMLoaiDiTich'),
-    ),
-  },
-  {
-    path: 'danh-muc-thu-vien',
-    component: asyncComponent(() => import('./containers/DanhMuc/DMThuVien')),
-  },
-  {
     path: 'quan-ly-danh-sach-phat',
     component: asyncComponent(() => import('./containers/DanhMuc/QLThuVien')),
   },
@@ -107,54 +65,20 @@ const routes = [
     component: asyncComponent(() => import('./containers/DanhMuc/QLLicense')),
   },
   {
-    path: 'quan-ly-di-tich-toan-tinh',
+    path: 'khach-hang',
     component: asyncComponent(() =>
-      import('./containers/DanhMuc/QLDiTichToanTinh'),
-    ),
-  },
-  {
-    path: 'quan-ly-di-san-tu-lieu',
-    component: asyncComponent(() =>
-      import('./containers/DanhMuc/QuanLyDiSanTuLieu'),
-    ),
-  },
-  {
-    path: 'quan-ly-nhan-luc-thu-vien',
-    component: asyncComponent(() =>
-      import('./containers/DanhMuc/QLNhanLucThuVien'),
-    ),
-  },
-  {
-    path: 'quan-ly-bao-vat-quoc-gia',
-    component: asyncComponent(() =>
-      import('./containers/DanhMuc/QLBaoVatQuocGia'),
-    ),
-  },
-  {
-    path: 'di-san-van-hoa-phi-vat-the',
-    component: asyncComponent(() =>
-      import('./containers/DanhMuc/QLDanhMucDiSanVanHoaPhiVatThe'),
+      import('./containers/DanhMuc/GiaoDienKhachHang'),
     ),
   },
   {
     path: 'quan-ly-lich-phat-2',
-    component: asyncComponent(() => import('./containers/DanhMuc/QLNgheNhan')),
+    component: asyncComponent(() => import('./containers/DanhMuc/QLLichPhat')),
   },
   {
     path: 'quan-ly-hien-vat-bao-tang',
     component: asyncComponent(() =>
-      import('./containers/DanhMuc/QLHienVatBaoTang'),
+      import('./containers/DanhMuc/DMKhachHang'),
     ),
-  },
-  {
-    path: 'quan-ly-di-san-van-hoa-phi-vat-the',
-    component: asyncComponent(() =>
-      import('./containers/DanhMuc/QLDiSanVanHoaPhiVatThe'),
-    ),
-  },
-  {
-    path: 'quan-ly-bao-tang',
-    component: asyncComponent(() => import('./containers/DanhMuc/QLBaoTang')),
   },
   {
     path: 'quan-ly-man-hinh',
@@ -165,22 +89,14 @@ const routes = [
     component: asyncComponent(() => import('./containers/DanhMuc/QuanLyNhomManHinh')),
   },
   {
-    path: 'danh-muc-loai-mau-phieu',
-    component: asyncComponent(() =>
-      import('./containers/DanhMuc/DMLoaiMauPhieu'),
-    ),
-  },
-  {
-    path: 'danh-muc-di-san-tu-lieu',
-    component: asyncComponent(() =>
-      import('./containers/DanhMuc/DMDiSanTuLieu'),
-    ),
-  },
-  {
     path: 'cau-hinh-dang-nhap',
     component: asyncComponent(() =>
       import('./containers/HeThong/CauHinhDangNhap'),
     ),
+  },
+  {
+    path: 'quan-ly-media',
+    component: asyncComponent(() => import('./containers/DanhMuc/QLMedia')),
   },
 ];
 export default routes;

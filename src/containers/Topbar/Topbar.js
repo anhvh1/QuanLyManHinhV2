@@ -1,6 +1,6 @@
-import React, {Component, useEffect, useState} from 'react';
-import {connect, useDispatch, useSelector} from 'react-redux';
-import {Link} from 'react-router-dom';
+import React, { Component, useEffect, useState } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import {
   Layout,
   Drawer,
@@ -9,16 +9,16 @@ import {
   Tooltip,
   Dropdown,
   message,
-} from 'antd';
-import appActions from '../../redux/app/actions';
-import TopbarNotification from './topbarNotification';
-import actions from '../../customApp/redux/DashBoard/action';
-import TopbarUser from './topbarUser';
-import TopbarWrapper from './topbar.style';
-import Dang from '../../image/dang.png';
+} from "antd";
+import appActions from "../../redux/app/actions";
+import TopbarNotification from "./topbarNotification";
+import actions from "../../customApp/redux/DashBoard/action";
+import TopbarUser from "./topbarUser";
+import TopbarWrapper from "./topbar.style";
+import Dang from "../../image/dang.png";
 // import apiHuongDan from '../../customApp/containers/QLHuongDanSuDung/config';
-import {store} from '../../redux/store';
-import Menu from '../../components/uielements/menu';
+import { store } from "../../redux/store";
+import Menu from "../../components/uielements/menu";
 import {
   changeUrlHttps,
   checkHttps,
@@ -28,20 +28,22 @@ import {
   _debounce,
   getInfoFromToken,
   getLocalKey,
-} from '../../helpers/utility';
-import {siteConfig} from '../../settings';
+} from "../../helpers/utility";
+import { siteConfig } from "../../settings";
 import {
   QuestionCircleOutlined,
   MenuOutlined,
   YoutubeOutlined,
-} from '@ant-design/icons';
-import actionSidebar from '../../customApp/redux/HeThong/Sidebar/actions';
-import api from './config';
-
+} from "@ant-design/icons";
+import actionSidebar from "../../customApp/redux/HeThong/Sidebar/actions";
+import api from "./config";
+import Switches from "../../components/uielements/switch";
 // import apiKeKhai from "../../customApp/containers/KeKhaiTaiSan/config";
-
-const {SubMenu, Item} = Menu;
-const {Header} = Layout;
+import MoonIcon from "../../components/utility/MoonIcon";
+import SunIcon from "../../components/utility/SunIcon";
+import Go from "./go.png";
+const { SubMenu, Item } = Menu;
+const { Header } = Layout;
 const {
   toggleCollapsed,
   clearMenu,
@@ -54,7 +56,7 @@ const {
 } = appActions;
 
 const stripTrailingSlash = (str) => {
-  if (str.substr(-1) === '/') {
+  if (str.substr(-1) === "/") {
     return str.substr(0, str.length - 1);
   }
   return str;
@@ -68,9 +70,8 @@ const Topbar = (props) => {
   const [validFile, setValidFile] = useState(false);
   const [loadingHuongDan, setLoadingHuongDan] = useState(false);
   const [CheckKeKhai, setCheckKeKhai] = useState(false);
-  const {ListSideBar} = useSelector((state) => state.ListSideBar);
-  const {SoLieuCanhBao} = useSelector((state) => state.DashBoard);
-
+  const { ListSideBar } = useSelector((state) => state.ListSideBar);
+  const { SoLieuCanhBao } = useSelector((state) => state.DashBoard);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -81,17 +82,17 @@ const Topbar = (props) => {
 
   const showDrawer = () => {
     const arrayKey = current;
-    let link = '';
+    let link = "";
 
     if (arrayKey && arrayKey.length) {
       link = arrayKey[0];
     }
-    if (link === 'ke-khai-tai-san/ke-khai') {
-      link = 'ke-khai-tai-san';
+    if (link === "ke-khai-tai-san/ke-khai") {
+      link = "ke-khai-tai-san";
     }
     setLoadingHuongDan(true);
     api
-      .GetByMaChucNang({MaChucNang: link})
+      .GetByMaChucNang({ MaChucNang: link })
       .then((response) => {
         setLoadingHuongDan(false);
         if (response.data.Status > 0) {
@@ -129,12 +130,12 @@ const Topbar = (props) => {
   };
 
   const onOpenChange = (newOpenKeys) => {
-    const {app, changeOpenKeys} = props;
+    const { app, changeOpenKeys } = props;
     const latestOpenKey = newOpenKeys.find(
-      (key) => !(app.openKeys.indexOf(key) > -1),
+      (key) => !(app.openKeys.indexOf(key) > -1)
     );
     const latestCloseKey = app.openKeys.find(
-      (key) => !(newOpenKeys.indexOf(key) > -1),
+      (key) => !(newOpenKeys.indexOf(key) > -1)
     );
     let nextOpenKeys = [];
     if (latestOpenKey) {
@@ -148,13 +149,13 @@ const Topbar = (props) => {
 
   const getAncestorKeys = (key) => {
     const map = {
-      sub3: ['sub2'],
+      sub3: ["sub2"],
     };
     return map[key] || [];
   };
 
-  const getMenuItem = ({singleOption, submenuStyle, submenuColor}) => {
-    const {TenMenu, Icon, Children, HienThi, MaMenu} = singleOption;
+  const getMenuItem = ({ singleOption, submenuStyle, submenuColor }) => {
+    const { TenMenu, Icon, Children, HienThi, MaMenu } = singleOption;
     const url = stripTrailingSlash(props.url);
     if (Children) {
       return (
@@ -166,13 +167,13 @@ const Topbar = (props) => {
               <span className="nav-text">{TenMenu}</span>
             </span>
           }
-          style={{display: 'flex'}}
+          style={{ display: "flex" }}
           popupClassName={
             Children.length > 2
-              ? 'menu-topbar popupSubMenuInline'
+              ? "menu-topbar popupSubMenuInline"
               : Children.length === 2
-              ? 'menu-topbar_SubMenuInline popupSubMenuInline'
-              : 'popupSubMenuInline'
+              ? "menu-topbar_SubMenuInline popupSubMenuInline"
+              : "popupSubMenuInline"
           }
         >
           {Children.map((child) => {
@@ -195,7 +196,7 @@ const Topbar = (props) => {
         <Link to={`${url}/${MaMenu}`}>
           <span className="isoMenuHolder" style={submenuColor}>
             <i className={Icon} />
-            <span style={{color: '#fff'}} className="nav-text">
+            <span style={{ color: "#fff" }} className="nav-text">
               {TenMenu}
             </span>
           </span>
@@ -207,14 +208,14 @@ const Topbar = (props) => {
   const getListOption = (optionsUsing) => {
     let role = store.getState().Auth.role;
     if (!role) {
-      let roleStore = localStorage.getItem('role');
+      let roleStore = localStorage.getItem("role");
       role = JSON.parse(roleStore);
     }
     let user = store.getState().Auth.user;
     // role = {...role,theo-doi-tien-trinh : }
     // role[theo-doi-tien-trinh] = {view: 1, add: 1, edit: 1, delete: 1}
     if (!user) {
-      let userStore = localStorage.getItem('user');
+      let userStore = localStorage.getItem("user");
       user = JSON.parse(userStore);
     }
     const isAdmin = user ? user.NguoiDungID === 1 : false;
@@ -240,7 +241,7 @@ const Topbar = (props) => {
             }
           }
         });
-        if (menu.Children.length) listOptions.push({...menu, Children});
+        if (menu.Children.length) listOptions.push({ ...menu, Children });
       } else {
         if (
           (role &&
@@ -275,13 +276,13 @@ const Topbar = (props) => {
     list.forEach((item) => {
       if (item && item.Children) {
         if (item && item.MaMenu === child) {
-          obj['parent'] = item;
+          obj["parent"] = item;
         } else {
           const CheckedChild = item.Children.find(
-            (itemChild) => itemChild.MaMenu === child,
+            (itemChild) => itemChild.MaMenu === child
           );
           if (CheckedChild && obj) {
-            obj['parent'] = item;
+            obj["parent"] = item;
           }
         }
       }
@@ -289,9 +290,9 @@ const Topbar = (props) => {
   };
 
   const handleGetListChild = () => {
-    const {app} = props;
+    const { app } = props;
     let parent = {};
-    if (mode === 'inline' && current?.length > 0) {
+    if (mode === "inline" && current?.length > 0) {
       handleFindParent(listOptions, current[0], parent);
     }
     const ListChild =
@@ -299,21 +300,21 @@ const Topbar = (props) => {
     props.changeListMenuActive(ListChild);
   };
 
-  const {toggleCollapsed, url, locale, openKeys, current, customizedTheme} =
+  const { toggleCollapsed, url, locale, openKeys, current, customizedTheme } =
     props;
   const collapsed = props.collapsed && !props.openDrawer;
 
-  const TenDonVi = getConfigLocal('tenDonVi', '');
+  const TenDonVi = getConfigLocal("tenDonVi", "");
 
   let htmlResult = (
     <div>
-      {loadingHuongDan ? <Spin /> : 'Chưa có hướng dẫn cho chức năng này'}
+      {loadingHuongDan ? <Spin /> : "Chưa có hướng dẫn cho chức năng này"}
     </div>
   );
 
   let role = store.getState().Auth.role;
   if (!role) {
-    let roleStore = localStorage.getItem('role');
+    let roleStore = localStorage.getItem("role");
     role = JSON.parse(roleStore);
   }
   let user = getInfoFromToken();
@@ -321,35 +322,36 @@ const Topbar = (props) => {
   // const optionsUsing = roleQuanLy && roleQuanLy.view ? [...options] : [...optionsCanBo];
   const listOptions = getListOption(ListSideBar);
 
-  const SidebarWidth = document.querySelectorAll('.ant-layout-sider')[0]
+  const SidebarWidth = document.querySelectorAll(".ant-layout-sider")[0]
     ?.clientWidth
-    ? document.querySelectorAll('.ant-layout-sider')[0]?.clientWidth + 10
+    ? document.querySelectorAll(".ant-layout-sider")[0]?.clientWidth + 10
     : 80;
 
-  const mode = collapsed === true ? 'vertical' : 'inline';
-  const access_token = getLocalKey('access_token');
+  const mode = collapsed === true ? "vertical" : "inline";
+  const access_token = getLocalKey("access_token");
   const dataUnzip = getInfoFromToken(access_token);
   let ListChucNang = dataUnzip?.NguoiDung?.UrlFile;
 
   // if (ListChucNang) {
   //   ListChucNang = `http://displaycms.gosol.com.vn${ListChucNang}`;
   // }
-const ListChucNangs = `http://displaycms.gosol.com.vn${ListChucNang}`;
-  const access_token1 = getLocalKey('access_token');
+  const access_token1 = getLocalKey("access_token");
   const dataUnzip1 = getInfoFromToken(access_token1);
   const TenNguoiDung = dataUnzip1?.NguoiDung?.TenNguoiDung;
-
   return (
-    <TopbarWrapper style={{userSelect: 'none'}} SidebarWidth={SidebarWidth}>
+    <TopbarWrapper style={{ userSelect: "none" }} SidebarWidth={SidebarWidth}>
       <Header
         className={
-          collapsed ? 'isomorphicTopbar collapsed' : 'isomorphicTopbar'
+          collapsed ? "isomorphicTopbar collapsed" : "isomorphicTopbar"
         }
+        style={{
+          background: "transparent",
+        }}
       >
         <div className="isoLeft">
           <MenuOutlined
             className={
-              collapsed ? 'triggerBtn menuCollapsed' : 'triggerBtn menuOpen'
+              collapsed ? "triggerBtn menuCollapsed" : "triggerBtn menuOpen"
             }
             onClick={() => {
               toggleCollapsed();
@@ -357,20 +359,17 @@ const ListChucNangs = `http://displaycms.gosol.com.vn${ListChucNang}`;
             }}
           />
           <Link
-            to={'/dashboard'}
-            style={{display: 'block', fontSize: 18}}
+            to={"/dashboard"}
+            style={{ display: "flex", fontSize: 18,marginTop:"15px" }}
             onClick={() => {
               dispatch(props.changeListChild([]));
-              dispatch(props.changeMaMenuActive(''));
+              dispatch(props.changeMaMenuActive(""));
               props.changeCurrent([]);
             }}
           >
-            <img src={ListChucNangs} alt={''} />
-            <h4 className={'triggerHeader'}>
-              {formatTenCoQuanDangNhap(
-                TenCoQuanDangNhap ? TenCoQuanDangNhap : '',
-              )}
-            </h4>
+            <img src={Go} alt={""} style={{ width: "54px", height: "39px" }} />
+
+            <h4 className={"triggerHeader"}>Go Smart Signage</h4>
           </Link>
         </div>
         {/* <Menu
@@ -387,32 +386,14 @@ const ListChucNangs = `http://displaycms.gosol.com.vn${ListChucNang}`;
               getMenuItem({submenuStyle, submenuColor, singleOption})
             )}
           </Menu> */}
-        <p className="siteName_topbar">{siteConfig.siteName}</p>
+        {/* <p className="siteName_topbar">{siteConfig.siteName}</p> */}
 
-        <ul className="isoRight">
-          <li className="isoGuide">
-            <QuestionCircleOutlined
-              style={{paddingTop: 2, color: '#fff', fontSize: 18}}
-              onClick={showDrawer}
-            />
-          </li>
-          <li
-            // onClick={() => setState({selectedItem: "notification"})}
-            className="isoNotify"
-            style={{marginRight: 26}}
-          >
-            <TopbarNotification locale={locale} />
-          </li>
-          <p style={{marginRight: '10px', color: 'white'}}>
-            {TenNguoiDung}
-          </p>
-          <li
-            // onClick={() => setState({selectedItem: "user"})}
-            className="isoUser"
-          >
+        <div className="isoRight">
+          <p className="isoUser">
             <TopbarUser locale={locale} />
-          </li>
-        </ul>
+          </p>
+          <p style={{ marginTop: "10px", color: "white" }}>{TenNguoiDung}</p>
+        </div>
 
         <Drawer
           className="guideDrawer"
@@ -422,35 +403,38 @@ const ListChucNangs = `http://displaycms.gosol.com.vn${ListChucNang}`;
           closable={true}
           onClose={closeDrawer}
           open={visibleDrawer}
-          bodyStyle={{height: 'calc(100% - 60px)'}}
+          bodyStyle={{ height: "calc(100% - 60px)" }}
         >
           {validFile ? (
-            <div style={{textAlign: 'center', height: '100%'}}>
+            <div style={{ textAlign: "center", height: "100%" }}>
               <p
                 style={{
                   fontWeight: 500,
-                  textAlign: 'left',
-                  margin: '10px 0',
+                  textAlign: "left",
+                  margin: "10px 0",
                   fontSize: 20,
                 }}
               >
                 Tài liệu hướng dẫn
               </p>
-              <iframe style={{width: '100%', height: '100%'}} src={filePath} />
+              <iframe
+                style={{ width: "100%", height: "100%" }}
+                src={filePath}
+              />
               <p
                 style={{
                   fontWeight: 500,
-                  textAlign: 'left',
-                  padding: '15px 0 15px 0',
+                  textAlign: "left",
+                  padding: "15px 0 15px 0",
                   // margin: '10px 0 50px 0',
                   fontSize: 20,
-                  position: 'fixed',
-                  width: '100%',
+                  position: "fixed",
+                  width: "100%",
                   bottom: 0,
-                  background: '#fff',
+                  background: "#fff",
                 }}
               >
-                Video hướng dẫn :{' '}
+                Video hướng dẫn :{" "}
                 <a href={linkPath} target="_blank">
                   <YoutubeOutlined /> Xem video
                 </a>
@@ -481,5 +465,5 @@ export default connect(
     changeListMenuActive,
     changeListChild,
     changeMaMenuActive,
-  },
+  }
 )(Topbar);

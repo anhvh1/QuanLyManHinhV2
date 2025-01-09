@@ -44,6 +44,7 @@ import apiCauHinh from "../CauHinhDangNhap/config";
 const date = new Date();
 import { useSelector } from "react-redux";
 import actionsCauHinhDangNhap from "../../../redux/HeThong/CauHinhDangNhap/actions";
+import { getInfoFromToken, getLocalKey } from "../../../../helpers/utility";
 const SignIn = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
@@ -211,7 +212,13 @@ const SignIn = (props) => {
       content: `Hệ thống đang trong quá trình bảo trì, vui lòng quay lại sau 17h30 ngày ${moment()}!`,
     });
   };
-  const from = { pathname: "/dashboard" };
+  const access_token = getLocalKey("access_token");
+  const dataUnzip = getInfoFromToken(access_token);
+  const IsAdmin = dataUnzip?.NguoiDung?.IsAdmin;
+  const from = IsAdmin
+    ? { pathname: "/dashboard/danh-muc-co-quan" }
+    : { pathname: "/dashboard/khach-hang" };
+
   const { isPreview } = props;
   if (isLoggedIn && !isPreview) {
     return <Redirect to={from} />;
@@ -299,7 +306,7 @@ const SignIn = (props) => {
                         style={{
                           position: "absolute",
                           right: "30px", // Điều chỉnh khoảng cách từ biểu tượng đến mép phải của ô input
-                          top: "40.5%",
+                          top: "42.5%",
                           transform: "translateY(-50%)",
                         }}
                       >

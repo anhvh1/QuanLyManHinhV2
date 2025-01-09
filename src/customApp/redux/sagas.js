@@ -7,35 +7,20 @@ import QLNguoiDung from './HeThong/QLNguoiDung/saga';
 import QuanLyThamSoHeThong from './HeThong/QLThamSoHeThong/saga';
 import QLHuongDanSuDung from './HeThong/QLHuongDanSuDung/saga';
 import NhatKyHeThong from './HeThong/NhatKyHeThong/saga';
-import DMPhamVi from './DanhMuc/DMPhamVi/saga';
 import QuanTriDuLieu from './HeThong/QuanTriDuLieu/saga';
 import CauHinhDangNhap from './HeThong/CauHinhDangNhap/saga';
 import QLChucNang from './HeThong/QLChucNang/saga';
 // Dashboard
 import DashBoard from './DashBoard/saga';
-import DMChiTieu from './DanhMuc/DMChiTieu/saga';
-import DMThoiGian from './DanhMuc/DMThoiGian/saga';
-import QLBaoVatQuocGia from './DanhMuc/QLBaoVatQuocGia/saga';
-import DMGiaTri from './DanhMuc/DMGiaTri/saga';
-import DMTieuChi from './DanhMuc/DMTieuChi/saga';
-import QLDiTichToanTinh from './DanhMuc/QLDiTichToanTinh/saga';
-import DMCapDiTichXepHang from './DanhMuc/DMCapDiTichXepHang/saga';
-import QLBaoTang from './DanhMuc/QLBaoTang/saga';
-import DMLoaiDiTich from './DanhMuc/DMLoaiDiTich/saga';
-import DMThuVien from './DanhMuc/DMThuVien/saga';
 import QLThuVien from './DanhMuc/QLThuVien/saga';
-import QLDiSanTuLieu from './DanhMuc/QuanLyDiSanTuLieu/saga';
-import DMDiSanTuLieu from './DanhMuc/DMDiSanTuLieu/saga';
-import QLDanhMucDiSanVanHoaPhiVatThe from './DanhMuc/QLDanhMucDiSanVanHoaPhiVatThe/saga';
-import QLDiSanVanHoaPhiVatThe from './DanhMuc/QLDiSanVanHoaPhiVatThe/saga';
-import KhachHang from './DanhMuc/QLHienVatBaoTang/saga';
-import QLNgheNhan from './DanhMuc/QLNgheNhan/saga';
-import QLNhanLucThuVien from './DanhMuc/QLNhanLucThuVien/saga';
+import DMKhachHang from './DanhMuc/GiaoDienKhachHang/saga';
+import KhachHang from './DanhMuc/DMKhachHang/saga';
+import QLLichPhat from './DanhMuc/QLLichPhat/saga';
+import DMChiTieu from './DanhMuc/QLMedia/saga';
 import QuanLyManHinh from './DanhMuc/QuanLyManHinh/saga';
 import QuanLyNhomManHinh from './DanhMuc/QuanLyNhomManHinh/saga';
 import QLLicense from './DanhMuc/QLLicense/saga';
 
-import DMLoaiMauPhieu from './DanhMuc/DMLoaiMauPhieu/saga';
 export default function* devSaga() {
   yield all([
     QLHuongDanSuDung(),
@@ -47,30 +32,16 @@ export default function* devSaga() {
     QLNguoiDung(),
     ListSideBar(),
     QuanLyThamSoHeThong(),
-    DMThoiGian(),
-    DMGiaTri(),
-    DMChiTieu(),
-    DMPhamVi(),
-    DMTieuChi(),
     NhatKyHeThong(),
-    DMCapDiTichXepHang(),
-    DMLoaiDiTich(),
-    QLDiTichToanTinh(),
-    QLBaoVatQuocGia(),
-    QLBaoTang(),
-    QLDiSanTuLieu(),
-    DMDiSanTuLieu(),
-    DMLoaiMauPhieu(),
-    QLDanhMucDiSanVanHoaPhiVatThe(),
+    DMKhachHang(),
     QLChucNang(),
-    QLNgheNhan(),
-    QLDiSanVanHoaPhiVatThe(),
+    QLLichPhat(),
     KhachHang(),
-    DMThuVien(),
-    QLThuVien(),
-    QLNhanLucThuVien(),
     QuanLyManHinh(),
     QuanLyNhomManHinh(),
     QLLicense(),
+    QLThuVien(),
+    DMChiTieu(),
+
   ]);
 }
