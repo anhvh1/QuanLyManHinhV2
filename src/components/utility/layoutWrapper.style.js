@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import {palette} from 'styled-theme';
 const LayoutContentWrapper = styled.div`
-  padding: ${(props) => (props?.isIframe ? '0' : '0 10px ')};
+  // padding: ${(props) => (props?.isIframe ? '0' : '0 10px ')};
   display: flex;
   flex-flow: row wrap;
   /* background: ${palette('primary', 16)}; */

@@ -4,10 +4,10 @@ import {palette} from 'styled-theme';
 const BoxWrapper = styled.div`
   width: 100%;
   height: ${(props) => (props.isFullHeight ? `100%` : 'calc(100% - 60px)')};
-  border: 1px solid #d5d5d5;
-  background: #fafafa;
+  // border: 1px solid #d5d5d5;
+  // background: #fafafa;
   /* margin: 8px; */
-  padding: 10px 10px 40px 10px;
+  padding: 10px 0px 40px 0px;
 
   &:last-child {
     margin-bottom: 0;
