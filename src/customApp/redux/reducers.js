@@ -20,7 +20,7 @@ import QuanLyManHinh from './DanhMuc/QuanLyManHinh/reducer';
 import QuanLyNhomManHinh from './DanhMuc/QuanLyNhomManHinh/reducer';
 import CauHinhDangNhap from './HeThong/CauHinhDangNhap/reducer';
 import DMChiTieu from './DanhMuc/QLMedia/reducer';
-
+import ContentMedia from './DanhMuc/ContentMedia/reducer';
 export default {
   DMCoQuan,
   QLPhanQuyen,
@@ -42,4 +42,5 @@ export default {
   QuanLyNhomManHinh,
   QLLicense,
   DMChiTieu,
+  ContentMedia,
 };

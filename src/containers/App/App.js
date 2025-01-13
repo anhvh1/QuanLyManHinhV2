@@ -103,7 +103,7 @@ export class App extends Component {
                       <Content
                         className="isomorphicContent"
                         style={{
-                          padding: "100px 0px 35px 0",
+                          padding: "100px 50px 35px 50px",
                           display: "grid",
                           gridTemplateColumns: ListMenuActive?.length
                             ? "11% 89%"

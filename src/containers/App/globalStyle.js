@@ -8,9 +8,12 @@ export default createGlobalStyle`
   }
   .nav-text {
       font-size: 14px;
-      color: ${palette('primary', 18)} !important;
+      color: #FFFFFF !important;
       ${transition()};
   }
+      .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-inline .ant-menu-inline > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a, .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-vertical .ant-menu-inline > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a, .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-inline .ant-menu-submenu-vertical > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a, .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-vertical .ant-menu-submenu-vertical > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a {
+    color: rgb(0, 0, 0) !important;
+}
   .popupSubMenuInline .ant-menu-item-selected {
     background-color: ${palette('hover', 0)} !important;
   }
@@ -66,13 +69,13 @@ export default createGlobalStyle`
    {
     background: ${palette('secondary', 10)} !important;
      .nav-text {
-      color: ${palette('text', 6)} !important; 
+      color:#FFFFFF !important; 
     }
   }
   .ant-menu-item-active {
     background: ${palette('secondary', 10)} !important;
     .nav-text {
-      color: ${palette('text', 6)} !important;
+      color: #FFFFFF !important;
     }
   } */
   

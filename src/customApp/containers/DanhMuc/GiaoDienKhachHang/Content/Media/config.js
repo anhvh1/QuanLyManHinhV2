@@ -1,38 +1,73 @@
-import {apiGetAuth, apiPostAuth, apiDownloadAuth} from '../../../../../../api';
+import {apiGetAuth, apiPostAuth, apiDeleteAuth} from '../../../../../../api';
 import server from '../../../../../../settings';
 import {getDefaultPageSize} from '../../../../../../helpers/utility';
-
 export const apiUrl = {
-  danhsachmanhinh: server.v2Url + 'QuanLyManHinh/GetListPaging',
-  themmanhinh: server.v2Url + 'QuanLyManHinh/Insert',
-  chitietmanhinh: server.v2Url + 'QuanLyManHinh/ChiTiet',
-  suamanhinh: server.v2Url + 'QuanLyManHinh/Update',
-  xoamanhinh: server.v2Url + 'QuanLyManHinh/Delete',
+  danhsachthumuc: server.v2Url + 'ThuMuc/GetListPaging',
+  themchitieu: server.v2Url + 'ThuMuc/Insert',
+  chitietchitieu: server.v2Url + 'ThuMuc/ChiTiet',
+  suachitieu: server.v2Url + 'ThuMuc/Update',
+  sua: server.v2Url + 'QuanLyMedia/Update',
+  getallchitieu: server.v2Url + 'DanhMucChiTieu/GetAll',
+  xoachitieu: server.v2Url + 'ThuMuc/Delete',
+  xoa: server.v2Url + 'QuanLyMedia/Delete',
+  danhsachmedia:server.v2Url + 'QuanLyMedia/GetListPaging',
+  themmedia: server.v2Url + 'QuanLyMedia/Insert',
+  chitiet: server.v2Url + 'QuanLyMedia/ChiTiet',
+  // DanhSachMedia
 };
 const api = {
-  danhSachManHinh: (param) => {
-    return apiGetAuth(apiUrl.danhsachmanhinh, {
+  DanhSachMedia: (param) => {
+    return apiGetAuth(apiUrl.danhsachmedia, {
       ...param,
       PageNumber: param.PageNumber ? param.PageNumber : 1,
-      PageSize: param.PageSize ? param.PageSize : getDefaultPageSize(),
+      PageSize: 10000,
     });
   },
-  themManHinh: (param) => {
-    return apiPostAuth(apiUrl.themmanhinh, {
+  DanhSachThuMuc: (param) => {
+    return apiGetAuth(apiUrl.danhsachthumuc, {
       ...param,
     });
   },
-  chiTietManHinh: (param) => {
-    return apiGetAuth(apiUrl.chitietmanhinh, param);
-  },
-  suaManHinh: (param) => {
-    return apiPostAuth(apiUrl.suamanhinh, {
+  themMedia: (param) => {
+    return apiPostAuth(apiUrl.themmedia, {
       ...param,
     });
   },
-  xoaManHinh: (manHinhID, param) => {
-    const url = `${apiUrl.xoamanhinh}?manHinhID=${manHinhID}`;
+  ChiTietChiTieu: (param) => {
+    return apiGetAuth(apiUrl.chitietchitieu, {
+      ...param,
+    });
+  },
+  ChiTiet: (param) => {
+    return apiGetAuth(apiUrl.chitiet, {
+      ...param,
+    });
+  },
+  ThemChiTieu: (param) => {
+    return apiPostAuth(apiUrl.themchitieu, {
+      ...param,
+    });
+  },
+  SuaChiTieu: (param) => {
+    return apiPostAuth(apiUrl.suachitieu, {
+      ...param,
+    });
+  },
+  Sua: (param) => {
+    return apiPostAuth(apiUrl.sua, {
+      ...param,
+    });
+  },
+  XoaChiTieu: (thuMucID, param) => {
+    const url = `${apiUrl.xoachitieu}?thuMucID=${thuMucID}`;
     return apiPostAuth(url, param);
+  },
+  Xoa: (id, param) => {
+    const url = `${apiUrl.xoa}?id=${id}`;
+    return apiPostAuth(url, param);
+  },
+  AllChiTieu: () => {
+    return apiGetAuth(apiUrl.getallchitieu);
   },
 };
 

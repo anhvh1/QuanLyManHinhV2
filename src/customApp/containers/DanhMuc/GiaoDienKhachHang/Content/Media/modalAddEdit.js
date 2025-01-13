@@ -1,152 +1,111 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {
-  ITEM_LAYOUT2,
+import React, {Component, useEffect, useState} from 'react';
+import {InputFormatSpecific} from '../../../../../../components/uielements/exportComponent';
+import Constants, {
+  MODAL_NORMAL,
   ITEM_LAYOUT,
-  ITEM_LAYOUT_SMALL_2,
   REQUIRED,
+  ITEM_LAYOUT2,
+  ITEM_LAYOUT_SMALL,
 } from '../../../../../../settings/constants';
-import {Form, Space, DatePicker, Select} from 'antd';
+import {Row, Col} from 'antd';
 import {
   Button,
   Modal,
-  InputFormatSpecific,
   Input,
-  Radio,
+  Textarea,
 } from '../../../../../../components/uielements/exportComponent';
-import {BorderOutlined, CheckSquareOutlined} from '@ant-design/icons';
-import DatePickerFormat from '../../../../../../components/uielements/datePickerFormat';
-import {checkInputNumber} from '../../../../../../helpers/utility';
-import TextArea from 'antd/lib/input/TextArea';
-import moment from 'moment';
-import {
-  _debounce,
-  getInfoFromToken,
-  getLocalKey,
-} from '../../../../../../helpers/utility';
+import Checkbox from '../../../../../../components/uielements/checkbox';
+
+import TreeSelect from '../../../../../../components/uielements/treeSelect';
+import Select, {Option} from '../../../../../../components/uielements/select';
+import {_debounce,getInfoFromToken,getLocalKey} from '../../../../../../helpers/utility';
 import api from './config';
-import dayjs from 'dayjs';
-const {Item, useForm} = Form;
+import layout, {StyledModalCoQuan} from './styled';
+import {customizeItemValidator as Item} from '../../../../../../components/uielements/itemValidator';
+import {
+  customizeFormValidator as Form,
+  useForm,
+} from '../../../../../../components/uielements/formValidator';
 
-export default (props) => {
+const ModalEdit = ({
+  visible,
+  onCancel,
+  dataModalEdit,
+  action,
+  onCreate,
+}) => {
   const [form] = useForm();
-  // const [isFormSuccess, setIsFormSuccess] = useState(true);
-  const {dataEdit, loading, visible, action} = props;
-  const getCoQuanID = () => {
-    if (dataEdit && dataEdit.NhomManHinhs && dataEdit.NhomManHinhs.length > 0) {
-      // Assuming you want the CoQuanID from the first item in the array
-      const firstNhomManHinh = dataEdit.NhomManHinhs[0];
-      const CoQuanID = firstNhomManHinh.CoQuanID;
-      return CoQuanID;
+  useEffect(() => {
+    if (dataModalEdit) {
+      form.setFieldsValue({
+        ...dataModalEdit,
+        CoQuanID: ListChucNang, // Set giá trị CoQuanID từ ListChucNang vào form
+      });
     }
-    return null; // handle case where dataEdit or NhomManHinhs is undefined or empty
-  };
-
-  // Example usage:
+  }, [dataModalEdit]);
   const access_token = getLocalKey('access_token');
   const dataUnzip = getInfoFromToken(access_token);
   const ListChucNang = dataUnzip?.NguoiDung?.CoQuanID;
-  const coQuanID = getCoQuanID();
-  useEffect(() => {
-    if (dataEdit && dataEdit.ManHinhID) {
-      const newNgayCongNhan = dayjs(dataEdit.NgayCongNhan).format('DD/MM/YYYY');
-      form &&
-        form.setFieldsValue({
-          ...dataEdit,
-          NgayCongNhan:
-            dataEdit && dataEdit.NgayCongNhan
-              ? dayjs(newNgayCongNhan, 'DD/MM/YYYY')
-              : '',
-        });
-    }
-  }, []);
-  useEffect(() => {
-    if (dataEdit && dataEdit.NhomManHinhs && dataEdit.NhomManHinhs.length > 0) {
-      const coQuanID = dataEdit.NhomManHinhs[0].CoQuanID; // Assuming you want the CoQuanID from the first item
-      form.setFieldsValue({CoQuanID: coQuanID});
-    }
-  }, [dataEdit]);
   const onOk = async (e) => {
-    e.preventDefault();
-    const value = await form.validateFields();
-
-    // Add CoQuanID to the form values if action is 'add'
-    if (action === 'add') {
-      value.CoQuanID = ListChucNang;
+  e.preventDefault();
+  const value = await form.validateFields();
+  
+  // Xóa các trường có giá trị rỗng để tránh gửi dữ liệu không cần thiết
+  for (const key in value) {
+    if (!value[key]) {
+      delete value[key];
     }
+  }
 
-    props.onCreate({
-      ...value,
-    });
-  };
+  // Xác định hành động là 'sửa' hoặc 'thêm' và thực hiện điều chỉnh dữ liệu phù hợp
+  if (action === 'edit') {
+    if (dataModalEdit.ThuMucID) {
+      value.ThuMucID = dataModalEdit.ThuMucID;
+    }
+  } else if (action === 'add') {
+    if (dataModalEdit.ThuMucChaID) {
+      value.ThuMucChaID = dataModalEdit.ThuMucChaID;
+    }
+  }
+  onCreate(value);
+};
 
   return (
-    <Modal
-      title={`${action === 'edit' ? 'Sửa' : 'Thêm mới'} màn hình`}
-      width={450}
-      visible={visible}
-      onCancel={props.onCancel}
-      footer={[
-        <Button key="back" onClick={props.onCancel}>
-          Hủy
-        </Button>,
-        <Button
-          key="submit"
-          htmlType="submit"
-          type="primary"
-          form="formDiSanTuLieu"
-          loading={loading}
-          onClick={onOk}
-          // disabled={isFormSuccess}
-        >
-          Lưu
-        </Button>,
-      ]}
-    >
-      <Form form={form} name={'formDiSanTuLieu'}>
-        {action !== 'add' ? (
-          <Item name="ManHinhID" hidden {...REQUIRED}></Item>
-        ) : null}
-        {action !== 'add' ? (
-          <Item name="CoQuanID" hidden {...REQUIRED}></Item>
-        ) : null}
-
-        <Item
-          label="Tên màn hình"
-          name={'TenManHinh'}
-          {...ITEM_LAYOUT}
-          rules={[REQUIRED]}
-        >
-          <Input />
-        </Item>
-
-        <Item
-          label="HardwareKey"
-          name={'HardwareKey'}
-          {...ITEM_LAYOUT}
-          rules={[REQUIRED]}
-        >
-          <Input />
-        </Item>
-        <Item
-          label="Địa chỉ mac "
-          name={'DiaChiMac'}
-          {...ITEM_LAYOUT}
-          rules={[REQUIRED]}
-        >
-          <Input></Input>
-        </Item>
-        <Item
-          label="Trạng thái"
-          name={'TrangThai'}
-          {...REQUIRED}
-          {...ITEM_LAYOUT}
-        >
-          <Select allowClear placeholder={'Chọn trạng thái'}>
-            <Option value={true}>Hoạt động</Option>
-            <Option value={false}>Không hoạt động</Option>
-          </Select>
-        </Item>
-      </Form>
-    </Modal>
+    <>
+      <Modal
+        open={visible}
+        title={action === 'add' ? 'Thêm thư mục' : 'Sửa thư mục'}
+        onCancel={onCancel}
+        width="700px"
+        footer={[
+          <Button key="back" onClick={onCancel}>
+            Hủy
+          </Button>,
+          <Button
+            key="submit"
+            type="primary"
+            htmlType="submit"
+            onClick={onOk}
+            form="FormDMTieuChi"
+          >
+            Lưu
+          </Button>,
+        ]}
+      >
+        <Form form={form} name="FormDMTieuChi">
+        {action === 'add' ?<Item name={'CoQuanID'} hidden></Item>: null}
+          <Item
+            label="Tên thư mục"
+            name={'TenThuMuc'}
+            rules={[REQUIRED]}
+            {...ITEM_LAYOUT_SMALL}
+          >
+            <Input />
+          </Item>
+        </Form>
+      </Modal>
+    </>
   );
 };
+
+export default React.memo(ModalEdit);

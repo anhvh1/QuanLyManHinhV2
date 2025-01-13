@@ -125,6 +125,15 @@ const AntSelect = (ComponentName) => styled(ComponentName)`
     pointer-events: none;
     transition: opacity 0.3s ease;
   }
+  .ant-select-clear {
+    color: rgb(197, 194, 194); /* Đổi màu của biểu tượng */
+    cursor: pointer; /* Tùy chỉnh kiểu con trỏ */
+    background: transparent;
+  }
+
+  .ant-select-clear:hover {
+    color: rgb(197, 194, 194); /* Màu sắc khi hover */
+  }
 `;
 
 const AntSelectOption = (ComponentName) => styled(ComponentName)`

@@ -23,6 +23,7 @@ theme.palette = {
     '#FF6F00', //19 : orange button
     '#F2F6FC', //20 : background layout
     '#DADCE0', //20 : hover sidebar
+    '#3A59E526', //22 : table color
   ],
   secondary: [
     '#2d3446', // 0: DarkBlue

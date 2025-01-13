@@ -1,10 +1,10 @@
-import styled from 'styled-components';
-import {palette} from 'styled-theme';
+import styled from "styled-components";
+import { palette } from "styled-theme";
 const LayoutContentWrapper = styled.div`
-  // padding: ${(props) => (props?.isIframe ? '0' : '0 10px ')};
-  display: flex;
+  // padding: ${(props) => (props?.isIframe ? "0" : "0 10px ")};
+  display: ${(props) => (props?.display ? "flex" : "block ")}
   flex-flow: row wrap;
-  /* background: ${palette('primary', 16)}; */
+  /* background: ${palette("primary", 16)}; */
 
   /* overflow: hidden; */
   // commet to changed layout
@@ -16,6 +16,7 @@ const LayoutContentWrapper = styled.div`
   @media (max-width: 580px) {
     padding: 15px;
   }
+  
 `;
 
-export {LayoutContentWrapper};
+export { LayoutContentWrapper };

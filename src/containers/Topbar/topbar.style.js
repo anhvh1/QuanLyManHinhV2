@@ -35,7 +35,7 @@ const TopbarWrapper = styled.div`
     border-bottom: 1px solid #ffffff33;
     // padding: 30px 0px;
     /* padding: 0 0; */
-    // z-index: 1000;
+     z-index: 1000;
     ${transition()};
     position: fixed;
     width: 100%;
