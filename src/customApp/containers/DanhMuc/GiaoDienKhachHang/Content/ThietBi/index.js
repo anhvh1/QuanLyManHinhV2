@@ -178,8 +178,8 @@ const QuanLyManHinh = (props) => {
                       >
                         <h2>Digital Standee</h2>
                         <Tooltip title={item.NhomManHinhs?.[0]?.TenNhom}>
-                          <div >
-                          {/* onClick={showModalAddThietBi} */}
+                          <div>
+                            {/* onClick={showModalAddThietBi} */}
                             <NoteIcon Note={item.NhomManHinhs?.[0]?.Mota} />
                           </div>
                         </Tooltip>
@@ -191,9 +191,18 @@ const QuanLyManHinh = (props) => {
                         }}
                       >
                         <h3 style={{ color: "red" }}>Tạm dừng</h3>
-                        <h3>
+                        <h3
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                          }}
+                        >
                           166, Xuân Thủy, Cầu Giấy, Hà Nội{" "}
-                          <PositioningIcon></PositioningIcon>
+                          <PositioningIcon
+                            style={{
+                              marginLeft: "5px",
+                            }}
+                          ></PositioningIcon>
                         </h3>
                       </div>
                     </div>

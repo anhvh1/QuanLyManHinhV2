@@ -12,7 +12,7 @@ const DataTable = styled(Table)`
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    color: #C5C2C2;
+    color: #c5c2c2;
     font-size: 14px;
     line-height: 1.5714285714285714;
     list-style: none;
@@ -22,15 +22,22 @@ const DataTable = styled(Table)`
     background: transparent;
     border-radius: 8px 8px 0 0;
   }
-    :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper .ant-table-thead >tr>th, :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper .ant-table-thead >tr>td {
+  :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper
+    .ant-table-thead
+    > tr
+    > th,
+  :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper
+    .ant-table-thead
+    > tr
+    > td {
     position: relative;
-    color: #C5C2C2;
+    color: #c5c2c2;
     font-weight: 600;
     text-align: start;
     background: transparent;
     border-bottom: 1px solid #f0f0f0;
     transition: background 0.2s ease;
-}
+  }
   :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper table {
     width: 100%;
     text-align: start;
@@ -64,6 +71,7 @@ const DataTable = styled(Table)`
   }
   .ant-table-pagination.ant-pagination {
     margin: 15px 0 !important;
+    height: 150px;
   }
 
   .ant-table-body {

@@ -383,7 +383,7 @@ const UserManagement = (props) => {
               notFoundContent={'Không có dữ liệu'}
               treeNodeFilterProp={'title'}
             />
-            <Search
+            <InputSearch
               placeholder={
                 'Nhập tên cán bộ, người dùng hoặc cơ quan cần tìm kiếm'
               }
@@ -391,7 +391,7 @@ const UserManagement = (props) => {
               style={{width: 350}}
               defaultValue={filterData.Keyword}
               allowClear
-            ></Search>
+            ></InputSearch>
           </BoxFilter>
           <BoxTable
             columns={columns}
