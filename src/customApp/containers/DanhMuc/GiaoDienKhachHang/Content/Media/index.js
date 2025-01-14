@@ -142,6 +142,13 @@ const ContentMedia = (props) => {
       content: "Bạn có muốn xóa thư mục này không?",
       cancelText: "Không",
       okText: "Có",
+      okButtonProps: {
+        style: {
+          backgroundColor: "#ff4d4f",
+          borderColor: "#ff4d4f",
+          color: "white",
+        },
+      },
       onOk: () => {
         api
           .XoaChiTieu(ThuMucID, {})

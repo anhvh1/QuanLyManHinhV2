@@ -8,6 +8,7 @@
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@microsoft/signalr": "^8.0.7",
     "@reduxjs/toolkit": "latest",
     "animate.css": "^4.1.1",
     "antd": "5.14.0",

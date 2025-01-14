@@ -35,6 +35,7 @@ import PositioningIcon from "../../../../../../components/utility/PositioningIco
 import NoteIcon from "../../../../../../components/utility/NoteIcon";
 import CameraIcon from "../../../../../../components/utility/CameraIcon";
 import SettingIcon from "../../../../../../components/utility/SettingIcon";
+import SlideViewer from "./SlideViewer";
 const QuanLyManHinh = (props) => {
   const { filterData, setFilterData } = props;
   // const [filterData, setFilterData] = useState(
@@ -97,11 +98,12 @@ const QuanLyManHinh = (props) => {
     setCurrentPage(page);
   };
 
-  const paginatedData = DanhSachManHinh.slice(
+  const [dataResult, setDataResult] = useState(null);
+  console.log("dữ liệu cần hiển thị", dataResult);
+  const paginatedData = dataResult?.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
-
   return (
     <LayoutWrapper>
       <PageWrap>
@@ -130,7 +132,7 @@ const QuanLyManHinh = (props) => {
             style={{ width: "200px" }}
             // defaultValue={filterData.LoaiSuKien}
             placeholder={"Nhóm thiết bị"}
-            onChange={(value) => onFilter(value, "LoaiSuKien")}
+            onChange={(value) => onFilter(value, "Status")}
           >
             <Option value={true}>Đang sử dụng</Option>
             <Option value={false}>Không sử dụng</Option>
@@ -146,7 +148,7 @@ const QuanLyManHinh = (props) => {
       </Box>
       <ContentTable>
         <div className="table-content">
-          {paginatedData.length > 0 ? (
+          {paginatedData?.length > 0 ? (
             <div
               className={`table-columns ${
                 paginatedData.length === 2 ? "two-items" : ""
@@ -156,9 +158,15 @@ const QuanLyManHinh = (props) => {
                 <div className="column" key={index}>
                   <div className="table-columns-left">
                     <div className="table-columns-left-top">
-                      {" "}
-                      15:00 12/10/2024
+                      {new Date(item.onlineLanCuoi).toLocaleString("vi-VN", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      })}
                     </div>
+
                     <div className="table-columns-left-img">
                       {" "}
                       <div className="table-columns-left-no"></div>
@@ -176,11 +184,11 @@ const QuanLyManHinh = (props) => {
                           justifyContent: "space-between",
                         }}
                       >
-                        <h2>Digital Standee</h2>
-                        <Tooltip title={item.NhomManHinhs?.[0]?.TenNhom}>
+                        <h2>{item.tenManHinh}</h2>
+                        <Tooltip title={item.nhomManHinhs?.[0]?.TenNhom}>
                           <div>
                             {/* onClick={showModalAddThietBi} */}
-                            <NoteIcon Note={item.NhomManHinhs?.[0]?.Mota} />
+                            <NoteIcon Note={item.nhomManHinhs?.[0]?.Mota} />
                           </div>
                         </Tooltip>
                       </div>
@@ -190,56 +198,46 @@ const QuanLyManHinh = (props) => {
                           justifyContent: "space-between",
                         }}
                       >
-                        <h3 style={{ color: "red" }}>Tạm dừng</h3>
-                        <h3
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          166, Xuân Thủy, Cầu Giấy, Hà Nội{" "}
-                          <PositioningIcon
-                            style={{
-                              marginLeft: "5px",
-                            }}
-                          ></PositioningIcon>
+                        <h3 style={{ color: item.trangThai ? "green" : "red" }}>
+                          {item.trangThai ? "Hoạt động" : "Tạm ngừng"}
                         </h3>
+
+                        {item.diaChi && item.diaChi.length > 0 && (
+                          <h3>
+                            {item.diaChi}
+                            <PositioningIcon />
+                          </h3>
+                        )}
                       </div>
                     </div>
                     <div className="table-columns-bottom">
                       <div className="table-columns-content">
                         <strong>Hardwarekey:</strong>
-                        <span>{item.HardwareKey || "-"}</span>
+                        <span>{item.hardwareKey || "-"}</span>
                       </div>
                       <div className="table-columns-content">
                         <strong>Địa chỉ mac: </strong>{" "}
-                        <span>{item.DiaChiMac || "-"}</span>
+                        <span>{item.diaChiMac || "-"}</span>
+                      </div>
+
+                      <div className="table-columns-content">
+                        <strong>Công suất:</strong> <span>{item.congSuat}</span>
                       </div>
                       <div className="table-columns-content">
-                        <strong>Trạng thái hoạt động:</strong>{" "}
-                        <span>
-                          {item.TrangThai
-                            ? "Đang hoạt động"
-                            : "Ngừng hoạt động"}
-                        </span>
+                        <strong>Hiệu điện thế:</strong>{" "}
+                        <span>{item.hieuDienThe}</span>
                       </div>
                       <div className="table-columns-content">
-                        <strong>Công suất:</strong> <span>-</span>
+                        <strong>Dòng điện:</strong> <span>{item.dongDien}</span>
                       </div>
                       <div className="table-columns-content">
-                        <strong>Hiệu điện thế:</strong> <span>-</span>
+                        <strong>Nhiệt độ:</strong> <span>{item.nhietDo}</span>
                       </div>
                       <div className="table-columns-content">
-                        <strong>Dòng điện:</strong> <span>-</span>
+                        <strong>Ram:</strong> <span>{item.ram}</span>
                       </div>
                       <div className="table-columns-content">
-                        <strong>Nhiệt độ:</strong> <span>-</span>
-                      </div>
-                      <div className="table-columns-content">
-                        <strong>Ram:</strong> <span>-</span>
-                      </div>
-                      <div className="table-columns-content">
-                        <strong>SSD:</strong> <span>-</span>
+                        <strong>SSD:</strong> <span>{item.ssd}</span>
                       </div>
                     </div>
                   </div>
@@ -250,12 +248,17 @@ const QuanLyManHinh = (props) => {
             <div>Không có dữ liệu</div>
           )}
         </div>
+        <SlideViewer
+          dataResult={dataResult}
+          setDataResult={setDataResult}
+          filterData={filterData}
+        ></SlideViewer>
 
         <Pagination
           className="custom-pagination"
           current={currentPage}
           pageSize={pageSize}
-          total={DanhSachManHinh.length}
+          total={dataResult?.length}
           onChange={handlePageChange}
           showSizeChanger={false}
         />

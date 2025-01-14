@@ -118,7 +118,7 @@ export const ContentTable = styled.div`
   .table-columns-left-bottom {
     padding: 15px;
     height: 70px;
-    text-align: center;
+    text-align: -webkit-center;
   }
   .table-columns-left-no {
     background: #ffffff;
