@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const Footer = ({ css }) => {
   const { spaceSection } = css;
   const classWrapList = "flex flex-col gap-2 pt-4 md:pt-8";
-  const classWrapItem = "text-sm lg:text-base xl:text-lg";
+  const classWrapItem = "text-sm lg:text-base xl:text-lg mb-0";
   const classWrapTitle =
     "text-sm md:text-base lg:text-lg xl:text-xl font-semibold";
   const hoverLink = "hover:text-sky-500 transition-all";

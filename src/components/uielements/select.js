@@ -1,6 +1,8 @@
 import React from 'react';
 import {Select} from 'antd';
 import {getScrollParent} from '../../helpers/utility';
+import {AntSelect} from './styles/select.style';
+import styled from 'styled-components';
 
 class CustomerSelect extends React.PureComponent {
   render() {
@@ -34,6 +36,6 @@ class CustomerSelect extends React.PureComponent {
 
 const Option = Select.Option;
 const OptGroup = Select.OptGroup;
-
-export default CustomerSelect;
+const WrapperStyle = AntSelect(CustomerSelect);
+export default WrapperStyle;
 export {Option, OptGroup};

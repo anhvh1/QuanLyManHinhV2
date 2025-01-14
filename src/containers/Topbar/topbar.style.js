@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import {palette} from 'styled-theme';
-import {transition, borderRadius, boxShadow} from '../../settings/style-util';
-import WithDirection from '../../settings/withDirection';
+import styled from "styled-components";
+import { palette } from "styled-theme";
+import { transition, borderRadius, boxShadow } from "../../settings/style-util";
+import WithDirection from "../../settings/withDirection";
 
 const TopbarWrapper = styled.div`
   .popupSubMenuInline {
@@ -10,7 +10,7 @@ const TopbarWrapper = styled.div`
   }
 
   .ant-menu-submenu-popup {
-    background: red;
+    //background: red;
   }
   .ant-menu-submenu-title {
     display: flex;
@@ -27,16 +27,15 @@ const TopbarWrapper = styled.div`
   .ant-menu {
   }
   .isomorphicTopbar {
-    padding: 0 10px;
-    height: 50px;
+    padding: 0 50px;
+    height: 90px;
     display: flex;
     justify-content: space-between;
-    background-color: ${palette('primary', 17)};
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    border: 1px solid #bcbcbc;
-    /* padding: 0 31px 0 15px; */
+    // background-color: #192168;
+    border-bottom: 1px solid #ffffff33;
+    // padding: 30px 0px;
     /* padding: 0 0; */
-    z-index: 1000;
+    // z-index: 1000;
     ${transition()};
     position: fixed;
     width: 100%;
@@ -45,11 +44,11 @@ const TopbarWrapper = styled.div`
       top: 0;
       z-index: -1;
       position: absolute;
-      content: '';
+      content: "";
       width: 54%;
       height: 100%;
       right: 0;
-      background: #0f6cbd !important;
+      //background: #0f6cbd !important;
       /* -webkit-clip-path: polygon(0 0%,95% 0%,100% 100%,0% 100%);
         clip-path: polygon(2% 0, 100% 0, 100% 100%, 0% 100%); */
     }
@@ -76,7 +75,7 @@ const TopbarWrapper = styled.div`
       align-items: center;
       font-size: 15px;
       font-weight: bold;
-      /* color: ${palette('text', 5)}; */
+      /* color: ${palette("text", 5)}; */
       text-transform: uppercase;
       color: #fff;
       position: relative;
@@ -84,11 +83,11 @@ const TopbarWrapper = styled.div`
         top: 0;
         z-index: -1;
         position: absolute;
-        content: '';
+        content: "";
         width: 110%;
         height: 100%;
         right: 0;
-        background: #0f6cbd !important;
+        //background: #0f6cbd !important;
         /* -webkit-clip-path: polygon(0 0%,95% 0%,100% 100%,0% 100%); */
         clip-path: polygon(6% 0, 100% 0, 100% 100%, 0% 100%);
       }
@@ -101,7 +100,7 @@ const TopbarWrapper = styled.div`
         width: 66%;
         height: 100%;
         right: 0;
-        background: #EAF1FB !important;
+        //background: #EAF1FB !important;
         -webkit-clip-path: polygon(0 0%,95% 0%,100% 100%,0% 100%);
         clip-path: polygon(2% 0, 100% 0, 100% 100%, 0% 100%);
       }  */
@@ -109,11 +108,11 @@ const TopbarWrapper = styled.div`
         top: 0;
         z-index: -1;
         position: absolute;
-        content: '';
+        content: "";
         left: -15%;
         width: 10%;
         height: 100%;
-        background: #0f6cbd !important;
+        //background: #0f6cbd !important;
         clip-path: polygon(68% 0, 100% 0, 35% 100%, 0% 100%);
       }
       @media only screen and (max-width: 1200px) {
@@ -128,7 +127,7 @@ const TopbarWrapper = styled.div`
     }
 
     .isoIconWrapper i {
-      color: ${palette('primary', 16)} !important;
+      color: ${palette("primary", 16)} !important;
     }
 
     .isoLeft {
@@ -140,11 +139,16 @@ const TopbarWrapper = styled.div`
       /* padding: 0 10px; */
 
       .triggerHeader {
-        /* color: ${palette('text', 5)}; */
-        color: #000;
+        /* color: ${palette("text", 5)}; */
+        color: #013cc6;
         display: inline-block;
-        font-size: 16px;
-
+        font-family: Poppins;
+        font-size: 35px;
+        font-weight: 500;
+        line-height: 48px;
+        text-align: left;
+        text-underline-position: from-font;
+        text-decoration-skip-ink: none;
         @media only screen and (max-width: 500px) {
           display: none;
         }
@@ -158,11 +162,11 @@ const TopbarWrapper = styled.div`
 
       .triggerBtn {
         width: ${(props) =>
-          props?.SidebarWidth ? `${props.SidebarWidth}px` : '24px'};
+          props?.SidebarWidth ? `${props.SidebarWidth}px` : "24px"};
         height: 100%;
         align-items: center;
         justify-content: center;
-        background-color: ${palette('primary', 16)};
+        //background-color: ${palette("primary", 16)};
         color: #000;
         border: 0;
         outline: 0;
@@ -176,8 +180,8 @@ const TopbarWrapper = styled.div`
         margin-right: 5px; */
 
         &:before {
-          content: '\f20e';
-          font-family: 'Ionicons';
+          content: "\f20e";
+          font-family: "Ionicons";
           font-size: 26px;
           color: inherit;
           line-height: 0;
@@ -193,13 +197,19 @@ const TopbarWrapper = styled.div`
     .isoRight {
       display: flex;
       align-items: center;
+      background: #ffffff0d;
+      border-radius: 10px;
+      height: 50px;
+      width: 200px;
+      margin-top: 18px;
+      padding-left: 10px;
       .question-circle {
         color: #fff;
       }
       li {
-        margin-left: ${(props) => (props['data-rtl'] === 'rtl' ? '35px' : '0')};
+        margin-left: ${(props) => (props["data-rtl"] === "rtl" ? "35px" : "0")};
         margin-right: ${(props) =>
-          props['data-rtl'] === 'rtl' ? '0' : '35px'};
+          props["data-rtl"] === "rtl" ? "0" : "35px"};
         cursor: pointer;
         line-height: normal;
         position: relative;
@@ -207,9 +217,9 @@ const TopbarWrapper = styled.div`
 
         @media only screen and (max-width: 360px) {
           margin-left: ${(props) =>
-            props['data-rtl'] === 'rtl' ? '25px' : '0'};
+            props["data-rtl"] === "rtl" ? "25px" : "0"};
           margin-right: ${(props) =>
-            props['data-rtl'] === 'rtl' ? '0' : '25px'};
+            props["data-rtl"] === "rtl" ? "0" : "25px"};
         }
 
         &:last-child {
@@ -218,7 +228,7 @@ const TopbarWrapper = styled.div`
 
         i {
           font-size: 24px;
-          color: ${palette('text', 0)};
+          color: ${palette("text", 0)};
           line-height: 1;
         }
 
@@ -229,7 +239,7 @@ const TopbarWrapper = styled.div`
           span {
             font-size: 12px;
             color: #fff;
-            background-color: ${palette('secondary', 1)};
+            //background-color: ${palette("secondary", 1)};
             width: 20px;
             height: 20px;
             display: -webkit-inline-flex;
@@ -242,17 +252,17 @@ const TopbarWrapper = styled.div`
             position: absolute;
             top: -8px;
             left: ${(props) =>
-              props['data-rtl'] === 'rtl' ? 'inherit' : '10px'};
+              props["data-rtl"] === "rtl" ? "inherit" : "10px"};
             right: ${(props) =>
-              props['data-rtl'] === 'rtl' ? '10px' : 'inherit'};
-            ${borderRadius('50%')};
+              props["data-rtl"] === "rtl" ? "10px" : "inherit"};
+            ${borderRadius("50%")};
           }
         }
 
         &.isoNotify {
           .isoIconWrapper {
             span {
-              background-color: ${palette('primary', 2)};
+              //background-color: ${palette("primary", 2)};
             }
           }
         }
@@ -261,12 +271,13 @@ const TopbarWrapper = styled.div`
           .isoImgWrapper {
             width: 40px;
             height: 40px;
+            margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            background-color: ${palette('grayscale', 9)};
-            ${borderRadius('50%')};
+            //background-color: ${palette("grayscale", 9)};
+            ${borderRadius("50%")};
 
             img {
               height: 100%;
@@ -277,12 +288,12 @@ const TopbarWrapper = styled.div`
               width: 10px;
               height: 10px;
               display: block;
-              background-color: ${palette('color', 3)};
+              //background-color: ${palette("color", 3)};
               position: absolute;
               bottom: 0;
               right: 3px;
               border: 1px solid #ffffff;
-              ${borderRadius('50%')};
+              ${borderRadius("50%")};
             }
           }
         }
@@ -290,7 +301,7 @@ const TopbarWrapper = styled.div`
     }
 
     .isoDashboardMenu {
-      background: transparent;
+      //background: transparent;
       border-inline-end: none !important;
       border-bottom: none;
       margin-right: auto;
@@ -330,7 +341,7 @@ const TopbarWrapper = styled.div`
       }
 
       .ant-menu-item-selected {
-        background-color: ${palette('primary', 15)} !important;
+        //background-color: ${palette("primary", 15)} !important;
         .anticon {
           color: #fff;
         }
@@ -361,11 +372,11 @@ const TopbarWrapper = styled.div`
       }
 
       .ant-menu-submenu-selected {
-        background-color: ${palette('primary', 15)} !important;
+        //background-color: ${palette("primary", 15)} !important;
       }
 
       .ant-menu-item-selected {
-        background-color: ${palette('primary', 15)} !important;
+        //background-color: ${palette("primary", 15)} !important;
         border-radius: 6px;
       }
     }
@@ -381,27 +392,27 @@ const TopbarWrapper = styled.div`
           position: absolute;
           top: 0;
           right: 0;
-          background-color: #ffffff;
+          //background-color: #ffffff;
           width: 220px;
           min-width: 160px;
           flex-shrink: 0;
-          ${borderRadius('5px')};
-          ${boxShadow('0 2px 10px rgba(0,0,0,0.2)')};
+          ${borderRadius("5px")};
+          ${boxShadow("0 2px 10px rgba(0,0,0,0.2)")};
           ${transition()};
 
           .isoDropdownLink {
             font-size: 13px;
-            color: ${palette('text', 1)};
+            color: ${palette("text", 1)};
             line-height: 1.1;
             padding: 7px 15px;
-            background-color: transparent;
+            //background-color: transparent;
             text-decoration: none;
             display: flex;
             justify-content: flex-start;
             ${transition()};
 
             &:hover {
-              background-color: ${palette('secondary', 6)};
+              //background-color: ${palette("secondary", 6)};
             }
           }
         }
@@ -419,12 +430,12 @@ const TopbarWrapper = styled.div`
           position: absolute;
           top: 0;
           right: 0;
-          background-color: #ffffff;
+          //background-color: #ffffff;
           width: 360px;
           min-width: 160px;
           flex-shrink: 0;
-          ${borderRadius('5px')};
-          ${boxShadow('0 2px 10px rgba(0,0,0,0.2)')};
+          ${borderRadius("5px")};
+          ${boxShadow("0 2px 10px rgba(0,0,0,0.2)")};
           ${transition()};
 
           @media only screen and (max-width: 767px) {
@@ -443,7 +454,7 @@ const TopbarWrapper = styled.div`
             h3 {
               font-size: 14px;
               font-weight: 500;
-              color: ${palette('text', 0)};
+              color: ${palette("text", 0)};
               text-align: center;
               text-transform: uppercase;
               margin: 0;
@@ -457,7 +468,7 @@ const TopbarWrapper = styled.div`
             display: flex;
             flex-direction: column;
             margin-bottom: 10px;
-            background-color: ${palette('grayscale', 6)};
+            //background-color: ${palette("grayscale", 6)};
 
             .isoDropdownListItem {
               padding: 15px 30px;
@@ -470,7 +481,7 @@ const TopbarWrapper = styled.div`
               ${transition()};
 
               &:hover {
-                background-color: ${palette('grayscale', 3)};
+                //background-color: ${palette("grayscale", 3)};
               }
 
               .isoListHead {
@@ -483,14 +494,14 @@ const TopbarWrapper = styled.div`
               h5 {
                 font-size: 13px;
                 font-weight: 500;
-                color: ${palette('text', 0)};
+                color: ${palette("text", 0)};
                 margin-top: 0;
               }
 
               p {
                 font-size: 12px;
                 font-weight: 400;
-                color: ${palette('text', 2)};
+                color: ${palette("text", 2)};
                 white-space: nowrap;
                 text-overflow: ellipsis;
                 overflow: hidden;
@@ -498,7 +509,7 @@ const TopbarWrapper = styled.div`
 
               .isoDate {
                 font-size: 11px;
-                color: ${palette('grayscale', 1)};
+                color: ${palette("grayscale", 1)};
                 flex-shrink: 0;
               }
             }
@@ -507,7 +518,7 @@ const TopbarWrapper = styled.div`
           .isoViewAllBtn {
             font-size: 13px;
             font-weight: 500;
-            color: ${palette('text', 2)};
+            color: ${palette("text", 2)};
             padding: 10px 15px 20px;
             display: flex;
             text-decoration: none;
@@ -517,7 +528,7 @@ const TopbarWrapper = styled.div`
             ${transition()};
 
             &:hover {
-              color: ${palette('primary', 0)};
+              color: ${palette("primary", 0)};
             }
           }
 
@@ -530,19 +541,19 @@ const TopbarWrapper = styled.div`
             a {
               font-size: 13px;
               font-weight: 500;
-              color: ${palette('text', 0)};
+              color: ${palette("text", 0)};
               text-decoration: none;
               padding: 10px 20px;
               line-height: 1;
-              border: 1px solid ${palette('border', 1)};
+              border: 1px solid ${palette("border", 1)};
               display: flex;
               align-items: center;
               justify-content: center;
               ${transition()};
 
               &:hover {
-                background-color: ${palette('primary', 0)};
-                border-color: ${palette('primary', 0)};
+                //background-color: ${palette("primary", 0)};
+                border-color: ${palette("primary", 0)};
                 color: #ffffff;
               }
             }
@@ -550,7 +561,7 @@ const TopbarWrapper = styled.div`
             h3 {
               font-size: 14px;
               font-weight: 500;
-              color: ${palette('text', 0)};
+              color: ${palette("text", 0)};
               line-height: 1.3;
             }
           }
@@ -571,8 +582,8 @@ const TopbarWrapper = styled.div`
                 align-items: center;
                 justify-content: center;
                 flex-shrink: 0;
-                background-color: ${palette('grayscale', 9)};
-                ${borderRadius('50%')};
+                //background-color: ${palette("grayscale", 9)};
+                ${borderRadius("50%")};
 
                 img {
                   width: 100%;
@@ -600,7 +611,7 @@ const TopbarWrapper = styled.div`
 
                 .isoDate {
                   font-size: 11px;
-                  color: ${palette('grayscale', 1)};
+                  color: ${palette("grayscale", 1)};
                   flex-shrink: 0;
                 }
 
@@ -664,7 +675,7 @@ const TopbarWrapper = styled.div`
             }
 
             .isoDropdownBody {
-              background-color: ${palette('grayscale', 6)};
+              //background-color: ${palette("grayscale", 6)};
             }
           }
         }

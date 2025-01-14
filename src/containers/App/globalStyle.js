@@ -1,24 +1,24 @@
-import {createGlobalStyle} from 'styled-components';
-import {palette} from 'styled-theme';
-import {transition} from '../../settings/style-util';
+import { createGlobalStyle } from "styled-components";
+import { palette } from "styled-theme";
+import { transition } from "../../settings/style-util";
 
 export default createGlobalStyle`
   .popupSubMenuInline  .ant-menu-item-active {
-      background: ${palette('primary', 21)} !important;
+      background: ${palette("primary", 21)} !important;
   }
   .nav-text {
       font-size: 14px;
-      color: ${palette('primary', 18)} !important;
+      color: ${palette("primary", 18)} !important;
       ${transition()};
   }
   .popupSubMenuInline .ant-menu-item-selected {
-    background-color: ${palette('hover', 0)} !important;
+    background-color: ${palette("hover", 0)} !important;
   }
   .ant-menu-submenu > .ant-menu {
-    background-color: ${palette('primary', 14)};
+    background-color: ${palette("primary", 14)};
     
     &:active {
-      background-color: ${palette('primary', 15)};
+      background-color: ${palette("primary", 15)};
     }
     
     .ant-menu-submenu {
@@ -64,15 +64,15 @@ export default createGlobalStyle`
   
   /* .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected
    {
-    background: ${palette('secondary', 10)} !important;
+    background: ${palette("secondary", 10)} !important;
      .nav-text {
-      color: ${palette('text', 6)} !important; 
+      color: ${palette("text", 6)} !important; 
     }
   }
   .ant-menu-item-active {
-    background: ${palette('secondary', 10)} !important;
+    background: ${palette("secondary", 10)} !important;
     .nav-text {
-      color: ${palette('text', 6)} !important;
+      color: ${palette("text", 6)} !important;
     }
   } */
   

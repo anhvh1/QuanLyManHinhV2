@@ -113,7 +113,7 @@ class TopbarUser extends Component {
             <img
               alt="user"
               src={renderUser.avatar}
-              style={{borderRadius: '50%', width: 40, height: 40}}
+              style={{borderRadius: '50%', width: 40, height: 40 ,marginTop:"14px",marginRight:"14px"}}
             />
             <span className="userActivity online" />
           </div>

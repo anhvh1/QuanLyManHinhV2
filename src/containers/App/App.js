@@ -1,79 +1,98 @@
-import React, {Component} from 'react';
-import {connect, useSelector} from 'react-redux';
-import {Layout, ConfigProvider, Button} from 'antd';
-import {IntlProvider} from 'react-intl';
-import {Debounce} from 'react-throttle';
-import WindowResizeListener from 'react-window-size-listener';
-import {ThemeProvider} from 'styled-components';
-import authAction from '../../redux/auth/actions';
-import appActions from '../../redux/app/actions';
-import Sidebar from '../Sidebar/Sidebar';
-import Notification from '../Notification/notification';
-import Topbar from '../Topbar/Topbar';
-import ThemeSwitcher from '../../containers/ThemeSwitcher';
-import AppRouter from './AppRouter';
-import {siteConfig} from '../../settings';
-import logo from './go.png';
-// import {AppLocale} from '../../dashApp';
-import themes from '../../settings/themes';
-import AppHolder from './commonStyle';
-import './global.css';
-import GlobalStyle from './globalStyle';
-import queryString from 'query-string';
-import {Link} from 'react-router-dom';
-import Wrapper from './App.styled';
-import ImgCrop from 'antd-img-crop';
-// import './antd4.css';
-
-const {Content, Footer} = Layout;
-const {logout} = authAction;
-const {toggleAll} = appActions;
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import { Layout, ConfigProvider } from "antd";
+import { IntlProvider } from "react-intl";
+import { Debounce } from "react-throttle";
+import WindowResizeListener from "react-window-size-listener";
+import { ThemeProvider } from "styled-components";
+import authAction from "../../redux/auth/actions";
+import appActions from "../../redux/app/actions";
+import Sidebar from "../Sidebar/Sidebar";
+import Notification from "../Notification/notification";
+import Topbar from "../Topbar/Topbar";
+import AppRouter from "./AppRouter";
+import { siteConfig } from "../../settings";
+import logo from "./go.png";
+import themes from "../../settings/themes";
+import AppHolder from "./commonStyle";
+import GlobalStyle from "./globalStyle";
+import Wrapper from "./App.styled";
+import { getInfoFromToken, getLocalKey } from "../../helpers/utility";
+import MoonIcon from "../../../src/components/utility/MoonIcon";
+import SunIcon from "../../../src/components/utility/SunIcon";
+const { Content, Footer } = Layout;
+const { logout } = authAction;
+const { toggleAll } = appActions;
 
 export class App extends Component {
-  stripTrailingSlash = (str) => {
-    if (str.substr(-1) === '/') {
-      return str.substr(0, str.length - 1);
-    }
-    return str;
+  constructor(props) {
+    super(props);
+
+    // Lấy giá trị BackgroundLayout từ localStorage hoặc đặt giá trị mặc định
+    const initialBackgroundLayout =
+      JSON.parse(localStorage.getItem("BackgroundLayout")) || false;
+
+    this.state = {
+      BackgroundLayout: false, // Trạng thái lưu giá trị nền
+    };
+  }
+
+  // Hàm thay đổi trạng thái BackgroundLayout
+  toggleBackgroundLayout = () => {
+    const newLayout = !this.state.BackgroundLayout;
+    this.setState({ BackgroundLayout: newLayout });
+    localStorage.setItem("BackgroundLayout", JSON.stringify(newLayout)); // Lưu giá trị mới vào localStorage
   };
 
-
   render() {
-    const {url} = this.props.match;
-    // const urlOrigin = this.stripTrailingSlash(url);
-    const {locale, selectedTheme, height, width, ListMenuActive} = this.props;
+    const { url } = this.props.match;
+    const { locale, selectedTheme, height, ListMenuActive } = this.props;
+    const { BackgroundLayout } = this.state;
+    console.log("BackgroundLayout", BackgroundLayout);
     const appHeight = window.innerHeight;
+
+    // Lấy thông tin người dùng từ token
+    const access_token = getLocalKey("access_token");
+    const dataUnzip = getInfoFromToken(access_token);
+    const IsAdmin = dataUnzip?.NguoiDung?.IsAdmin;
 
     return (
       <Wrapper>
-        <ConfigProvider
-        // locale={currentAppLocale.antd}
-        >
-          <IntlProvider
-          // locale={currentAppLocale.locale}
-          // messages={currentAppLocale.messages}
-          >
+        <ConfigProvider>
+          <IntlProvider>
             <ThemeProvider theme={themes[selectedTheme]}>
               <AppHolder>
                 <GlobalStyle />
-                <Layout style={{height: appHeight}} className={'outerLayout'}>
+                <Layout style={{ height: appHeight }} className={"outerLayout"}>
                   <Debounce time="1000" handler="onResize">
                     <WindowResizeListener
                       onResize={(windowSize) =>
                         this.props.toggleAll(
                           windowSize.windowWidth,
-                          windowSize.windowHeight,
+                          windowSize.windowHeight
                         )
                       }
                     />
                   </Debounce>
-                 <Topbar url={url} /> 
-                  <Layout
-                    style={{flexDirection: 'row', overflowX: 'hidden'}}
-                    className={'middleLayout'}
+                  <Topbar BackgroundLayout={BackgroundLayout} url={url} />
+                  {/* <button
+                    style={{
+                      position: "fixed",
+                      top:30,
+                      right: 255,
+                      border: "none",
+                      cursor: "pointer",
+                      background: BackgroundLayout ? "white" : "#101349",
+                    }}
+                    
                   >
-                   <Sidebar url={url} /> 
-                    {/* <Sidebar url={url} /> */}
+                    {BackgroundLayout ? <MoonIcon onClick={this.toggleBackgroundLayout} /> : <SunIcon onClick={this.toggleBackgroundLayout} />}
+                  </button> */}
+                  <Layout
+                    style={{ flexDirection: "row", overflowX: "hidden" }}
+                    className={"middleLayout"}
+                  >
+                    {IsAdmin ? <Sidebar url={url} /> : null}
                     <Notification url={url} />
                     <Layout
                       className="isoContentMainLayout"
@@ -84,37 +103,39 @@ export class App extends Component {
                       <Content
                         className="isomorphicContent"
                         style={{
-                          padding:  '55px 0px 35px 0',
-                          display: 'grid',
+                          padding: "100px 0px 35px 0",
+                          display: "grid",
                           gridTemplateColumns: ListMenuActive?.length
-                            ? '11% 89%'
-                            : '100%',
-                          overflow: 'auto',
+                            ? "11% 89%"
+                            : "100%",
+                          overflow: "auto",
+                          background: BackgroundLayout ? " white" : "#101349",
                         }}
                       >
-                        <div
-                          className="wrapper-content"
-                          // style={{
-                          //   width: ListMenuActive?.length ? '89%' : '100',
-                          // }}
-                        >
-                          <AppRouter style={{height: '100%'}} url={url} />
+                        <div className="wrapper-content">
+                          <AppRouter style={{ height: "100%" }} url={url} />
                         </div>
+                        {/* Nút chuyển đổi nền */}
                       </Content>
-
-                        <Footer
-                          style={{
-                            background: '#fafafa',
-                            textAlign: 'center',
-                            borderTop: '1px solid #ededed',
-                            padding: '10px 50px',
-                          }}
-                        >
-                         <img src={logo} style={{width:"50px",height:"30px"}} alt="Footer" /><span style={{marginTop:"10px",marginLeft:"10px"}}>{siteConfig.footerText}</span>
-                        </Footer>
+                      <Footer
+                        style={{
+                          textAlign: "center",
+                          borderTop: "1px solid #FFFFFF33",
+                          padding: "10px 50px",
+                          background: BackgroundLayout ? " white" : "#101349",
+                        }}
+                      >
+                        <img
+                          src={logo}
+                          style={{ width: "50px", height: "30px" }}
+                          alt="Footer"
+                        />
+                        <span style={{ marginTop: "10px", marginLeft: "10px",color:"#FFFFFF" }}>
+                          {siteConfig.footerText}
+                        </span>
+                      </Footer>
                     </Layout>
                   </Layout>
-                  {/*<ThemeSwitcher />*/}
                 </Layout>
               </AppHolder>
             </ThemeProvider>
@@ -135,5 +156,5 @@ export default connect(
     isViewIframe: state.App.isViewIframe,
     ListMenuActive: state.App.ListMenuActive,
   }),
-  {logout, toggleAll},
+  { logout, toggleAll }
 )(App);

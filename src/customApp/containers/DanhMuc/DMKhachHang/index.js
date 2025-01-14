@@ -1,5 +1,5 @@
 import {Modal, Table, Tooltip, message} from 'antd';
-import actions from '../../../redux/DanhMuc/QLThuVien/actions';
+import actions from '../../../redux/DanhMuc/DMKhachHang/actions';
 import React, {useState, useEffect} from 'react';
 import {connect, useDispatch, useSelector} from 'react-redux';
 import LayoutWrapper from '../../../../components/utility/layoutWrapper';
@@ -13,6 +13,8 @@ import {
   InputSearch,
   Select,
 } from '../../../../components/uielements/exportComponent';
+import {formDataCaller} from '../../../../api/formDataCaller';
+
 import Checkbox from '../../../../components/uielements/checkbox';
 import Switches from '../../../../components/uielements/switch';
 import {
@@ -24,14 +26,12 @@ import {
 } from '../../../../helpers/utility';
 import {useKey} from '../../../CustomHook/useKey';
 import queryString from 'query-string';
-import api from './config';
+import api, {apiUrl} from './config';
 import moment from 'moment';
 import ModalAddEdit from './modalAddEdit';
-import ModalThietLap from './modalThietLap';
-
-import {DeleteOutlined, EditOutlined, PlusOutlined,FieldTimeOutlined} from '@ant-design/icons';
+import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
 import PageWrap from '../../../../components/utility/PageWrap';
-const QLThuVien = (props) => {
+const DMKhachHang = (props) => {
   const [filterData, setFilterData] = useState(
     queryString.parse(props.location.search),
   );
@@ -42,17 +42,15 @@ const QLThuVien = (props) => {
   const [selectedRowsKey, setSelectedRowsKey] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const dispatch = useDispatch();
-  document.title = 'Quản Lý Danh Sách Phát';
+  document.title = 'Danh Mục Khách Hàng';
 
   useEffect(() => {
     changeUrlFilter(filterData);
     props.getList(filterData);
-    props.getInitData(filterData);
   }, [filterData]);
 
   useEffect(() => {
     props.getList(filterData);
-    props.getInitData(filterData);
     dispatch(actions.getInitData(filterData));
   }, []);
 
@@ -81,7 +79,7 @@ const QLThuVien = (props) => {
     setVisibleModalAddEdit(true);
   };
 
-  const deleteModalAddEdit = (DanhSachPhatID) => {
+  const deleteModalAddEdit = (CoQuanID) => {
     Modal.confirm({
       title: 'Xóa Dữ Liệu',
       content: 'Bạn có muốn xóa chức vụ này không?',
@@ -90,21 +88,28 @@ const QLThuVien = (props) => {
       onOk: () => {
         setConfirmLoading(true);
         api
-        .xoaQLThuVien(DanhSachPhatID, {})
+        .xoaCoQuan(CoQuanID)
           .then((res) => {
             if (res.data.Status > 0) {
               setConfirmLoading(false);
-              props.getList(filterData);
+              props.getList({
+                ...filterData,
+                PageNumber:
+                  Math.ceil((TotalRow - 1) / filterData.PageSize) <
+                  filterData.PageNumber
+                    ? Math.ceil((TotalRow - 1) / filterData.PageSize)
+                    : filterData.PageNumber,
+              });
               message.destroy();
               message.success(res.data.Message);
-              // setFilterData({
-              //   ...filterData,
-              //   PageNumber:
-              //     Math.ceil((TotalRow - 1) / filterData.PageSize) <
-              //     filterData.PageNumber
-              //       ? Math.ceil((TotalRow - 1) / filterData.PageSize)
-              //       : filterData.PageNumber,
-              // });
+              setFilterData({
+                ...filterData,
+                PageNumber:
+                  Math.ceil((TotalRow - 1) / filterData.PageSize) <
+                  filterData.PageNumber
+                    ? Math.ceil((TotalRow - 1) / filterData.PageSize)
+                    : filterData.PageNumber,
+              });
             } else {
               message.destroy();
               message.error(res.data.Message);
@@ -118,11 +123,10 @@ const QLThuVien = (props) => {
     });
   };
 
-  const showModalEdit = (danhSachPhatID) => {
-    const DanhSachPhatID = danhSachPhatID;
+  const showModalEdit = (ID) => {
     setAction('edit');
     api
-      .chiTietQLThuVien({DanhSachPhatID})
+      .chiTietQLThuVien({ID})
       .then((res) => {
         if (res.data.Status > 0) {
           setDataModalAddEdit(res.data.Data);
@@ -145,99 +149,69 @@ const QLThuVien = (props) => {
     setVisibleModalAddEdit(false);
   };
 
-  const submitModalAddEdit = (data) => {
+  const submitModalAddEdit = (data,FileData) => {
     setConfirmLoading(true);
     if (action === 'add') {
-      api
-        .themQLThuVien(data)
-        .then((res) => {
+      const formSave = new FormData();
+      formSave.append('files', FileData);
+      formSave.append('coQuanStr', JSON.stringify(data));
+
+      formDataCaller(apiUrl.themqlthuvien, formSave)
+        .then((response) => {
           setConfirmLoading(false);
-          if (res.data.Status > 0) {
-            message.destroy();
-            message.success(res.data.Message);
+          if (response.data.Status > 0) {
+            //message success
+            message.success('Thêm thành công');
+            //hide modal
             hideModalAddEdit();
-            props.getList(filterData);
+            //reset page
+            dispatch(actions.getList(filterData));
+            dispatch(actions.getGuild());
           } else {
-            setConfirmLoading(false);
             message.destroy();
-            message.error(res.data.Message);
+            message.error(response.data.Message);
           }
         })
         .catch((error) => {
-          setConfirmLoading(false);
           message.destroy();
           message.error(error.toString());
         });
     }
     if (action === 'edit') {
-      api
-        .suaQLThuVien(data)
-        .then((res) => {
-          if (res.data.Status > 0) {
-            setConfirmLoading(false);
-            message.destroy();
-            message.success(res.data.Message);
+      const formSave = new FormData();
+      formSave.append('updateCoQuanDonVi', JSON.stringify(data));
+      // if (FileData.name) {
+        formSave.append('files', FileData);
+      // }
+      formDataCaller(apiUrl.suaqlthuvien, formSave)
+        .then((response) => {
+          setConfirmLoading(false);
+          if (response.data.Status > 0) {
+            //message success
+            message.success('Cập nhật thành công');
+            //hide modal
             hideModalAddEdit();
-            props.getList(filterData);
+            //reset page
+            dispatch(actions.getList(filterData));
+            dispatch(actions.getGuild());
           } else {
-            setConfirmLoading(false);
             message.destroy();
-            message.error(res.data.Message);
+            message.error(response.data.Message);
           }
         })
         .catch((error) => {
-          setConfirmLoading(false);
           message.destroy();
           message.error(error.toString());
         });
     }
   };
-  const [actionthietlap, setActionThietLap] = useState('');
-  const [visibleModalThietLap, setVisibleModalThietLap] = useState(false);
 
-  const [confirmLoadingThietLap, setConfirmLoadingThietLap] = useState(false);
-  const [modalThietLap, inceaseModalThietLap] = useKey();
-  
-  const [dataModalThietLap, setDataModalThietLap] = useState({});
-  const [dataModalDanhSachMediaID, setDataModalDanhSachMediaID] = useState({});
-
-  
-  const hideModalThietLap = () => {
-    setVisibleModalThietLap(false);
-  };
-  const submitModalThietLap = (data,FileData) => {
-    setConfirmLoadingThietLap(true);
-    props.getList(filterData);
-    message.success("Thiết lập Media thành công");
-  }
-  const showModalThietLap = (DanhSachPhatID) => {
-    // const DanhSachPhatID = danhSachPhatID;
-    setActionThietLap('thietlap');
-    api
-      .chiTietThietLap({DanhSachPhatID})
-      .then((res) => {
-        if (res.data.Status > 0) {
-          setDataModalThietLap(res.data.Data.DanhSachMediaID);
-          setDataModalDanhSachMediaID(res.data.Data)
-          inceaseModalThietLap();
-          setVisibleModalThietLap(true);
-        } else {
-          message.destroy();
-          message.error(res.data.Message);
-        }
-      })
-      .catch((error) => {
-        message.destroy();
-        message.error(error.toString());
-      });
-  };
-  const [selectedDanhSachPhatID, setSelectedDanhSachPhatID] = useState(null);
   const renderThaoTac = (record) => {
     return (
       <div className={'action-btn'}>
         {/* {role?.edit ? ( */}
           <Tooltip title={'Sửa'}>
-            <EditOutlined onClick={() => showModalEdit(record.DanhSachPhatID)} />
+            <EditOutlined onClick={() => showModalEdit(record.ID)} />
           </Tooltip>
         {/* ) : ( */}
           {/* '' */}
@@ -245,21 +219,16 @@ const QLThuVien = (props) => {
         {/* {role?.delete ? ( */}
           <Tooltip title={'Xóa'}>
             <DeleteOutlined
-              onClick={() => deleteModalAddEdit(record.DanhSachPhatID)}
+              onClick={() => deleteModalAddEdit(record.ID)}
             />
           </Tooltip>
         {/* ) : (
           ''
         )} */}
-        <Tooltip title={'Thiết lập'}>
-            <FieldTimeOutlined 
-              onClick={() => showModalThietLap(record.DanhSachPhatID)}
-            />
-          </Tooltip>
       </div>
     );
   };
-  const {DanhSachQLThuVien,DanhSachDMThuVien,DanhSachMedia,DanhSachNguoiDung, TotalRow, role} = props;
+  const {DanhSachKhachHang,DanhSachDMThuVien, TotalRow, role} = props;
   const PageNumber = filterData.PageNumber
     ? parseInt(filterData.PageNumber)
     : 1;
@@ -270,46 +239,52 @@ const QLThuVien = (props) => {
     const columns = [
       {
         title: 'Số thứ tự',
-        width: '5%',
+        width: '10%',
         align: 'center',
         render: (text, record, index) => (
           <span>{(PageNumber - 1) * PageSize + (index + 1)}</span>
         ),
       },
       {
-        title: 'Tên danh sách phát',
-        dataIndex: 'TenDanhSachPhat',
+        title: 'Tên khách hàng',
+        dataIndex: 'Ten',
         align: 'left',
-        width: '30%',
+        width: '25%',
       },
       {
-        title: 'Tổng thời gian',
-        dataIndex: 'TongThoiGianPhat',
-        align: 'center',
-        width: '17%',
+        title: 'Địa chỉ',
+        dataIndex: 'DiaChi',
+        align: 'left',
+        width: '20%',
       },
       {
-        title: 'Tổng số Media',
-        dataIndex: 'TongSoMedia',
-        align: 'center',
-        width: '8%',
-      },
-      {
-        title: 'Khách hàng',
-        dataIndex: 'TenNguoiDung',
-        align: 'center',
+        title: 'Số điện thoại',
+        dataIndex: 'DienThoai',
+        align: 'left',
         width: '15%',
       },
       {
-        title: 'Trạng thái sử dụng',
-        dataIndex: 'TrangThai',
+        title: 'Email',
+        dataIndex: 'Email',
+        align: 'left',
+        width: '15%',
+      },
+      {
+        title: 'Mã cơ quan',
+        dataIndex: 'MaCQ',
+        align: 'left',
+        width: '15%',
+      },
+      {
+        title: 'Trạng thái',
+        dataIndex: 'IsStatus',
         align: 'center',
-        width: '12%',
-        render: (TrangThai) => {
-          if (TrangThai === true) {
-            return <span>Đang sử dụng</span>;
-          } else if (TrangThai === false) {
-            return <span>Không sử dụng</span>;
+        width: '10%',
+        render: (IsStatus) => {
+          if (IsStatus === true) {
+            return <span>Triển khai</span>;
+          } else if (IsStatus === false) {
+            return <span>Không triển khai</span>;
           } else {
             return <span>Trạng thái khác</span>; // Handle any other values if necessary
           }
@@ -326,7 +301,7 @@ const QLThuVien = (props) => {
   return (
     <LayoutWrapper>
       <PageWrap>
-        <PageHeader>Quản Lý Danh Sách Phát</PageHeader>
+        <PageHeader>Danh Mục Khách Hàng</PageHeader>
         <PageAction>
           {/* {role ? (
             role.add ? ( */}
@@ -346,7 +321,7 @@ const QLThuVien = (props) => {
         <BoxFilter>
           <InputSearch
             defaultValue={filterData.Keyword}
-            placeholder={'Nhập tên danh sách phát'}
+            placeholder={'Nhập tên khách hàng'}
             style={{width: 300}}
             onSearch={(value) => onFilter(value, 'Keyword')}
             allowClear
@@ -354,7 +329,7 @@ const QLThuVien = (props) => {
         </BoxFilter>
         <BoxTable
           columns={columns}
-          dataSource={DanhSachQLThuVien}
+          dataSource={DanhSachKhachHang}
           onChange={onTableChange}
           pagination={{
             showSizeChanger: true,
@@ -376,21 +351,6 @@ const QLThuVien = (props) => {
         onCreate={submitModalAddEdit}
         onCancel={hideModalAddEdit}
         danhSachDMThuVien={DanhSachDMThuVien}
-        DanhSachNguoiDung={DanhSachNguoiDung}
-      />
-      <ModalThietLap
-      visible={visibleModalThietLap}
-      dataThietLap={dataModalThietLap}
-      dataModalDanhSachMediaID={dataModalDanhSachMediaID}
-      action={actionthietlap}
-      loading={confirmLoading}
-      key={modalKey}
-      onCreate={submitModalThietLap}
-      onCancel={hideModalThietLap}
-      danhSachDMThuVien={DanhSachDMThuVien}
-      DanhSachMedia={DanhSachMedia}
-      filterData ={filterData }
-      onFilter={onFilter}
       />
     </LayoutWrapper>
   );
@@ -398,9 +358,9 @@ const QLThuVien = (props) => {
 
 function mapStateToProps(state) {
   return {
-    ...state.QLThuVien,
+    ...state.DMKhachHang,
     role: getRoleByKey(state.Auth.role, 'danh-muc-chuc-vu'),
   };
 }
 
-export default connect(mapStateToProps, actions)(QLThuVien);
+export default connect(mapStateToProps, actions)(DMKhachHang);
