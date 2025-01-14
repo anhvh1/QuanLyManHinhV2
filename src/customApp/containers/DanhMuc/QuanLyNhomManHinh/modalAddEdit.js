@@ -86,7 +86,7 @@ export default (props) => {
         TrangThai: null,
         
       }));
-      if (action === 'add') {
+      if (action === 'add'||action === 'edit') {
         values.CoQuanID = ListChucNang;
       }
       const payload = {
@@ -123,7 +123,7 @@ export default (props) => {
       ]}
     >
       <Form form={form} name={'formDiSanTuLieu'}>
-        {action !== 'add' ? <Item name="ID" hidden {...REQUIRED}></Item> : null}
+        {action !== 'add' ? <Item name="NhomManHinhID" hidden {...REQUIRED}></Item> : null}
         <Item
           label="Tên nhóm"
           name={'TenNhom'}

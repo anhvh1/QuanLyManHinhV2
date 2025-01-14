@@ -1,27 +1,26 @@
 import {getRoleByKey} from '../../../../helpers/utility';
 
 const actions = {
-  QLMANHINH_GET_INIT_DATA_REQUEST: 'QLMANHINH_GET_INIT_DATA_REQUEST',
-  QLMANHINH_GET_INIT_DATA_REQUEST_SUCCESS: 'QLMANHINH_GET_INIT_DATA_REQUEST_SUCCESS',
-  QLMANHINH_GET_INIT_DATA_REQUEST_ERROR: 'QLMANHINH_GET_INIT_DATA_REQUEST_ERROR',
+  MEDIA_GET_INIT_DATA_REQUEST: 'MEDIA_GET_INIT_DATA_REQUEST',
+  MEDIA_GET_INIT_DATA_REQUEST_SUCCESS: 'MEDIA_GET_INIT_DATA_REQUEST_SUCCESS',
+  MEDIA_GET_INIT_DATA_REQUEST_ERROR: 'MEDIA_GET_INIT_DATA_REQUEST_ERROR',
   getInitData: (filterData) => {
     return (disPatch, getState) => {
       //get role
       let listRole = getState().Auth.role;
-      let role = getRoleByKey(listRole, 'di-san');
+      let role = getRoleByKey(listRole, 'di-tich-toan-tinh');
       //-------
       disPatch({
-        type: actions.QLMANHINH_GET_INIT_DATA_REQUEST,
+        type: actions.MEDIA_GET_INIT_DATA_REQUEST,
         payload: {filterData, role},
       });
     };
   },
-
-  QLMANHINH_GET_LIST_REQUEST: 'QLMANHINH_GET_LIST_REQUEST',
-  QLMANHINH_GET_LIST_REQUEST_SUCCESS: 'QLMANHINH_GET_LIST_REQUEST_SUCCESS',
-  QLMANHINH_GET_LIST_REQUEST_ERROR: 'QLMANHINH_GET_LIST_REQUEST_ERROR',
+  MEDIA_GET_LIST_REQUEST: 'MEDIA_GET_LIST_REQUEST',
+  MEDIA_GET_LIST_REQUEST_SUCCESS: 'MEDIA_GET_LIST_REQUEST_SUCCESS',
+  MEDIA_GET_LIST_REQUEST_ERROR: 'MEDIA_GET_LIST_REQUEST_ERROR',
   getList: (filterData) => ({
-    type: actions.QLMANHINH_GET_LIST_REQUEST,
+    type: actions.MEDIA_GET_LIST_REQUEST,
     payload: {filterData},
   }),
   //get notification

@@ -35,7 +35,8 @@ const PublicRoutes = ({ history, isLoggedIn }) => {
           exact
           path={"/"}
           component={asyncComponent(() =>
-            import("./customApp/containers/HeThong/LandingPage")
+            // import("./customApp/containers/HeThong/LandingPage")
+            import("./customApp/containers/HeThong/DangNhap")
           )}
         />
         <Route

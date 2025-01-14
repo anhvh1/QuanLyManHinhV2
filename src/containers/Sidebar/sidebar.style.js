@@ -1,16 +1,13 @@
-import styled from 'styled-components';
-import {palette} from 'styled-theme';
-import {transition, borderRadius} from '../../settings/style-util';
+import styled from "styled-components";
+import { palette } from "styled-theme";
+import { transition, borderRadius } from "../../settings/style-util";
 
-const widthCollaped = '50px';
-const widthCollapedMobile = '0px';
-const widthExpanded = '240px';
+const widthCollaped = "50px";
+const widthCollapedMobile = "0px";
+const widthExpanded = "240px";
 
 const SidebarWrapper = styled.div`
-  .parent-menu {
-    font-weight: 700;
-  }
-  .ant-tooltip-open,
+  padding: 0px 5px 0px 5px;
   .ant-menu-title-content {
     font-size: 14px;
   }
@@ -30,17 +27,18 @@ const SidebarWrapper = styled.div`
     }
   }
   .isomorphicSidebar {
-    background: #fafafa;
+    background: #101349;
+    padding:0px 10px;
     z-index: 999;
-    /* background: ${palette('primary', 14)};
-    color: ${palette('secondary', 1)}; */
-    background: ${palette('sidebar', 0)};
-    color: ${palette('sidebar', 1)};
+    /* background: ${palette("primary", 14)};
+    color: ${palette("secondary", 1)}; */
+    // background: ${palette("sidebar", 0)};
+    color: #ffffff;
     width: ${widthExpanded} !important;
     flex: 0 0 ${widthExpanded} !important;
     max-width: ${widthExpanded} !important;
     min-width: ${widthExpanded} !important;
-
+    border-right: 1px solid #ffffff33;
     .scrollarea {
       height: calc(100vh - 70px);
     }
@@ -81,8 +79,8 @@ const SidebarWrapper = styled.div`
           font-size: 21px;
           line-height: 70px;
           text-transform: uppercase;
-          color: ${palette('sidebar', 1)};
-          /* color: ${palette('primary', 14)}; */
+          color: #ffffff;
+          /* color: ${palette("primary", 14)}; */
           display: block;
           text-decoration: none;
         }
@@ -135,7 +133,7 @@ const SidebarWrapper = styled.div`
       .isoMenuHolder {
         display: flex;
         align-items: center;
-        color: ${palette('secondary', 1)};
+        color: ${palette("secondary", 1)};
 
         i {
           font-size: 19px;
@@ -146,7 +144,7 @@ const SidebarWrapper = styled.div`
         }
 
         ion-icon {
-          color: ${palette('sidebar', 1)};
+          color: #ffffff;
           /* color: inherit; */
           margin: 0 15px 0 10px;
           width: 24px;
@@ -156,8 +154,8 @@ const SidebarWrapper = styled.div`
 
         &.current {
           ion-icon {
-            color: ${palette('sidebar', 1)};
-            /* color: ${palette('primary', 14)}; */
+            color: #ffffff;
+            /* color: ${palette("primary", 14)}; */
           }
         }
       }
@@ -172,7 +170,7 @@ const SidebarWrapper = styled.div`
       .nav-text {
         font-size: 14px;
         /* color: inherit; */
-        color: ${palette('sidebar', 1)};
+        color: #ffffff;
         ${transition()};
         /* color :  */
       }
@@ -201,41 +199,41 @@ const SidebarWrapper = styled.div`
           .ant-menu-item-selected
         ):hover
         a {
-        color: #000 !important;
+        color: #ffffff !important;
       }
       /* .ant-menu-item-active .ant-menu-title-content {
         .nav-text {
-          color: #000 !important;
+          color: #FFFFFF !important;
         }
       } */
       .ant-menu-item-selected {
         background-color: #1058af !important;
         border-radius: 111px;
-        /* background-color: ${palette('sidebar', 2)}; */
-        /* background-color: ${palette('secondary', 1)} !important; */
+        /* background-color: ${palette("sidebar", 2)}; */
+        /* background-color: ${palette("secondary", 1)} !important; */
         .anticon {
           color: #ffffff !important;
-          /* color: ${palette('sidebar', 1)}; */
-          /* color: ${palette('primary', 14)}; */
+          /* color: #FFFFFF; */
+          /* color: ${palette("primary", 14)}; */
         }
 
         i {
           color: #ffffff !important;
-          /* color: ${palette('sidebar', 1)}; */
-          /* color: ${palette('primary', 14)}; */
+          /* color: #FFFFFF; */
+          /* color: ${palette("primary", 14)}; */
         }
 
         ion-icon {
           color: #ffffff !important;
-          /* color: ${palette('sidebar', 1)}; */
-          /* color: ${palette('primary', 14)}; */
+          /* color: #FFFFFF; */
+          /* color: ${palette("primary", 14)}; */
         }
 
         .nav-text,
         .ant-menu-title-content {
           color: #ffffff !important;
-          /* color: ${palette('sidebar', 1)}; */
-          /* color: ${palette('primary', 14)}; */
+          /* color: #FFFFFF; */
+          /* color: ${palette("primary", 14)}; */
         }
 
         &::after {
@@ -245,7 +243,7 @@ const SidebarWrapper = styled.div`
     }
 
     .ant-menu-dark .ant-menu-inline.ant-menu-sub {
-      background: ${palette('secondary', 5)};
+      background: ${palette("secondary", 5)};
     }
 
     .ant-menu-submenu-inline,

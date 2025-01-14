@@ -281,6 +281,7 @@ const Sidebar = (props) => {
           userSelect: 'none',
           gridTemplateColumns:
             ListChild && ListChild.length > 0 ? '80px 210px' : '75px',
+            background:"#101349",
         }}
       >
         <Sider

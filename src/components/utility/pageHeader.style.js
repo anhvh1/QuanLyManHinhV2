@@ -5,7 +5,7 @@ import WithDirection from '../../settings/withDirection';
 const WDComponentTitleWrapper = styled.h1`
   font-size: 19px;
   font-weight: 600;
-  color: ${palette('secondary', 2)};
+  color: #FFFFFF;
   /* margin-bottom: 15px; */
   display: inline-flex;
   align-items: center;

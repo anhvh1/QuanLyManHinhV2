@@ -345,7 +345,7 @@ const Topbar = (props) => {
           collapsed ? "isomorphicTopbar collapsed" : "isomorphicTopbar"
         }
         style={{
-          background: "transparent",
+          background: "#101349",
         }}
       >
         <div className="isoLeft">

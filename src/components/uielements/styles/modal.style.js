@@ -8,7 +8,7 @@ const ModalWrapper = styled(Modal)`
 
   .ant-modal-title {
     font-size: 18px !important;
-    color: white !important;
+    color: #000000CC !important;
   }
 
   .modal-footer__grey .ant-modal-footer {
@@ -16,14 +16,16 @@ const ModalWrapper = styled(Modal)`
   }
 
   .ant-modal-close {
-    color: ${(props) => (props.noTitle ? '#999' : '#fff')} !important;
+    color: #000000 !important;
     display: ${(props) => (props.noTitle ? 'none' : 'block')};
   }
 
   .ant-modal-header {
-    background-color: ${palette('primary', 0)} !important;
+    // background-color: ${palette('primary', 0)} !important;
     /* border-color: ${palette('primary', 0)}; */
     /* background-color: #2878d7 !important; */
+    background-color: #FFFFFF !important;
+    border-bottom: 1px solid #00000033
   }
 
   .ant-modal-header {
@@ -60,7 +62,7 @@ const ModalWrapper = styled(Modal)`
   }
   .ant-modal-footer {
     margin-top: 0;
-    border-top: 1px solid #dddddd;
+    // border-top: 1px solid #dddddd;
     padding: 10px 20px 10px 20px;
   }
 `;
