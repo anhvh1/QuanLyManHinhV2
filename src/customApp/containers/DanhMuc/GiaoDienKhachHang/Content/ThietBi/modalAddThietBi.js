@@ -9,13 +9,15 @@ const { Item, useForm } = Form;
 
 export default (props) => {
   const [form] = useForm();
-  const { visible, onCancel, manHinhID, setNhomManHinhID, NhomManHinhID } =
-    props;
+  const {
+    visible,
+    onCancel,
+    manHinhID,
+    setNhomManHinhID,
+    NhomManHinhID,
+    setfetchData,
+  } = props;
   const [nhomManHinhData, setNhomManHinhData] = useState([]);
-  // Fetch the data when the modal is visible
-  console.log("NhomManHinhID", NhomManHinhID);
-  console.log("nhomManHinhData", nhomManHinhData);
-
   useEffect(() => {
     if (visible) {
       const danhSachNhomManHinh = async () => {
@@ -59,18 +61,19 @@ export default (props) => {
           });
       };
       showModalEdit();
-      submitModalAddEdit();
+      setfetchData(2);
     }
   }, [NhomManHinhID]);
-  const submitModalAddEdit = () => {
+  const submitModalAddEdit = (id) => {
     api
       .UpdateNhomManHinh({
-        NhomManHinhID: NhomManHinhID ,
+        NhomManHinhID: id,
         ListManHinh: [manHinhID],
       })
       .then((res) => {
         if (res.data.Status > 0) {
           message.success(res.data.Message);
+          setfetchData(1);
         } else {
           message.destroy();
           message.error(res.data.Message);
@@ -83,8 +86,12 @@ export default (props) => {
       });
   };
   const handleCheckboxChange = (id) => {
-    setNhomManHinhID(id); // Cập nhật trạng thái
-    
+    const newId = NhomManHinhID === id ? 0 : id;
+    if (newId === 0) {
+      setfetchData(2);
+    }
+    setNhomManHinhID(newId);
+    submitModalAddEdit(newId);
   };
   return (
     <Modal

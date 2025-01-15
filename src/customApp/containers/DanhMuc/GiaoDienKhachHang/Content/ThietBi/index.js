@@ -94,7 +94,6 @@ const QuanLyManHinh = (props) => {
   const hideModalAddThietBi = () => {
     setVisibleModalAddThietBi(false);
     setNhomManHinhID();
-    setfetchData(1);
   };
   const { DanhSachManHinh, TotalRow, role } = props;
 
@@ -200,7 +199,10 @@ const QuanLyManHinh = (props) => {
                             onClick={() => {
                               showModalAddThietBi();
                               setmanHinhID(item.manHinhID);
-                              setNhomManHinhID(item[0]?.nhomManHinhs);
+                              setNhomManHinhID(
+                                item?.nhomManHinhs[0]?.nhomManHinhID
+                              );
+                              setfetchData(0);
                             }}
                           >
                             <NoteIcon Note={item.nhomManHinhs?.[0]?.mota} />
@@ -295,6 +297,7 @@ const QuanLyManHinh = (props) => {
         manHinhID={manHinhID}
         setNhomManHinhID={setNhomManHinhID}
         NhomManHinhID={NhomManHinhID}
+        setfetchData={setfetchData}
       />
     </LayoutWrapper>
   );
