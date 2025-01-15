@@ -20,6 +20,7 @@ import Wrapper from "./App.styled";
 import { getInfoFromToken, getLocalKey } from "../../helpers/utility";
 import MoonIcon from "../../../src/components/utility/MoonIcon";
 import SunIcon from "../../../src/components/utility/SunIcon";
+import "./global.css";
 const { Content, Footer } = Layout;
 const { logout } = authAction;
 const { toggleAll } = appActions;
@@ -130,7 +131,13 @@ export class App extends Component {
                           style={{ width: "50px", height: "30px" }}
                           alt="Footer"
                         />
-                        <span style={{ marginTop: "10px", marginLeft: "10px",color:"#FFFFFF" }}>
+                        <span
+                          style={{
+                            marginTop: "10px",
+                            marginLeft: "10px",
+                            color: "#FFFFFF",
+                          }}
+                        >
                           {siteConfig.footerText}
                         </span>
                       </Footer>

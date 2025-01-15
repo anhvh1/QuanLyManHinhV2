@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+    margin : 0;
+    padding :0;
+}
+p {
+    margin-bottom: 0 !important;
+}
+
+@layer components {
+    /* Loại bỏ mũi tên thanh cuộn và hiển thị chỉ thanh cuộn dọc */
+    textarea::-webkit-scrollbar {
+      width: 8px; /* Điều chỉnh độ rộng của thanh cuộn */
+    }
+  
+    textarea::-webkit-scrollbar-thumb {
+      background-color: #6B7280; /* Màu của thanh cuộn */
+      border-radius: 4px; /* Bo tròn thanh cuộn */
+    }
+  
+    textarea::-webkit-scrollbar-track {
+      background-color: #E5E7EB; /* Màu nền của thanh cuộn */
+    }
+  
+    textarea::-webkit-scrollbar-button {
+      display: none; /* Ẩn mũi tên cuộn */
+    }
+  
+    /* Tuỳ chỉnh thanh cuộn cho các trình duyệt Firefox */
+    textarea {
+      scrollbar-width: thin;
+      scrollbar-color: #6B7280 #E5E7EB; /* Màu của thanh cuộn và nền */
+    }
+    
+  }

@@ -39,7 +39,9 @@ html a {
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
 }
 
-
+.ant-upload {
+  width: 100% !important;
+}
 
 textarea::-webkit-resizer {
   display: none;
