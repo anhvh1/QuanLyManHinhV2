@@ -26,7 +26,7 @@ import {
 import {REQUIRED} from '../../../../../../settings/constants';
 import moment from 'moment';
 import dayjs from 'dayjs';
-
+import './style.css';
 const {Item, useForm} = Form;
 
 export default (props) => {
@@ -269,6 +269,13 @@ export default (props) => {
       content: 'Bạn có chắc chắn muốn hủy thêm mới media này không?',
       cancelText: 'Không',
       okText: 'Có',
+      okButtonProps: {
+        style: {
+          backgroundColor: "rgb(22, 119, 255)",
+          borderColor: "rgb(22, 119, 255)",
+          color: "white",
+        },
+      },
       onOk: () => {
         props.onCancel();
       },
@@ -328,7 +335,7 @@ export default (props) => {
             }}
             onClick={() => document.getElementById('fileInput').click()}
           >
-            <PlusOutlined /> Thêm tệp
+             Thêm tệp
           </Button>
           <Button
             style={{
@@ -340,7 +347,6 @@ export default (props) => {
             }}
             onClick={onOk}
           >
-            <UploadOutlined />
             Tải lên tất cả
           </Button>
           <Button
@@ -353,7 +359,6 @@ export default (props) => {
             }}
             onClick={handleCancelUpload}
           >
-            <StopOutlined style={{color: 'black'}} />
             Hủy tải lên
           </Button>
           <Button
@@ -365,7 +370,6 @@ export default (props) => {
             }}
             onClick={handleCancelModal}
           >
-            <CheckCircleOutlined />
             Hoàn tất
           </Button>
         </div>

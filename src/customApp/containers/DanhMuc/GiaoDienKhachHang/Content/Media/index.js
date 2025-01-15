@@ -143,8 +143,8 @@ const ContentMedia = (props) => {
       okText: "Có",
       okButtonProps: {
         style: {
-          backgroundColor: "#ff4d4f",
-          borderColor: "#ff4d4f",
+          backgroundColor: "rgb(22, 119, 255)",
+          borderColor: "rgb(22, 119, 255)",
           color: "white",
         },
       },
