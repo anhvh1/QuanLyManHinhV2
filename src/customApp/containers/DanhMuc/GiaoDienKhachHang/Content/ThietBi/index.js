@@ -192,7 +192,7 @@ const QuanLyManHinh = (props) => {
                         <h2>{item.tenManHinh}</h2>
                         <Tooltip
                           title={
-                            item.nhomManHinhs?.[0]?.TenNhom ||
+                            item.nhomManHinhs?.[0]?.tenNhom ||
                             "Chưa có nhóm thiết bị"
                           }
                         >
@@ -203,7 +203,7 @@ const QuanLyManHinh = (props) => {
                               setNhomManHinhID(item[0]?.nhomManHinhs);
                             }}
                           >
-                            <NoteIcon Note={item.nhomManHinhs?.[0]?.Mota} />
+                            <NoteIcon Note={item.nhomManHinhs?.[0]?.mota} />
                           </div>
                         </Tooltip>
                       </div>
