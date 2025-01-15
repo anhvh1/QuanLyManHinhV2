@@ -48,7 +48,6 @@ export class App extends Component {
     const { url } = this.props.match;
     const { locale, selectedTheme, height, ListMenuActive } = this.props;
     const { BackgroundLayout } = this.state;
-    console.log("BackgroundLayout", BackgroundLayout);
     const appHeight = window.innerHeight;
 
     // Lấy thông tin người dùng từ token

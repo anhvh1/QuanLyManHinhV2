@@ -9,7 +9,6 @@ const Testimonials = ({ imgComma, listImgFuture, css }) => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        console.log(entry.isIntersecting); // Kiểm tra xem phần tử có vào viewport hay không
         if (entry.isIntersecting) {
           setIsInView(true); // Khi phần tử vào viewport
         }

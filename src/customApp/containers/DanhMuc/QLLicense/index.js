@@ -46,7 +46,6 @@ const QLLicense = (props) => {
   const [dataModalAddEdit, setDataModalAddEdit] = useState({});
   const [visibleModalAddEdit, setVisibleModalAddEdit] = useState(false);
   const [action, setAction] = useState('');
-  console.log('action', action);
   const {DanhSachCoQuan} = useSelector((state) => state.DMCoQuan);
   const [modalKey, inceaseModalKey] = useKey();
   const [selectedRowsKey, setSelectedRowsKey] = useState([]);
@@ -162,7 +161,6 @@ const QLLicense = (props) => {
   };
 
   const submitModalAddEdit = (data) => {
-    console.log(data);
     setConfirmLoading(true);
     if (action === 'add') {
       api

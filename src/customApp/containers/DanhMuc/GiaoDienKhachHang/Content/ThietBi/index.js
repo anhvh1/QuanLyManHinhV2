@@ -44,7 +44,8 @@ const QuanLyManHinh = (props) => {
   const [dataModalAddEdit, setDataModalAddEdit] = useState([]);
   const [visibleModalAddEdit, setVisibleModalAddEdit] = useState(false);
   const [visibleModalAddThietBi, setVisibleModalAddThietBi] = useState(false);
-
+  const [fetchData, setfetchData] = useState();
+  console.log("fetchData", fetchData);
   const [action, setAction] = useState("");
   const [modalKey, inceaseModalKey] = useKey();
   const [selectedRowsKey, setSelectedRowsKey] = useState([]);
@@ -80,6 +81,7 @@ const QuanLyManHinh = (props) => {
     setAction("add");
     setVisibleModalAddEdit(true);
   };
+  const [NhomManHinhID, setNhomManHinhID] = useState();
   const showModalAddThietBi = () => {
     setAction("add");
     setVisibleModalAddThietBi(true);
@@ -91,6 +93,8 @@ const QuanLyManHinh = (props) => {
   };
   const hideModalAddThietBi = () => {
     setVisibleModalAddThietBi(false);
+    setNhomManHinhID();
+    setfetchData(1);
   };
   const { DanhSachManHinh, TotalRow, role } = props;
 
@@ -99,6 +103,7 @@ const QuanLyManHinh = (props) => {
   };
 
   const [dataResult, setDataResult] = useState(null);
+  const [manHinhID, setmanHinhID] = useState();
   console.log("dữ liệu cần hiển thị", dataResult);
   const paginatedData = dataResult?.slice(
     (currentPage - 1) * pageSize,
@@ -185,9 +190,19 @@ const QuanLyManHinh = (props) => {
                         }}
                       >
                         <h2>{item.tenManHinh}</h2>
-                        <Tooltip title={item.nhomManHinhs?.[0]?.TenNhom}>
-                          <div>
-                            {/* onClick={showModalAddThietBi} */}
+                        <Tooltip
+                          title={
+                            item.nhomManHinhs?.[0]?.TenNhom ||
+                            "Chưa có nhóm thiết bị"
+                          }
+                        >
+                          <div
+                            onClick={() => {
+                              showModalAddThietBi();
+                              setmanHinhID(item.manHinhID);
+                              setNhomManHinhID(item[0]?.nhomManHinhs);
+                            }}
+                          >
                             <NoteIcon Note={item.nhomManHinhs?.[0]?.Mota} />
                           </div>
                         </Tooltip>
@@ -252,6 +267,8 @@ const QuanLyManHinh = (props) => {
           dataResult={dataResult}
           setDataResult={setDataResult}
           filterData={filterData}
+          setfetchData={setfetchData}
+          fetchData1={fetchData}
         ></SlideViewer>
 
         <Pagination
@@ -275,6 +292,9 @@ const QuanLyManHinh = (props) => {
         visible={visibleModalAddThietBi}
         action={action}
         onCancel={hideModalAddThietBi}
+        manHinhID={manHinhID}
+        setNhomManHinhID={setNhomManHinhID}
+        NhomManHinhID={NhomManHinhID}
       />
     </LayoutWrapper>
   );

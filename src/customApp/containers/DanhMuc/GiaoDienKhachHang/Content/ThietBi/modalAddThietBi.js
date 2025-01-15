@@ -9,9 +9,13 @@ const { Item, useForm } = Form;
 
 export default (props) => {
   const [form] = useForm();
-  const { visible, onCancel } = props;
+  const { visible, onCancel, manHinhID, setNhomManHinhID, NhomManHinhID } =
+    props;
   const [nhomManHinhData, setNhomManHinhData] = useState([]);
   // Fetch the data when the modal is visible
+  console.log("NhomManHinhID", NhomManHinhID);
+  console.log("nhomManHinhData", nhomManHinhData);
+
   useEffect(() => {
     if (visible) {
       const danhSachNhomManHinh = async () => {
@@ -32,10 +36,56 @@ export default (props) => {
         } finally {
         }
       };
+
       danhSachNhomManHinh();
     }
   }, [visible]);
-
+  useEffect(() => {
+    if (NhomManHinhID) {
+      const showModalEdit = () => {
+        api
+          .chiTietNhomManHinh({ NhomManHinhID })
+          .then((res) => {
+            if (res.data.Status > 0) {
+              setNhomManHinhID(res.data.Data.NhomManHinhID);
+            } else {
+              message.destroy();
+              message.error(res.data.Message);
+            }
+          })
+          .catch((error) => {
+            message.destroy();
+            message.error(error.toString());
+          });
+      };
+      showModalEdit();
+      submitModalAddEdit();
+    }
+  }, [NhomManHinhID]);
+  const submitModalAddEdit = () => {
+    api
+      .UpdateNhomManHinh({
+        NhomManHinhID: NhomManHinhID ,
+        ListManHinh: [manHinhID],
+      })
+      .then((res) => {
+        if (res.data.Status > 0) {
+          message.success(res.data.Message);
+        } else {
+          message.destroy();
+          message.error(res.data.Message);
+        }
+      })
+      .catch((error) => {
+        setConfirmLoading(false);
+        message.destroy();
+        message.error(error.toString());
+      });
+  };
+  const handleCheckboxChange = (id) => {
+    setNhomManHinhID(id); // Cập nhật trạng thái
+    
+  };
   return (
     <Modal
       title="Nhóm thiết bị"
@@ -49,9 +99,15 @@ export default (props) => {
           <div>
             <div>
               {nhomManHinhData.map((item) => (
-                <div style={{display:"flex",justifyContent:"space-between"}}>
-                  <Checkbox></Checkbox>
-                  <div style={{width:"95%"}} className="conten-group" key={item.NhomManHinhID}>
+                <div
+                  key={item.NhomManHinhID}
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <Checkbox
+                    checked={NhomManHinhID === item.NhomManHinhID}
+                    onChange={() => handleCheckboxChange(item.NhomManHinhID)}
+                  />
+                  <div style={{ width: "95%" }} className="conten-group">
                     <div className="conten-group-left">
                       <div>
                         <NoteIcon Note={item?.Mota} />

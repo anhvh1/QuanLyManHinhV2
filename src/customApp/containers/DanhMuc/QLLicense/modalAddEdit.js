@@ -150,7 +150,6 @@ export default (props) => {
       ...rest,
       Status: TrangThai,
     };
-    console.log(StartDate, EndDate,newValue.StartDate, newValue.EndDate);
     newValue.StartDate = StartDate ? dayjs(StartDate).format('YYYY-MM-DD') : null;
     newValue.EndDate = EndDate ? dayjs(EndDate).format('YYYY-MM-DD') : null;
     const { onCreate } = props;
