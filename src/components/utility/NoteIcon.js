@@ -13,7 +13,7 @@ export default (props) => {
       case '4':  // So sánh giá trị chuỗi '4'
         return "#C9D138";
       default:
-        return "red"; // Giá trị mặc định nếu không khớp
+        return "white"; // Giá trị mặc định nếu không khớp
     }
   })();
 
