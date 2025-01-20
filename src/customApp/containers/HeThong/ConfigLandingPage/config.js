@@ -1,17 +1,25 @@
-import {apiGetAuth} from '../../../../api';
-import server from '../../../../settings';
-import {getDefaultPageSize} from '../../../../helpers/utility';
+import { apiGet, apiGetAuth, apiPostAuth } from "../../../../api";
+import server from "../../../../settings";
+import { getDefaultPageSize } from "../../../../helpers/utility";
 
 const apiUrl = {
-  systemLog: server.v2Url + 'SystemLog/GetListPaging',
+  uploadfile: server.v2Url + "FileDinhKem/Insert",
+  insert: server.v2Url + "LandingPage/Insert",
+  getlandingpage: server.v2Url + "LandingPage/GetLandingPage",
+  deletefile: server.v2Url + "FileDinhKem/Delete",
 };
 const api = {
-  SystemLog: (param) => {
-    return apiGetAuth(apiUrl.systemLog, {
-      ...param,
-      PageNumber: param.PageNumber ? param.PageNumber : 1,
-      PageSize: param.PageSize ? param.PageSize : getDefaultPageSize(),
-    });
+  UploadFile: (param) => {
+    return apiPostAuth(apiUrl.uploadfile, param);
+  },
+  Insert: (param) => {
+    return apiPostAuth(apiUrl.insert, param);
+  },
+  DeleteFile: (param) => {
+    return apiPostAuth(apiUrl.deletefile, param);
+  },
+  GetLandingPage: (param) => {
+    return apiGet(apiUrl.getlandingpage, param);
   },
 };
 

@@ -19,7 +19,9 @@ const routes = [
 
   {
     path: "cau-hinh-landingpage",
-    component: asyncComponent(() => import("./containers/DanhMuc/DMKhachHang")),
+    component: asyncComponent(() =>
+      import("./containers/HeThong/ConfigLandingPage")
+    ),
   },
 
   {

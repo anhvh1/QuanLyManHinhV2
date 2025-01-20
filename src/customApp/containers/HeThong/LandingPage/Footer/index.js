@@ -3,13 +3,14 @@ import React from "react";
 import { FooterContainer } from "../styled";
 import { Link } from "react-router-dom";
 
-const Footer = ({ css }) => {
+const Footer = ({ css, infoFooter }) => {
   const { spaceSection } = css;
   const classWrapList = "flex flex-col gap-2 pt-4 md:pt-8";
   const classWrapItem = "text-sm lg:text-base xl:text-lg mb-0";
   const classWrapTitle =
     "text-sm md:text-base lg:text-lg xl:text-xl font-semibold";
   const hoverLink = "hover:text-sky-500 transition-all";
+  const { SocialLinks, ContactDetails } = infoFooter;
   return (
     <footer
       className={`px-5 sm:px-10 md:px-20 lg:px-10 xl:px-20 pt-8 md:pt-16 py-0 md:py-10 bg-slate-100`}
@@ -28,37 +29,33 @@ const Footer = ({ css }) => {
             <div
               className={`flex gap-2 pt-0 lg:pt-8 flex-row lg:flex-col flex-1 justify-around`}
             >
-              <a
-                href="https://benhvienthammydonga.vn/wp-content/uploads/2022/09/ve-dep-cuon-hut-cua-cap-ni-khac-tu.jpg"
-                target="_blank"
-                className={`${classWrapItem} ${hoverLink}`}
-              >
-                Instagram
-              </a>
-              <a
-                href="https://benhvienthammydonga.vn/wp-content/uploads/2022/09/ve-dep-cuon-hut-cua-cap-ni-khac-tu.jpg"
-                target="_blank"
-                className={`${classWrapItem} ${hoverLink}`}
-              >
-                Twitter
-              </a>
-              <a
-                href="https://benhvienthammydonga.vn/wp-content/uploads/2022/09/ve-dep-cuon-hut-cua-cap-ni-khac-tu.jpg"
-                target="_blank"
-                className={`${classWrapItem} ${hoverLink}`}
-              >
-                Facebook
-              </a>
-              <a
-                href="https://benhvienthammydonga.vn/wp-content/uploads/2022/09/ve-dep-cuon-hut-cua-cap-ni-khac-tu.jpg"
-                target="_blank"
-                className={`${classWrapItem} ${hoverLink}`}
-              >
-                LinkedIn
-              </a>
+              {SocialLinks &&
+                SocialLinks.map((link) => (
+                  <a
+                    key={link.Name}
+                    href={link.Url}
+                    target="_blank"
+                    className={`${classWrapItem} ${hoverLink}`}
+                  >
+                    {link.Name}
+                  </a>
+                ))}
             </div>
           </div>
-          <div className="footer-item">
+          {ContactDetails &&
+            ContactDetails.map((contact) => (
+              <div className="footer-item">
+                <p className={classWrapTitle}>{contact.Name}</p>
+                <div className={classWrapList}>
+                  <p className={`${classWrapItem} leading-8`}>
+                    {contact.Address}
+                  </p>
+                  <p className={classWrapItem}>Điện thoại: {contact.Phone}</p>
+                  <p className={classWrapItem}>Email: {contact.Email}</p>
+                </div>
+              </div>
+            ))}
+          {/* <div className="footer-item">
             <p className={classWrapTitle}>Hà nội</p>
             <div className={classWrapList}>
               <p className={classWrapItem}>
@@ -79,7 +76,7 @@ const Footer = ({ css }) => {
               <p className={classWrapItem}>Điện thoại: 0799.999.978</p>
               <p className={classWrapItem}>Email: info@lightjsc.com</p>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>

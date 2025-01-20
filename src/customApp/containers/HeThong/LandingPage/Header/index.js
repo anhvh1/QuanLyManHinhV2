@@ -4,7 +4,7 @@ import { HeaderContainer, HeaderButton } from "../styled";
 import { motion } from "framer-motion";
 import api from "../config";
 import { message } from "antd";
-const Header = ({ background }) => {
+const Header = ({ infoHeader, infoGeneral, onConvertUrl }) => {
   const heightConfig = "min-h-[700px] md:h-[100vh]";
   const [loadingDownload, setLoadingDownload] = useState(false);
   const handleDowloadLastestApp = () => {
@@ -23,18 +23,22 @@ const Header = ({ background }) => {
       }
     });
   };
+
+  const { Title, Url } = infoHeader;
+  const { SoftwareName, CompanyName } = infoGeneral;
+
   return (
     <div id="header" className="lg:flex items-center">
       <div
         className={`w-screen flex-1 lg:mt-0 ${heightConfig} bg-no-repeat bg-cover `}
-        style={{ backgroundImage: `url(${background})` }}
+        style={{ backgroundImage: `url(${onConvertUrl(Url)})` }}
       >
         <div className={`px-12 ${heightConfig} bg-black bg-opacity-50`}>
           <div className="max-w-screen-xl mx-auto">
             <div className={`${heightConfig} flex flex-col`}>
               <div className="pt-12">
                 <p className="text-white text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold italic">
-                  LightJSC
+                  {CompanyName}
                 </p>
               </div>
 
@@ -50,7 +54,7 @@ const Header = ({ background }) => {
                     }}
                   >
                     <p className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl text-white font-medium">
-                      GO SMARTSIGNAGE
+                      {SoftwareName}
                     </p>
                   </motion.div>
 
@@ -65,8 +69,7 @@ const Header = ({ background }) => {
                     }}
                   >
                     <p className="mt-3 text-base md:text-sm lg:text-lg xl:text-xl text-white">
-                      Giải pháp quản lý màn hình quảng cáo trực tuyến hiệu quả
-                      và linh hoạt
+                      {Title}
                     </p>
                   </motion.div>
 
