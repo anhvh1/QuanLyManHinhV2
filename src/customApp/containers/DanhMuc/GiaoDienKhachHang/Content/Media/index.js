@@ -84,7 +84,6 @@ const ContentMedia = (props) => {
     modalKey: 0,
   });
   const { DanhSachMedia, TotalRow, DanhSachThuMuc } = props;
-  console.log("DanhSachMedia", DanhSachMedia);
   const dispatch = useDispatch();
   const [DanhSachCacCap, setDanhSachCacCap] = useState([]);
   const {
@@ -142,6 +141,13 @@ const ContentMedia = (props) => {
       content: "Bạn có muốn xóa thư mục này không?",
       cancelText: "Không",
       okText: "Có",
+      okButtonProps: {
+        style: {
+          backgroundColor: "rgb(22, 119, 255)",
+          borderColor: "rgb(22, 119, 255)",
+          color: "white",
+        },
+      },
       onOk: () => {
         api
           .XoaChiTieu(ThuMucID, {})
@@ -640,6 +646,11 @@ const ContentMedia = (props) => {
       content: "Bạn có muốn xóa media này không?",
       cancelText: "Không",
       okText: "Có",
+      okButtonProps: {
+        style: {
+          backgroundColor: "#1677ff", // Custom background color
+        },
+      },
       onOk: () => {
         setConfirmLoadingEdit(true);
         api
@@ -812,7 +823,9 @@ const ContentMedia = (props) => {
                       ) : null}
                     </div>
                     <div className="table-columns-left-bottom">
-                      <div  className="table-columns-text-ten">{item.TenFile}</div>
+                      <div className="table-columns-text-ten">
+                        {item.TenFile}
+                      </div>
                       <div className="table-columns-text">{item.KichThuoc}</div>
                       <Switch
                         checked={item.TrangThai}

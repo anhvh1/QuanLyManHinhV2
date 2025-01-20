@@ -1,15 +1,15 @@
-import {apiGetAuth, apiPostAuth, apiDownloadAuth} from '../../../../api';
-import server from '../../../../settings';
-import {getDefaultPageSize} from '../../../../helpers/utility';
+import { apiGetAuth, apiPostAuth, apiDownloadAuth } from "../../../../api";
+import server from "../../../../settings";
+import { getDefaultPageSize } from "../../../../helpers/utility";
 
 export const apiUrl = {
-  danhsachnhommanhinh: server.v2Url + 'QuanLyNhomManHinh/GetListPaging',
-  themnhommanhinh: server.v2Url + 'QuanLyNhomManHinh/Insert',
-  chitietnhommanhinh: server.v2Url + 'QuanLyNhomManHinh/ChiTiet',
-  suanhommanhinh: server.v2Url + 'QuanLyNhomManHinh/Update',
-  xoanhommanhinh: server.v2Url + 'QuanLyNhomManHinh/Delete',
-  danhsachdmnhommanhinh: server.v2Url + 'QuanLyNhomManHinh/GetListPaging',
-  danhsachmanhinh: server.v2Url + 'QuanLyManHinh/GetListPaging',
+  danhsachnhommanhinh: server.v2Url + "QuanLyNhomManHinh/GetListPaging",
+  themnhommanhinh: server.v2Url + "QuanLyNhomManHinh/Insert",
+  chitietnhommanhinh: server.v2Url + "QuanLyNhomManHinh/ChiTiet",
+  suanhommanhinh: server.v2Url + "QuanLyNhomManHinh/Update",
+  xoanhommanhinh: server.v2Url + "QuanLyNhomManHinh/Delete",
+  danhsachdmnhommanhinh: server.v2Url + "QuanLyNhomManHinh/GetListPaging",
+  danhsachmanhinh: server.v2Url + "QuanLyManHinh/GetListPaging",
 };
 const api = {
   danhSachNhomManHinh: (param) => {

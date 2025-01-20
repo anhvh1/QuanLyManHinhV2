@@ -1,10 +1,10 @@
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-const MoreInfoSection = ({ background }) => {
+const MoreInfoSection = ({ infoMore, onConvertUrl }) => {
   const [isInView, setIsInView] = useState(false); // Theo dõi trạng thái "trong viewport"
   const sectionRef = useRef();
-
+  const { Url, Information, Maxim } = infoMore;
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -35,7 +35,7 @@ const MoreInfoSection = ({ background }) => {
     >
       <div
         className="px-5 bg-no-repeat bg-cover sm:px-10 md:px-20 lg:px-10 xl:px-20 py-8 flex-1 lg:mt-0 min-h-[500px] lg:h-[65vh] h-[60vh]"
-        style={{ backgroundImage: `url(${background})` }}
+        style={{ backgroundImage: `url(${onConvertUrl(Url)})` }}
       >
         <div className="max-w-screen-xl mx-auto min-h-[500px]">
           <div className="pt-12 max-w-screen-xl mx-auto flex flex-col md:flex-row gap-10 justify-between">
@@ -45,27 +45,27 @@ const MoreInfoSection = ({ background }) => {
               animate={isInView ? { x: 0, opacity: 1 } : {}} // Chỉ chạy khi trong viewport
               transition={{ duration: 1, ease: "easeOut" }}
             >
-              <p className="text-white text-lg md:text-lg lg:text-2xl xl:text-4xl">
-                Lightjsc
-                <br /> More than business
-                <br /> It’s friendship
-              </p>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: Maxim ? Maxim?.replace(/\n/g, "<br>") : "",
+                }}
+                className="text-white text-lg md:text-lg lg:text-2xl xl:text-4xl"
+              ></p>
             </motion.div>
 
             {/* Trượt từ phải qua trái */}
-            <motion.div
-              className="max-w-[400px] px-10 py-7 bg-white"
-              initial={{ x: "100%", opacity: 0 }} // Trạng thái ban đầu
-              animate={isInView ? { x: 0, opacity: 1 } : {}} // Chỉ chạy khi trong viewport
-              transition={{ duration: 1, ease: "easeOut" }}
-            >
-              <p className="text-black text-sm md:text-sm lg:text-lg">
-                Công ty Cổ phần Giải pháp Công nghệ Ánh Sáng (LightJSC) là nhà
-                phân phối chính thức, đối tác của các thương hiệu lớn trong
-                ngành CCTV như Camera Axis (Thụy điển), Thiết bị lưu trữ Promise
-                (Đài Loan), Secure Logiq (Anh Quốc), Milestone VMS (Đan Mạch)...
-              </p>
-            </motion.div>
+            {Information ? (
+              <motion.div
+                className="max-w-[400px] px-10 py-7 bg-white"
+                initial={{ x: "100%", opacity: 0 }} // Trạng thái ban đầu
+                animate={isInView ? { x: 0, opacity: 1 } : {}} // Chỉ chạy khi trong viewport
+                transition={{ duration: 1, ease: "easeOut" }}
+              >
+                <p className="text-black text-sm md:text-sm lg:text-lg">
+                  {Information}
+                </p>
+              </motion.div>
+            ) : null}
           </div>
         </div>
       </div>

@@ -8,6 +8,7 @@
     "@dnd-kit/modifiers": "^7.0.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@microsoft/signalr": "^8.0.7",
     "@reduxjs/toolkit": "latest",
     "animate.css": "^4.1.1",
     "antd": "5.14.0",
@@ -113,7 +114,7 @@
     "smooth-scrollbar": "^8.8.1",
     "styled-components": "^5.2.1",
     "styled-theme": "^0.3.3",
-    "swiper": "^11.0.5",
+    "swiper": "^11.2.1",
     "tailwindcss": "^3.4.17",
     "tus-js-client": "^2.3.0",
     "uppy": "1.23.1"

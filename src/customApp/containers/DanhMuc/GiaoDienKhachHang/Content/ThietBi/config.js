@@ -1,16 +1,22 @@
-import {apiGetAuth, apiPostAuth, apiDownloadAuth} from '../../../../../../api';
-import server from '../../../../../../settings';
-import {getDefaultPageSize} from '../../../../../../helpers/utility';
+import {
+  apiGetAuth,
+  apiPostAuth,
+  apiDownloadAuth,
+} from "../../../../../../api";
+import server from "../../../../../../settings";
+import { getDefaultPageSize } from "../../../../../../helpers/utility";
 
 export const apiUrl = {
-  danhsachmanhinh: server.v2Url + 'QuanLyManHinh/GetListPaging',
-  themmanhinh: server.v2Url + 'QuanLyManHinh/Insert',
-  chitietmanhinh: server.v2Url + 'QuanLyManHinh/ChiTiet',
-  suamanhinh: server.v2Url + 'QuanLyManHinh/Update',
-  xoamanhinh: server.v2Url + 'QuanLyManHinh/Delete',
-  danhsachnhommanhinh: server.v2Url + 'QuanLyNhomManHinh/GetListPaging',
-  xoanhommanhinh: server.v2Url + 'QuanLyNhomManHinh/Delete',
-  themnhommanhinh: server.v2Url + 'QuanLyNhomManHinh/Insert',
+  danhsachmanhinh: server.v2Url + "QuanLyManHinh/GetListPaging",
+  themmanhinh: server.v2Url + "QuanLyManHinh/Insert",
+  chitietmanhinh: server.v2Url + "QuanLyManHinh/ChiTiet",
+  chitietnhommanhinh: server.v2Url + "QuanLyNhomManHinh/ChiTiet",
+  UpdateNhomManHinh: server.v2Url + "QuanLyNhomManHinh/UpdateNhomManHinh",
+  suamanhinh: server.v2Url + "QuanLyManHinh/Update",
+  xoamanhinh: server.v2Url + "QuanLyManHinh/Delete",
+  danhsachnhommanhinh: server.v2Url + "QuanLyNhomManHinh/GetListPaging",
+  xoanhommanhinh: server.v2Url + "QuanLyNhomManHinh/Delete",
+  themnhommanhinh: server.v2Url + "QuanLyNhomManHinh/Insert",
 };
 const api = {
   danhSachManHinh: (param) => {
@@ -35,8 +41,16 @@ const api = {
   chiTietManHinh: (param) => {
     return apiGetAuth(apiUrl.chitietmanhinh, param);
   },
+  chiTietNhomManHinh: (param) => {
+    return apiGetAuth(apiUrl.chitietnhommanhinh, param);
+  },
   suaManHinh: (param) => {
     return apiPostAuth(apiUrl.suamanhinh, {
+      ...param,
+    });
+  },
+  UpdateNhomManHinh: (param) => {
+    return apiPostAuth(apiUrl.UpdateNhomManHinh, {
       ...param,
     });
   },

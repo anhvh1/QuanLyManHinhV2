@@ -8,11 +8,8 @@ export default createGlobalStyle`
   }
   .nav-text {
       font-size: 14px;
-<<<<<<< HEAD
-      color: ${palette("primary", 18)} !important;
-=======
       color: #FFFFFF !important;
->>>>>>> 13003d72f6ac288d13b19dbfff8bee4b7cdaa032
+
       ${transition()};
   }
       .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-inline .ant-menu-inline > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a, .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-vertical .ant-menu-inline > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a, .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-inline .ant-menu-submenu-vertical > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a, .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-vertical .ant-menu-submenu-vertical > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a {
@@ -69,27 +66,7 @@ export default createGlobalStyle`
     }
   }
   
-  /* .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected
-   {
-    background: ${palette("secondary", 10)} !important;
-     .nav-text {
-<<<<<<< HEAD
-      color: ${palette("text", 6)} !important; 
-=======
-      color:#FFFFFF !important; 
->>>>>>> 13003d72f6ac288d13b19dbfff8bee4b7cdaa032
-    }
-  }
-  .ant-menu-item-active {
-    background: ${palette("secondary", 10)} !important;
-    .nav-text {
-<<<<<<< HEAD
-      color: ${palette("text", 6)} !important;
-=======
-      color: #FFFFFF !important;
->>>>>>> 13003d72f6ac288d13b19dbfff8bee4b7cdaa032
-    }
-  } */
+ 
   
   .ant-menu-item-selected > a, .ant-menu-item-selected > a:hover {
     color: #FFF;

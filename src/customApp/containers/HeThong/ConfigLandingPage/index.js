@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   FaSave,
   FaImage,
@@ -20,100 +20,149 @@ import {
   MdAdd,
   MdDelete,
 } from "react-icons/md";
+import api from "./config";
 import { useCallback } from "react";
-import { Upload } from "antd";
+import { message, Upload } from "antd";
 import { Input } from "../../../../components/uielements/exportComponent";
 const ConfigurableLandingPage = () => {
   const featureIcon = "https://cdn-icons-png.flaticon.com/512/1246/1246307.png";
   const responseIcon =
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e";
 
-  const [generalInfo, setGeneralInfo] = useState({
-    SoftwareName: "",
-    CompanyName: "",
+  const [dataLandingPage, setDataLandingPage] = useState({
+    generalInfo: {
+      SoftwareName: "",
+      CompanyName: "",
+    },
+    header: {
+      Title: "",
+      file: null,
+      Url: "",
+      FileId: 0,
+    },
+    product: {
+      Title: "",
+      Images: [],
+    },
+    features: {
+      Title: "",
+      Items: [
+        {
+          Content: "",
+          Url: featureIcon,
+          FileId: 0,
+        },
+        {
+          Content: "",
+          Url: featureIcon,
+          FileId: 0,
+        },
+        {
+          Content: "",
+          Url: featureIcon,
+          FileId: 0,
+        },
+      ],
+    },
+    responses: {
+      Title: "",
+      Items: [
+        {
+          Content: "",
+          UserName: "",
+          UserRole: "",
+          Url: responseIcon,
+          file: null,
+          FileId: 0,
+        },
+      ],
+    },
+    moreInfo: {
+      file: null,
+      Url: "",
+      Information: "",
+      Maxim: "",
+      FileId: 0,
+    },
+    footer: {
+      SocialLinks: [
+        { Name: "Facebook", Url: "" },
+        { Name: "Twitter", Url: "" },
+        { Name: "LinkedIn", Url: "" },
+        { Name: "Instagram", Url: "" },
+      ],
+      ContactDetails: [
+        {
+          Address: "",
+          Name: "",
+          Phone: "",
+          Email: "",
+        },
+        {
+          Address: "",
+          Name: "",
+          Phone: "",
+          Email: "",
+        },
+      ],
+    },
   });
+  const [listFileIDDelete, setListFileIDDelete] = useState([]);
+  const {
+    generalInfo,
+    header,
+    product,
+    features,
+    responses,
+    moreInfo,
+    footer,
+  } = dataLandingPage;
 
-  const [header, setHeader] = useState({
-    Title: "",
-    file: null,
-    Url: "",
-  });
+  const getDataLandingPage = () => {
+    api.GetLandingPage().then((res) => {
+      if (res.data.Status > 0) {
+        const data = res.data.Data;
+        const {
+          Features,
+          Footer,
+          GeneralInfo,
+          Header,
+          MoreInfo,
+          Product,
+          Responses,
+        } = data;
+        setDataLandingPage({
+          features: Features,
+          footer: Footer,
+          generalInfo: GeneralInfo,
+          header: Header,
+          product: Product,
+          responses: Responses,
+          moreInfo: MoreInfo,
+        });
+      }
+    });
+  };
 
-  const [product, setProduct] = useState({
-    Title: "",
-    Images: [],
-  });
+  const changeDataLandingPage = (key, data) => {
+    const newDataLandingPage = { ...dataLandingPage };
+    newDataLandingPage[key] = data;
+    setDataLandingPage(newDataLandingPage);
+  };
 
-  const [features, setFeatures] = useState({
-    Title: "",
-    Items: [
-      {
-        Content: "",
-        Url: featureIcon,
-      },
-      {
-        Content: "",
-        Url: featureIcon,
-      },
-      {
-        Content: "",
-        Url: featureIcon,
-      },
-    ],
-  });
-
-  const [responses, setResponses] = useState({
-    Title: "",
-    Items: [
-      {
-        Content: "",
-        UserName: "",
-        UserRole: "",
-        Url: responseIcon,
-        file: null,
-      },
-    ],
-  });
-
-  const [moreInfo, setMoreInfo] = useState({
-    file: null,
-    Url: "",
-    Infomation: "",
-    Maxim: "",
-  });
-
-  const [footer, setFooter] = useState({
-    socialLinks: [
-      { Name: "Facebook", Url: "" },
-      { Name: "Twitter", Url: "" },
-      { Name: "LinkedIn", Url: "" },
-      { Name: "Instagram", Url: "" },
-    ],
-    contactDetails: [
-      {
-        Address: "",
-        Name: "",
-        Phone: "",
-        Email: "",
-      },
-      {
-        Address: "",
-        Name: "",
-        Phone: "",
-        Email: "",
-      },
-    ],
-  });
+  useEffect(() => {
+    getDataLandingPage();
+  }, []);
 
   const handleHeaderImageChange = (file) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setHeader((prev) => ({
-          ...prev,
+        changeDataLandingPage("header", {
+          ...header,
           file: file,
           Url: reader.result,
-        }));
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -123,25 +172,31 @@ const ConfigurableLandingPage = () => {
     files.forEach((file) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProduct((prev) => ({
+        setDataLandingPage((prev) => ({
           ...prev,
-          Images: [...prev.Images, { Url: reader.result, file }],
+          product: {
+            ...prev.product,
+            Images: [...prev.product.Images, { Url: reader.result, file }],
+          },
         }));
+        // changeDataLandingPage("product", {
+        //   ...product,
+        //   Images: [...product.Images, { Url: reader.result, file }],
+        // });
       };
       reader.readAsDataURL(file);
     });
   };
 
-  const handleMoreInfoImageChange = (e) => {
-    const file = e.target.files[0];
+  const handleMoreInfoImageChange = (file) => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setMoreInfo((prev) => ({
-          ...prev,
+        changeDataLandingPage("moreInfo", {
+          ...moreInfo,
           file: file,
           Url: reader.result,
-        }));
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -159,7 +214,10 @@ const ConfigurableLandingPage = () => {
             Url: reader.result,
             file: file,
           };
-          setResponses({ ...responses, Items: newItems });
+          changeDataLandingPage("responses", {
+            ...responses,
+            Items: newItems,
+          });
         } else if (gene === "feature") {
           const newItems = [...features.Items];
           newItems[index] = {
@@ -167,7 +225,10 @@ const ConfigurableLandingPage = () => {
             Url: reader.result,
             file: file,
           };
-          setFeatures({ ...responses, Items: newItems });
+          changeDataLandingPage("features", {
+            ...features,
+            Items: newItems,
+          });
         }
       };
       reader.readAsDataURL(file);
@@ -175,15 +236,15 @@ const ConfigurableLandingPage = () => {
   };
 
   const addFeatureItem = () => {
-    setFeatures((prev) => ({
-      ...prev,
-      Items: [...prev.Items, { Url: featureIcon, Content: "" }],
-    }));
+    changeDataLandingPage("features", {
+      ...features,
+      Items: [...features.Items, { Url: featureIcon, Content: "" }],
+    });
   };
 
   const addResponseItem = () => {
-    setResponses((prev) => ({
-      ...prev,
+    changeDataLandingPage("responses", {
+      ...responses,
       Items: [
         ...prev.Items,
         {
@@ -194,14 +255,21 @@ const ConfigurableLandingPage = () => {
           file: null,
         },
       ],
-    }));
+    });
   };
 
   const addContactDetail = () => {
-    setFooter((prev) => ({
-      ...prev,
-      contactDetails: [...prev.contactDetails, { type: "Address", value: "" }],
-    }));
+    changeDataLandingPage("footer", {
+      ...footer,
+      ContactDetails: [...prev.ContactDetails, { type: "Address", value: "" }],
+    });
+  };
+  const handleRemoveFileID = (FileID) => {
+    if (FileID) {
+      const newListFileID = [...listFileIDDelete];
+      newListFileID.push(FileID);
+      setListFileIDDelete(newListFileID);
+    }
   };
 
   const convertNumberToWords = (number) => {
@@ -257,15 +325,105 @@ const ConfigurableLandingPage = () => {
     return number + (suffixes[lastDigit] || suffixes[0]); // Default "th"
   };
 
-  const handleSave = () => {
-    console.log("Saving configuration...", {
-      generalInfo,
-      header,
-      product,
-      features,
-      responses,
-      moreInfo,
-      footer,
+  const callApiUploadFile = (file) => {
+    const LoaiFile = {
+      FileType: 12,
+    };
+    return new Promise((resolve, reject) => {
+      const formDataFile = new FormData();
+      formDataFile.append("files", file);
+      formDataFile.append("FileDinhKemStr", JSON.stringify({ ...LoaiFile }));
+      api.UploadFile(formDataFile).then((res) => {
+        if (res.data.Status > 0) {
+          resolve(res.data.Data[0]);
+        } else {
+          reject(res.data.Message);
+        }
+      });
+    });
+  };
+
+  console.log(dataLandingPage, "dataLandingPage");
+
+  const handleSave = async () => {
+    const cloneObject = (obj) => JSON.parse(JSON.stringify(obj));
+    const data = {
+      generalInfo: cloneObject(generalInfo),
+      header: cloneObject(header),
+      product: cloneObject(product),
+      features: cloneObject(features),
+      responses: cloneObject(responses),
+      moreInfo: cloneObject(moreInfo),
+      footer: cloneObject(footer),
+    };
+
+    // Xử lý Header File
+    if (header.file) {
+      const response = await callApiUploadFile(header.file);
+      data.header = { ...header, FileId: response.FileID, Url: "" };
+    }
+
+    // Xử lý Product Images
+    if (product.Images.filter((image) => image.file)?.length) {
+      for (let index = 0; index < product.Images.length; index++) {
+        const image = product.Images[index];
+        if (image.file) {
+          const response = await callApiUploadFile(image.file);
+          if (response.FileID && data.product.Images[index]) {
+            data.product.Images[index].FileId = response.FileID;
+            data.product.Images[index].Url = "";
+          }
+        }
+      }
+    }
+
+    // Xử lý Features Items
+    if (features.Items) {
+      for (let index = 0; index < features.Items.length; index++) {
+        const feature = features.Items[index];
+        if (feature.file) {
+          const response = await callApiUploadFile(feature.file);
+          if (response.FileID && data.features.Items[index]) {
+            data.features.Items[index].FileId = response.FileID;
+            data.features.Items[index].Url = "";
+          }
+        }
+      }
+    }
+
+    // Xử lý Responses Items
+    if (responses.Items) {
+      for (let index = 0; index < responses.Items.length; index++) {
+        const r = responses.Items[index];
+        if (r.file) {
+          const response = await callApiUploadFile(r.file);
+          if (response.FileID && data.responses.Items[index]) {
+            data.responses.Items[index].FileId = response.FileID;
+            data.responses.Items[index].Url = "";
+          }
+        }
+      }
+    }
+
+    // Xử lý MoreInfo File
+    if (moreInfo.file) {
+      const response = await callApiUploadFile(moreInfo.file);
+      data.moreInfo = { ...moreInfo, FileId: response.FileID, Url: "" };
+    }
+
+    // Xử lý các file cần xóa
+    if (listFileIDDelete?.length) {
+      data.ListFileDelete = listFileIDDelete;
+    }
+
+    console.log(data, "data");
+    api.Insert(data).then((res) => {
+      if (res.data.Status > 0) {
+        getDataLandingPage();
+      } else {
+        message.destroy();
+        message.warning(res.data.Message);
+      }
     });
   };
 
@@ -296,7 +454,7 @@ const ConfigurableLandingPage = () => {
   const cssLabel = "block text-sm font-medium text-gray-700 mb-2";
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-gray-50 p-8 pb-24">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* General Information */}
         <section className="bg-white p-6 rounded-lg shadow-md">
@@ -308,12 +466,12 @@ const ConfigurableLandingPage = () => {
                 type="text"
                 className={cssInput}
                 value={generalInfo.SoftwareName}
-                onChange={(e) =>
-                  setGeneralInfo({
+                onChange={(e) => {
+                  changeDataLandingPage("generalInfo", {
                     ...generalInfo,
                     SoftwareName: e.target.value,
-                  })
-                }
+                  });
+                }}
               />
             </div>
             <div>
@@ -323,7 +481,7 @@ const ConfigurableLandingPage = () => {
                 className={cssInput}
                 value={generalInfo.CompanyName}
                 onChange={(e) =>
-                  setGeneralInfo({
+                  changeDataLandingPage("generalInfo", {
                     ...generalInfo,
                     CompanyName: e.target.value,
                   })
@@ -343,9 +501,12 @@ const ConfigurableLandingPage = () => {
                 type="text"
                 className={cssInput}
                 value={header.Title}
-                onChange={(e) =>
-                  setHeader({ ...header, Title: e.target.value })
-                }
+                onChange={(e) => {
+                  changeDataLandingPage("header", {
+                    ...header,
+                    Title: e.target.value,
+                  });
+                }}
               />
             </div>
             <div>
@@ -372,12 +533,15 @@ const ConfigurableLandingPage = () => {
                     <button
                       className="absolute top-4 rounded-lg w-[35px] text-lg right-2 p-[3px] bg-red-500 text-white  hover:bg-red-600"
                       style={{ borderRadius: "5px" }}
-                      onClick={() =>
-                        setProduct({
-                          ...product,
-                          Images: product.Images.filter((_, i) => i !== index),
-                        })
-                      }
+                      onClick={() => {
+                        handleRemoveFileID(header.FileId);
+                        changeDataLandingPage("header", {
+                          ...header,
+                          Url: "",
+                          file: null,
+                          FileId: 0,
+                        });
+                      }}
                     >
                       ×
                     </button>
@@ -398,9 +562,12 @@ const ConfigurableLandingPage = () => {
                 type="text"
                 className={cssInput}
                 value={product.Title}
-                onChange={(e) =>
-                  setProduct({ ...product, Title: e.target.value })
-                }
+                onChange={(e) => {
+                  changeDataLandingPage("product", {
+                    ...product,
+                    Title: e.target.value,
+                  });
+                }}
               />
             </div>
             <div>
@@ -411,17 +578,19 @@ const ConfigurableLandingPage = () => {
                     <img
                       src={img.Url}
                       alt={`Product ${index + 1}`}
-                      className="w-full h-full object-cover rounded-lg"
+                      className="w-full h-52 object-cover rounded-lg"
                     />
                     <button
                       className="absolute top-2 rounded-lg w-[35px] text-lg right-2 p-[3px] bg-red-500 text-white  hover:bg-red-600"
                       style={{ borderRadius: "5px" }}
-                      onClick={() =>
-                        setProduct({
+                      onClick={() => {
+                        handleRemoveFileID(img.FileId);
+                        changeDataLandingPage("product", {
                           ...product,
                           Images: product.Images.filter((_, i) => i !== index),
-                        })
-                      }
+                          FileId: 0,
+                        });
+                      }}
                     >
                       ×
                     </button>
@@ -433,7 +602,7 @@ const ConfigurableLandingPage = () => {
                     handleProductImagesChange(listFile)
                   }
                 >
-                  <button className="flex h-48  items-center justify-center border-2 border-dashed border-gray-300 rounded-lg aspect-video hover:border-indigo-500 transition-colors">
+                  <button className="flex h-52 w-full  items-center justify-center border-2 border-dashed border-gray-300 rounded-lg aspect-video hover:border-indigo-500 transition-colors">
                     <FaImage className="w-8 h-8 text-gray-400" />
                   </button>
                 </UploadFileImage>
@@ -458,9 +627,12 @@ const ConfigurableLandingPage = () => {
                 type="text"
                 className={cssInput}
                 value={features.Title}
-                onChange={(e) =>
-                  setFeatures({ ...features, Title: e.target.value })
-                }
+                onChange={(e) => {
+                  changeDataLandingPage("features", {
+                    ...features,
+                    Title: e.target.value,
+                  });
+                }}
               />
             </div>
             <div className="space-y-4">
@@ -468,9 +640,9 @@ const ConfigurableLandingPage = () => {
                 <div key={index} className="flex gap-4 items-center">
                   <div className="relative">
                     <UploadFileImage
-                      onBeforeUpload={() =>
-                        handleUserImageChange(index, "feature", file)
-                      }
+                      index={index}
+                      gene={"feature"}
+                      onBeforeUpload={handleUserImageChange}
                     >
                       <img
                         src={item.Url}
@@ -492,7 +664,10 @@ const ConfigurableLandingPage = () => {
                     onChange={(e) => {
                       const newItems = [...features.Items];
                       newItems[index].Content = e.target.value;
-                      setFeatures({ ...features, Items: newItems });
+                      changeDataLandingPage("features", {
+                        ...features,
+                        Items: newItems,
+                      });
                     }}
                   />
                   <button
@@ -500,7 +675,11 @@ const ConfigurableLandingPage = () => {
                       const newItems = features.Items.filter(
                         (_, i) => i !== index
                       );
-                      setFeatures({ ...features, Items: newItems });
+                      handleRemoveFileID(item.FileId);
+                      changeDataLandingPage("features", {
+                        ...features,
+                        Items: newItems,
+                      });
                     }}
                     className="p-2 text-red-500 hover:text-red-700"
                   >
@@ -529,9 +708,12 @@ const ConfigurableLandingPage = () => {
                 type="text"
                 className={cssInput}
                 value={responses.Title}
-                onChange={(e) =>
-                  setResponses({ ...responses, Title: e.target.value })
-                }
+                onChange={(e) => {
+                  changeDataLandingPage("responses", {
+                    ...responses,
+                    Title: e.target.value,
+                  });
+                }}
               />
             </div>
             <div className="space-y-5">
@@ -553,9 +735,9 @@ const ConfigurableLandingPage = () => {
                   <div className="flex gap-4 items-start">
                     <div className="relative">
                       <UploadFileImage
-                        onBeforeUpload={() =>
-                          handleUserImageChange(index, "response", file)
-                        }
+                        index={index}
+                        gene={"response"}
+                        onBeforeUpload={handleUserImageChange}
                       >
                         <img
                           src={item.Url}
@@ -569,14 +751,17 @@ const ConfigurableLandingPage = () => {
                     </div>
                     <div className="flex-1 space-y-4">
                       <textarea
-                        className={cssInput}
+                        className={`${cssInput} leading-6`}
                         value={item.Content}
                         placeholder="Response content"
                         rows="3"
                         onChange={(e) => {
                           const newItems = [...responses.Items];
                           newItems[index].Content = e.target.value;
-                          setResponses({ ...responses, Items: newItems });
+                          changeDataLandingPage("responses", {
+                            ...responses,
+                            Items: newItems,
+                          });
                         }}
                       />
                       <div className="flex gap-4">
@@ -588,7 +773,10 @@ const ConfigurableLandingPage = () => {
                           onChange={(e) => {
                             const newItems = [...responses.Items];
                             newItems[index].UserName = e.target.value;
-                            setResponses({ ...responses, Items: newItems });
+                            changeDataLandingPage("responses", {
+                              ...responses,
+                              Items: newItems,
+                            });
                           }}
                         />
                         <input
@@ -599,7 +787,10 @@ const ConfigurableLandingPage = () => {
                           onChange={(e) => {
                             const newItems = [...responses.Items];
                             newItems[index].UserRole = e.target.value;
-                            setResponses({ ...responses, Items: newItems });
+                            changeDataLandingPage("responses", {
+                              ...responses,
+                              Items: newItems,
+                            });
                           }}
                         />
                       </div>
@@ -609,7 +800,11 @@ const ConfigurableLandingPage = () => {
                         const newItems = responses.Items.filter(
                           (_, i) => i !== index
                         );
-                        setResponses({ ...responses, Items: newItems });
+                        handleRemoveFileID(item?.FileId);
+                        changeDataLandingPage("responses", {
+                          ...responses,
+                          Items: newItems,
+                        });
                       }}
                       className="p-2 text-red-500 hover:text-red-700"
                     >
@@ -629,7 +824,11 @@ const ConfigurableLandingPage = () => {
             <div>
               <label className={cssLabel}>Background Image</label>
               <div className="mt-1 space-y-4">
-                <UploadFileImage onBeforeUpload={handleMoreInfoImageChange}>
+                <UploadFileImage
+                  onBeforeUpload={(index, gene, file) =>
+                    handleMoreInfoImageChange(file)
+                  }
+                >
                   <div type="button" className={buttonUploadImage}>
                     <FaImage className="mr-2" />
                     Upload Image
@@ -643,6 +842,21 @@ const ConfigurableLandingPage = () => {
                       alt="More info background"
                       className="w-full h-full h-12 object-cover"
                     />
+                    <button
+                      className="absolute top-4 rounded-lg w-[35px] text-lg right-2 p-[3px] bg-red-500 text-white  hover:bg-red-600"
+                      style={{ borderRadius: "5px" }}
+                      onClick={() => {
+                        handleRemoveFileID(moreInfo?.FileId);
+                        changeDataLandingPage("moreInfo", {
+                          ...moreInfo,
+                          file: null,
+                          Url: "",
+                          FileId: 0,
+                        });
+                      }}
+                    >
+                      ×
+                    </button>
                   </div>
                 )}
               </div>
@@ -650,36 +864,42 @@ const ConfigurableLandingPage = () => {
             <div>
               <label className={cssLabel}>Information</label>
               <textarea
-                className={cssInput}
+                className={`${cssInput} leading-6`}
                 rows="5"
-                value={moreInfo.Infomation}
-                onChange={(e) =>
-                  setMoreInfo({ ...moreInfo, Infomation: e.target.value })
-                }
+                value={moreInfo.Information}
+                onChange={(e) => {
+                  changeDataLandingPage("moreInfo", {
+                    ...moreInfo,
+                    Information: e.target.value,
+                  });
+                }}
               />
             </div>
             <div>
               <label className={cssLabel}>Maxim</label>
               <textarea
-                className={`${cssInput} scrollbar-thin scrollbar-thumb-rounded-md`}
+                className={`${cssInput} leading-6 scrollbar-thin scrollbar-thumb-rounded-md`}
                 rows="4"
                 value={moreInfo.Maxim}
-                onChange={(e) =>
-                  setMoreInfo({ ...moreInfo, Maxim: e.target.value })
-                }
+                onChange={(e) => {
+                  changeDataLandingPage("moreInfo", {
+                    ...moreInfo,
+                    Maxim: e.target.value,
+                  });
+                }}
               />
             </div>
           </div>
         </section>
 
         {/* Footer Configuration */}
-        <section className="bg-white p-6 rounded-lg shadow-md">
+        <section className="bg-white p-6 rounded-lg shadow-md ">
           <h2 className="text-2xl font-bold mb-4">Footer Configuration</h2>
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-medium mb-4">Social Links</h3>
               <div className="space-y-4">
-                {footer.socialLinks.map((link, index) => (
+                {footer.SocialLinks.map((link, index) => (
                   <div key={index} className="flex items-center gap-4">
                     {link.Name === "Facebook" && (
                       <FaFacebook className="text-blue-600 text-xl" />
@@ -699,9 +919,12 @@ const ConfigurableLandingPage = () => {
                       placeholder={`${link.Name} URL`}
                       value={link.Url}
                       onChange={(e) => {
-                        const newLinks = [...footer.socialLinks];
+                        const newLinks = [...footer.SocialLinks];
                         newLinks[index].Url = e.target.value;
-                        setFooter({ ...footer, socialLinks: newLinks });
+                        changeDataLandingPage("footer", {
+                          ...footer,
+                          SocialLinks: newLinks,
+                        });
                       }}
                     />
                   </div>
@@ -720,7 +943,7 @@ const ConfigurableLandingPage = () => {
                 </button>
               </div>
               <div className="space-y-4">
-                {footer.contactDetails.map((detail, index) => (
+                {footer.ContactDetails.map((detail, index) => (
                   <>
                     <div className={cssTitleList}>
                       <p className="text-base font-medium">
@@ -729,10 +952,13 @@ const ConfigurableLandingPage = () => {
                       </p>
                       <button
                         onClick={() => {
-                          const newDetails = footer.contactDetails.filter(
+                          const newDetails = footer.ContactDetails.filter(
                             (_, i) => i !== index
                           );
-                          setFooter({ ...footer, contactDetails: newDetails });
+                          changeDataLandingPage("footer", {
+                            ...footer,
+                            ContactDetails: newDetails,
+                          });
                         }}
                         className="p-2 text-red-500 hover:text-red-700"
                       >
@@ -750,11 +976,11 @@ const ConfigurableLandingPage = () => {
                             placeholder={"Name"}
                             value={detail.Name}
                             onChange={(e) => {
-                              const newDetails = [...footer.contactDetails];
+                              const newDetails = [...footer.ContactDetails];
                               newDetails[index].Name = e.target.value;
-                              setFooter({
+                              changeDataLandingPage("footer", {
                                 ...footer,
-                                contactDetails: newDetails,
+                                ContactDetails: newDetails,
                               });
                             }}
                           />
@@ -768,11 +994,11 @@ const ConfigurableLandingPage = () => {
                             placeholder={"Address"}
                             value={detail.Address}
                             onChange={(e) => {
-                              const newDetails = [...footer.contactDetails];
+                              const newDetails = [...footer.ContactDetails];
                               newDetails[index].Address = e.target.value;
-                              setFooter({
+                              changeDataLandingPage("footer", {
                                 ...footer,
-                                contactDetails: newDetails,
+                                ContactDetails: newDetails,
                               });
                             }}
                           />
@@ -786,11 +1012,11 @@ const ConfigurableLandingPage = () => {
                             placeholder={"Phone"}
                             value={detail.Phone}
                             onChange={(e) => {
-                              const newDetails = [...footer.contactDetails];
+                              const newDetails = [...footer.ContactDetails];
                               newDetails[index].Phone = e.target.value;
-                              setFooter({
+                              changeDataLandingPage("footer", {
                                 ...footer,
-                                contactDetails: newDetails,
+                                ContactDetails: newDetails,
                               });
                             }}
                           />
@@ -804,11 +1030,11 @@ const ConfigurableLandingPage = () => {
                             placeholder={"Email"}
                             value={detail.Email}
                             onChange={(e) => {
-                              const newDetails = [...footer.contactDetails];
+                              const newDetails = [...footer.ContactDetails];
                               newDetails[index].Email = e.target.value;
-                              setFooter({
+                              changeDataLandingPage("footer", {
                                 ...footer,
-                                contactDetails: newDetails,
+                                ContactDetails: newDetails,
                               });
                             }}
                           />
@@ -823,7 +1049,8 @@ const ConfigurableLandingPage = () => {
         </section>
 
         {/* Save Button */}
-        <div className="flex justify-end">
+        {/* flex justify-end */}
+        <div className="absolute bottom-16 right-20 flex justify-end">
           <button
             onClick={handleSave}
             className="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 transition-colors"

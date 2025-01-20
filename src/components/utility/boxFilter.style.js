@@ -26,6 +26,7 @@ const WDComponentDivFilter = styled.div`
       margin-right: 0;
     }
   }
+    
 `;
 
 const ComponentDivFilter = WithDirection(WDComponentDivFilter);
