@@ -621,7 +621,7 @@ html[dir="rtl"] .dz-hidden-input {
 
 .ant-input-group {
   height: 35px;
-
+  margin-top: 10px;
 }
 .ant-input-group input {
   height: 100%;
@@ -684,4 +684,36 @@ html[dir="rtl"] .dz-hidden-input {
 }
 .img-crop-modal .ant-modal-body, .img-crop-modal .ant-modal-footer,.img-crop-modal .ant-modal-title {
   padding: 10px;
+}
+:where(.css-cg4vza).ant-table-wrapper .ant-table {
+  background: transparent;
+}
+:where(.css-cg4vza).ant-table-wrapper .ant-table-thead >tr>th, :where(.css-cg4vza).ant-table-wrapper .ant-table-thead >tr>td {
+  position: relative;
+  color: #C5C2C2;
+  font-weight: 600;
+  text-align: start;
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s ease;
+}
+:where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper .ant-table-thead >tr>th, :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper .ant-table-thead >tr>td {
+  position: relative;
+  color: #C5C2C2;
+  font-weight: 600;
+  text-align: start;
+  background: transparent;
+  border-bottom: 1px solid #f0f0f0;
+  transition: background 0.2s ease;
+}
+:where(.css-cg4vza).ant-table-wrapper table {
+  width: 100%;
+  text-align: start;
+  border-radius: 8px 8px 0 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+:where(.css-dev-only-do-not-override-cg4vza).ant-image {
+  position: relative;
+  display: block;
 }

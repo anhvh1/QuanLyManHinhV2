@@ -347,12 +347,7 @@ const QLThuVien = (props) => {
                 <PlusOutlined />
                 Thêm mới
               </Button> */}
-          <div
-            style={{ color: "white", cursor: "context-menu" }}
-            onClick={showModalAdd}
-          >
-            <PlusOutlined /> Thêm mới
-          </div>
+         
           {/* ) : (
               ''
             )
@@ -362,7 +357,7 @@ const QLThuVien = (props) => {
         </PageAction>
       </PageWrap>
       <Box>
-        <BoxFilter>
+        <BoxFilter style={{ display: "flex", justifyContent: "space-between" }}>
           <InputSearch
             defaultValue={filterData.Keyword}
             placeholder={"Nhập tên danh sách phát"}
@@ -370,6 +365,12 @@ const QLThuVien = (props) => {
             onSearch={(value) => onFilter(value, "Keyword")}
             allowClear
           />
+           <div
+            style={{ color: "white", cursor: "context-menu" }}
+            onClick={showModalAdd}
+          >
+            <PlusOutlined /> Thêm mới
+          </div>
         </BoxFilter>
         <BoxTable
           columns={columns}

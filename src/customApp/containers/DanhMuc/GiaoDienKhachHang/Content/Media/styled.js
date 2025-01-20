@@ -108,7 +108,11 @@ export const ContentTable = styled.div`
     overflow: hidden; /* Ẩn phần chữ vượt quá */
     white-space: nowrap; /* Không cho chữ xuống dòng */
     text-overflow: ellipsis; /* Hiệu ứng ba chấm */
-    max-width: 90px; /* Giới hạn chiều rộng tối đa */
+    max-width: 150px; /* Giới hạn chiều rộng tối đa */
+  }
+  .ant-image {
+    position: relative;
+    display: block;
   }
 `;
 export const RedTree = styled.div`

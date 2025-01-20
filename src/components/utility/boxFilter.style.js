@@ -8,7 +8,7 @@ const WDComponentDivFilter = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: start;
-  align-items: center;
+  // align-items: center;
   gap: 10px;
   display: ${(props) => (props?.isCenter === true ? 'flex' : '')};
   justify-content: ${(props) => (props?.isCenter === true ? 'center' : '')};

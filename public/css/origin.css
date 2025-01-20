@@ -155,7 +155,7 @@ div::-webkit-scrollbar-thumb {
 
 .ant-table-header {
     overflow-y: hidden !important;
-    width: calc(100% - 8px) !important;
+    width: calc(100% - 9px) !important;
 }
 
 .ant-table-fixed-left .ant-table-header {
@@ -188,6 +188,6 @@ div::-webkit-scrollbar-thumb {
 .ant-table-tbody>tr>td{
     border: 1px solid white;
 }
-:where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table-tbody .ant-table-row >.ant-table-cell-row-hover {
-    background: white;
+:where(.css-cg4vza).ant-table-wrapper .ant-table {
+    background: transparent;
 }

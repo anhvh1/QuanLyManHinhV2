@@ -1,44 +1,44 @@
-import {Modal, Table, Tooltip, message} from 'antd';
-import actions from '../../../../../redux/DanhMuc/QLLichPhat/actions';
-import React, {useState, useEffect} from 'react';
-import {connect, useDispatch} from 'react-redux';
-import LayoutWrapper from '../../../../../../components/utility/layoutWrapper';
-import PageHeader from '../../../../../../components/utility/pageHeader';
-import PageAction from '../../../../../../components/utility/pageAction';
-import Box from '../../../../../../components/utility/box';
-import BoxFilter from '../../../../../../components/utility/boxFilter';
-import BoxTable from '../../../../../../components/utility/boxTable';
-import {TreeSelect} from '../../../../../../components/uielements/exportComponent';
-import actionsCoQuan from '../../../../../redux/DanhMuc/DMCoQuan/actions';
+import { Modal, Table, Tooltip, message } from "antd";
+import actions from "../../../../../redux/DanhMuc/QLLichPhat/actions";
+import React, { useState, useEffect } from "react";
+import { connect, useDispatch } from "react-redux";
+import LayoutWrapper from "../../../../../../components/utility/layoutWrapper";
+import PageHeader from "../../../../../../components/utility/pageHeader";
+import PageAction from "../../../../../../components/utility/pageAction";
+import Box from "../../../../../../components/utility/box";
+import BoxFilter from "../../../../../../components/utility/boxFilter";
+import BoxTable from "../../../../../../components/utility/boxTable";
+import { TreeSelect } from "../../../../../../components/uielements/exportComponent";
+import actionsCoQuan from "../../../../../redux/DanhMuc/DMCoQuan/actions";
 import {
   Button,
   InputSearch,
   Select,
-} from '../../../../../../components/uielements/exportComponent';
-import Checkbox from '../../../../../../components/uielements/checkbox';
-import Switches from '../../../../../../components/uielements/switch';
+} from "../../../../../../components/uielements/exportComponent";
+import Checkbox from "../../../../../../components/uielements/checkbox";
+import Switches from "../../../../../../components/uielements/switch";
 import {
   changeUrlFilter,
   exportExcel,
   getDefaultPageSize,
   getFilterData,
   getRoleByKey,
-} from '../../../../../../helpers/utility';
+} from "../../../../../../helpers/utility";
 import {
   _debounce,
   getInfoFromToken,
   getLocalKey,
-} from '../../../../../../helpers/utility';
-import {useKey} from '../../../../../CustomHook/useKey';
-import queryString from 'query-string';
-import api from './config';
-import ModalAddEdit from './modalAddEdit';
-import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
-import {useSelector} from 'react-redux';
-import dayjs from 'dayjs';
-import moment from 'moment';
+} from "../../../../../../helpers/utility";
+import { useKey } from "../../../../../CustomHook/useKey";
+import queryString from "query-string";
+import api from "./config";
+import ModalAddEdit from "./modalAddEdit";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import dayjs from "dayjs";
+import moment from "moment";
 
-import PageWrap from '../../../../../../components/utility/PageWrap';
+import PageWrap from "../../../../../../components/utility/PageWrap";
 const QLLichPhat = (props) => {
   // const [filterData, setFilterData] = useState(
   //   queryString.parse(props.location.search),
@@ -46,14 +46,14 @@ const QLLichPhat = (props) => {
   const { filterData, setFilterData } = props;
   const [dataModalAddEdit, setDataModalAddEdit] = useState({});
   const [visibleModalAddEdit, setVisibleModalAddEdit] = useState(false);
-  const [action, setAction] = useState('');
-  const {DanhSachCoQuan} = useSelector((state) => state.DMCoQuan);
+  const [action, setAction] = useState("");
+  const { DanhSachCoQuan } = useSelector((state) => state.DMCoQuan);
   const [modalKey, inceaseModalKey] = useKey();
   const [selectedRowsKey, setSelectedRowsKey] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const dispatch = useDispatch();
 
-  document.title = 'Quản lý lịch phát';
+  document.title = "Quản lý lịch phát";
 
   useEffect(() => {
     changeUrlFilter(filterData);
@@ -68,7 +68,7 @@ const QLLichPhat = (props) => {
 
   const onTableChange = (pagination, filters, sorter) => {
     let oldFilterData = filterData;
-    let onOrder = {pagination, filters, sorter};
+    let onOrder = { pagination, filters, sorter };
     let newFilterData = getFilterData(oldFilterData, null, onOrder);
 
     setFilterData(newFilterData);
@@ -77,7 +77,7 @@ const QLLichPhat = (props) => {
 
   const onFilter = (value, property) => {
     let oldFilterData = filterData;
-    let onFilter = {value, property};
+    let onFilter = { value, property };
     let newfilterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data
     setFilterData(newfilterData);
@@ -85,7 +85,7 @@ const QLLichPhat = (props) => {
   };
 
   const showModalAdd = () => {
-    setAction('add');
+    setAction("add");
     setDataModalAddEdit({});
     inceaseModalKey();
     setVisibleModalAddEdit(true);
@@ -93,10 +93,10 @@ const QLLichPhat = (props) => {
 
   const deleteModalAddEdit = (LichPhatID) => {
     Modal.confirm({
-      title: 'Xóa Dữ Liệu',
-      content: 'Bạn có muốn xóa chức vụ này không?',
-      cancelText: 'Không',
-      okText: 'Có',
+      title: "Xóa Dữ Liệu",
+      content: "Bạn có muốn xóa chức vụ này không?",
+      cancelText: "Không",
+      okText: "Có",
       onOk: () => {
         setConfirmLoading(true);
         api
@@ -137,9 +137,9 @@ const QLLichPhat = (props) => {
 
   const showModalEdit = (lichPhatID) => {
     const LichPhatID = lichPhatID;
-    setAction('edit');
+    setAction("edit");
     api
-      .chiTietNgheNhan({LichPhatID})
+      .chiTietNgheNhan({ LichPhatID })
       .then((res) => {
         if (res.data.Status > 0) {
           setDataModalAddEdit(res.data.Data);
@@ -164,7 +164,7 @@ const QLLichPhat = (props) => {
 
   const submitModalAddEdit = (data) => {
     setConfirmLoading(true);
-    if (action === 'add') {
+    if (action === "add") {
       api
         .themNgheNhan(data)
         .then((res) => {
@@ -186,7 +186,7 @@ const QLLichPhat = (props) => {
           message.error(error.toString());
         });
     }
-    if (action === 'edit') {
+    if (action === "edit") {
       api
         .suaNgheNhan(data)
         .then((res) => {
@@ -212,16 +212,16 @@ const QLLichPhat = (props) => {
 
   const renderThaoTac = (record) => {
     return (
-      <div className={'action-btn'}>
+      <div className={"action-btn"}>
         {/* {role?.edit ? ( */}
-        <Tooltip title={'Sửa'}>
+        <Tooltip title={"Sửa"}>
           <EditOutlined onClick={() => showModalEdit(record.LichPhatID)} />
         </Tooltip>{" "}
         {/* ) : ( */}
         {/* '' */}
         {/* )} */}
         {/* {role?.delete ? ( */}
-        <Tooltip title={'Xóa'}>
+        <Tooltip title={"Xóa"}>
           <DeleteOutlined
             onClick={() => deleteModalAddEdit(record.LichPhatID)}
           />
@@ -249,91 +249,82 @@ const QLLichPhat = (props) => {
 
   const columns = [
     {
-      title: 'STT',
-      width: '5%',
-      align: 'center',
+      title: "STT",
+      width: "5%",
+      align: "center",
       render: (text, record, index) => (
         <span>{(PageNumber - 1) * PageSize + (index + 1)}</span>
       ),
     },
     {
-      title: 'Tên lịch phát',
-      dataIndex: 'TenLichPhat',
-      align: 'center',
-      width: '20%',
+      title: "Tên lịch phát",
+      dataIndex: "TenLichPhat",
+      align: "center",
+      width: "20%",
     },
     {
-      title: 'Loại sự kiện',
-      dataIndex: 'TenSuKien',
-      align: 'center',
-      width: '15%',
+      title: "Loại sự kiện",
+      dataIndex: "TenSuKien",
+      align: "center",
+      width: "15%",
     },
     {
-      title: 'Media/Danh sách phát',
-      dataIndex: 'TenMediaORDanhSachPhat',
-      align: 'center',
-      width: '20%',
+      title: "Media/Danh sách phát",
+      dataIndex: "TenMediaORDanhSachPhat",
+      align: "center",
+      width: "20%",
     },
     {
-      title: 'Màn hình/Nhóm',
-      dataIndex: 'ListManHinhOrNhomManHinh',
-      align: 'center',
-      width: '20%',
+      title: "Màn hình/Nhóm",
+      dataIndex: "ListManHinhOrNhomManHinh",
+      align: "center",
+      width: "20%",
       render: (text, record) => {
         if (
           record.ListManHinhOrNhomManHinh &&
           record.ListManHinhOrNhomManHinh.length > 0
         ) {
           const Ten = record.ListManHinhOrNhomManHinh.filter(
-            (item) => item.Ten !== null,
+            (item) => item.Ten !== null
           ).map((item) => item.Ten);
-          return Ten.join(', ');
+          return Ten.join(", ");
         } else {
-          return ''; // Handle case where there are no items in the array or handle accordingly
+          return ""; // Handle case where there are no items in the array or handle accordingly
         }
       },
     },
     {
-      title: 'Giờ bắt đầu',
-      dataIndex: 'GioBatDau',
-      align: 'center',
-      width: '10%',
+      title: "Giờ bắt đầu",
+      dataIndex: "GioBatDau",
+      align: "center",
+      width: "10%",
       render: (GioBatDau, record) => {
         if (record.ChiaNgay === false) {
           return <span>Luôn Luôn</span>;
         } else {
-          return (
-            <>
-             {(GioBatDau)}
-            </>
-          );
+          return <>{GioBatDau}</>;
         }
       },
     },
 
     {
-      title: 'Giờ kết thúc',
-      dataIndex: 'GioKetThuc',
-      align: 'center',
-      width: '10%',
+      title: "Giờ kết thúc",
+      dataIndex: "GioKetThuc",
+      align: "center",
+      width: "10%",
       render: (GioKetThuc, record) => {
         if (record.ChiaNgay === false) {
           return null;
         } else {
-          return (
-            <>
-              
-              {(GioKetThuc)}
-            </>
-          );
+          return <>{GioKetThuc}</>;
         }
       },
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'TrangThai',
-      align: 'center',
-      width: '15%',
+      title: "Trạng thái",
+      dataIndex: "TrangThai",
+      align: "center",
+      width: "15%",
       render: (TrangThai) => {
         if (TrangThai === true) {
           return <span>Hoạt động</span>;
@@ -345,20 +336,20 @@ const QLLichPhat = (props) => {
       },
     },
     {
-      title: 'Khách hàng',
-      dataIndex: 'TenCoQuan',
-      align: 'center',
-      width: '20%',
+      title: "Khách hàng",
+      dataIndex: "TenCoQuan",
+      align: "center",
+      width: "20%",
     },
     {
-      title: 'Thao tác',
-      width: '10%',
-      align: 'center',
-      margin: '10px',
+      title: "Thao tác",
+      width: "10%",
+      align: "center",
+      margin: "10px",
       render: (text, record) => renderThaoTac(record),
     },
   ];
-  const access_token1 = getLocalKey('access_token');
+  const access_token1 = getLocalKey("access_token");
   const dataUnzip1 = getInfoFromToken(access_token1);
   const ListNguoiDung = dataUnzip1?.NguoiDung?.NguoiDungID;
   const hideSelect = ListNguoiDung !== 18;
@@ -373,12 +364,7 @@ const QLLichPhat = (props) => {
             <PlusOutlined />
             Thêm mới
           </Button> */}
-          <div
-            style={{ color: "white", cursor: "context-menu" }}
-            onClick={showModalAdd}
-          >
-            <PlusOutlined /> Thêm mới
-          </div>
+
           {/* ) : (
               ''
             )
@@ -388,110 +374,117 @@ const QLLichPhat = (props) => {
         </PageAction>
       </PageWrap>
       <Box>
-        <BoxFilter>
-        {!hideSelect && (
-          <TreeSelect
-            showSearch
-            treeData={DanhSachCoQuan}
-            onChange={(value) => onFilter(value, 'CoQuanID')}
-            style={{width: 400}}
-            dropdownStyle={{maxHeight: 400, overflow: 'auto'}}
-            placeholder="Chọn cơ quan"
-            allowClear
-            treeDefaultExpandAll
-            // onChange={value => this.onSearch(value, "CoQuanID")}
-            notFoundContent={'Không có dữ liệu'}
-            treeNodeFilterProp={'title'}
-          />
-        )}
-          <Select
-            allowClear
-            style={{width: '200px'}}
-            defaultValue={filterData.LoaiSuKien}
-            placeholder={'Loại sư kiện'}
-            onChange={(value) => onFilter(value, 'LoaiSuKien')}
-          >
-            {DanhSachLoaiSuKien?.map((item) => (
-              <Option value={item.ID}>{item.TenSuKien}</Option>
-            ))}
-          </Select>
-          <Select
-            allowClear
-            style={{width: '200px'}}
-            defaultValue={filterData.ID}
-            placeholder={'Màn hình'}
-            onChange={(value, item) => {
-              onFilter(value, 'ID');
-              const selectedItem = DanhSachManHinhOrNhomManHinh.find(
-                (item) => item.ID === value,
-              );
+        <BoxFilter style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
+            {!hideSelect && (
+              <TreeSelect
+                showSearch
+                treeData={DanhSachCoQuan}
+                onChange={(value) => onFilter(value, "CoQuanID")}
+                style={{ width: 400 }}
+                dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+                placeholder="Chọn cơ quan"
+                allowClear
+                treeDefaultExpandAll
+                // onChange={value => this.onSearch(value, "CoQuanID")}
+                notFoundContent={"Không có dữ liệu"}
+                treeNodeFilterProp={"title"}
+              />
+            )}
+            <Select
+              allowClear
+              style={{ width: "200px" }}
+              defaultValue={filterData.LoaiSuKien}
+              placeholder={"Loại sư kiện"}
+              onChange={(value) => onFilter(value, "LoaiSuKien")}
+            >
+              {DanhSachLoaiSuKien?.map((item) => (
+                <Option value={item.ID}>{item.TenSuKien}</Option>
+              ))}
+            </Select>
+            <Select
+              allowClear
+              style={{ width: "200px" }}
+              defaultValue={filterData.ID}
+              placeholder={"Màn hình"}
+              onChange={(value, item) => {
+                onFilter(value, "ID");
+                const selectedItem = DanhSachManHinhOrNhomManHinh.find(
+                  (item) => item.ID === value
+                );
 
-              if (selectedItem && selectedItem.ID === value) {
-                onFilter(1, 'title'); 
-              } else {
-                onFilter(null, 'title');
-              }
-            }}
-          >
-            {DanhSachManHinhOrNhomManHinh.filter(
-              (item) => item.Title === 1,
-            ).map((item) => (
-              <Option key={item.Title} value={item.ID}>
-                {item.Ten}
-              </Option>
-            ))}
-          </Select>
+                if (selectedItem && selectedItem.ID === value) {
+                  onFilter(1, "title");
+                } else {
+                  onFilter(null, "title");
+                }
+              }}
+            >
+              {DanhSachManHinhOrNhomManHinh.filter(
+                (item) => item.Title === 1
+              ).map((item) => (
+                <Option key={item.Title} value={item.ID}>
+                  {item.Ten}
+                </Option>
+              ))}
+            </Select>
 
-          <Select
-            allowClear
-            style={{width: '200px'}}
-            defaultValue={filterData.title}
-            placeholder={'Nhóm màn hình'}
-            onChange={(value, item) => {
-              onFilter(value, 'ID');
-              const selectedItem = DanhSachManHinhOrNhomManHinh.find(
-                (item) => item.ID === value,
-              );
+            <Select
+              allowClear
+              style={{ width: "200px" }}
+              defaultValue={filterData.title}
+              placeholder={"Nhóm màn hình"}
+              onChange={(value, item) => {
+                onFilter(value, "ID");
+                const selectedItem = DanhSachManHinhOrNhomManHinh.find(
+                  (item) => item.ID === value
+                );
 
-              if (selectedItem && selectedItem.ID === value) {
-                onFilter(2, 'title'); 
-              } else {
-                onFilter(null, 'title');
-              }
-            }}
+                if (selectedItem && selectedItem.ID === value) {
+                  onFilter(2, "title");
+                } else {
+                  onFilter(null, "title");
+                }
+              }}
+            >
+              {DanhSachManHinhOrNhomManHinh.filter(
+                (item) => item.Title === 2
+              ).map((item) => (
+                <Option key={item.ID} value={item.ID}>
+                  {item.Ten}
+                </Option>
+              ))}
+            </Select>
+            <InputSearch
+              defaultValue={filterData.Keyword}
+              placeholder={"Nhập tên sự kiện"}
+              style={{ width: 300 }}
+              onSearch={(value) => onFilter(value, "Keyword")}
+              allowClear
+            />
+          </div>
+          <div
+            style={{ color: "white", cursor: "context-menu" }}
+            onClick={showModalAdd}
           >
-            {DanhSachManHinhOrNhomManHinh.filter(
-              (item) => item.Title === 2,
-            ).map((item) => (
-              <Option key={item.ID} value={item.ID}>
-                {item.Ten}
-              </Option>
-            ))}
-          </Select>
-          <InputSearch
-            defaultValue={filterData.Keyword}
-            placeholder={'Nhập tên sự kiện'}
-            style={{width: 300}}
-            onSearch={(value) => onFilter(value, 'Keyword')}
-            allowClear
-          />
+            <PlusOutlined /> Thêm mới
+          </div>
         </BoxFilter>
-        
       </Box>
       <BoxTable
-          columns={columns}
-          dataSource={DanhSachNgheNhan}
-          onChange={onTableChange}
-          pagination={{
-            showSizeChanger: false,
-            showTotal: (total, range) =>
-              `Từ ${range[0]} đến ${range[1]} trên ${total} kết quả`,
-            total: TotalRow,
-            current: PageNumber,
-            pageSize: PageSize,
-          }}
-          rowKey={(record) => record.ID}
-        />
+        columns={columns}
+        dataSource={DanhSachNgheNhan}
+        onChange={onTableChange}
+        pagination={{
+          showSizeChanger: false,
+          showTotal: (total, range) =>
+            `Từ ${range[0]} đến ${range[1]} trên ${total} kết quả`,
+          total: TotalRow,
+          current: PageNumber,
+          pageSize: PageSize,
+        }}
+        rowKey={(record) => record.ID}
+      />
       <ModalAddEdit
         visible={visibleModalAddEdit}
         dataEdit={dataModalAddEdit}
@@ -511,7 +504,7 @@ const QLLichPhat = (props) => {
 function mapStateToProps(state) {
   return {
     ...state.QLLichPhat,
-    role: getRoleByKey(state.Auth.role, 'danh-muc-chuc-vu'),
+    role: getRoleByKey(state.Auth.role, "danh-muc-chuc-vu"),
   };
 }
 

@@ -26,4 +26,5 @@ export const Layout = styled.div`
 `;
 export const MenuContent = styled.div`
   display: flex;
+  margin-bottom: 20px;
 `;

@@ -697,43 +697,46 @@ const ContentMedia = (props) => {
         <PageAction>{role?.add ? renderActionAdd() : ""}</PageAction>
         <PageAction>
           {/* {role ? role.add ?  */}
+
+          {/* //  : '' : ''} */}
+        </PageAction>
+      </PageWrap>
+      <Box>
+        <BoxFilter style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
+            <Select
+              defaultValue={filterData?.Loai ? filterData?.Loai : null}
+              placeholder="Loại"
+              onChange={(value) => onFilter(value, "Loai")}
+              style={{ width: 200 }}
+              allowClear
+            >
+              <Option value={1}>Hình ảnh</Option>
+              <Option value={2}>Video</Option>
+            </Select>
+            <Select
+              defaultValue={filterData?.Status ? filterData?.Status : null}
+              placeholder="Trạng thái"
+              onChange={(value) => onFilter(value, "Status")}
+              style={{ width: 200 }}
+            >
+              <Option value={true}>Đang sử dụng</Option>
+              <Option value={false}>Không sử dụng</Option>
+            </Select>
+            <InputSearch
+              allowClear
+              defaultValue={filterData?.Keyword}
+              placeholder="Tìm kiếm theo tên "
+              onSearch={(value) => onFilter(value, "Keyword")}
+              style={{ width: 300 }}
+            />
+          </div>
           <div
             style={{ color: "white", cursor: "context-menu" }}
             onClick={showModalAddMedia}
           >
             <PlusOutlined /> Thêm mới
           </div>
-          {/* //  : '' : ''} */}
-        </PageAction>
-      </PageWrap>
-      <Box>
-        <BoxFilter>
-          <Select
-            defaultValue={filterData?.Loai ? filterData?.Loai : null}
-            placeholder="Loại"
-            onChange={(value) => onFilter(value, "Loai")}
-            style={{ width: 200 }}
-            allowClear
-          >
-            <Option value={1}>Hình ảnh</Option>
-            <Option value={2}>Video</Option>
-          </Select>
-          <Select
-            defaultValue={filterData?.Status ? filterData?.Status : null}
-            placeholder="Trạng thái"
-            onChange={(value) => onFilter(value, "Status")}
-            style={{ width: 200 }}
-          >
-            <Option value={true}>Đang sử dụng</Option>
-            <Option value={false}>Không sử dụng</Option>
-          </Select>
-          <InputSearch
-            allowClear
-            defaultValue={filterData?.Keyword}
-            placeholder="Tìm kiếm theo tên "
-            onSearch={(value) => onFilter(value, "Keyword")}
-            style={{ width: 300 }}
-          />
         </BoxFilter>
       </Box>
       <Box
@@ -824,15 +827,16 @@ const ContentMedia = (props) => {
                     </div>
                     <div className="table-columns-left-bottom">
                       <div className="table-columns-text-ten">
-                        {item.TenFile}
+                        {item.TenFile} {" "}
+                        {item.KichThuoc}
                       </div>
-                      <div className="table-columns-text">{item.KichThuoc}</div>
-                      <Switch
+                      <div className="table-columns-text"></div>
+                      {/* <Switch
                         checked={item.TrangThai}
                         onChange={(checked) =>
                           handleSwitchChange(item, checked)
                         }
-                      />
+                      /> */}
                       <DeleteIcon onClick={() => deleteModalAddEdit(item.ID)} />
                     </div>
                   </div>

@@ -110,8 +110,28 @@ const QuanLyManHinh = (props) => {
   );
   return (
     <LayoutWrapper>
-      <PageWrap>
-        <PageAction>
+      <Box>
+        <BoxFilter style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
+            <Select
+              allowClear
+              style={{ width: "200px" }}
+              // defaultValue={filterData.LoaiSuKien}
+              placeholder={"Nhóm thiết bị"}
+              onChange={(value) => onFilter(value, "Status")}
+            >
+              <Option value={true}>Đang sử dụng</Option>
+              <Option value={false}>Không sử dụng</Option>
+            </Select>
+            <InputSearch
+              defaultValue={filterData?.Keyword}
+              placeholder={"Tìm kiếm"}
+              style={{ width: 300 }}
+              onSearch={(value) => onFilter(value, "Keyword")}
+              allowClear
+            />
+          </div>
+
           <div style={{ display: "flex" }} onClick={showModalAdd}>
             <SettingIcon />
             <div
@@ -127,27 +147,6 @@ const QuanLyManHinh = (props) => {
               Quản lý nhóm thiết bị
             </div>
           </div>
-        </PageAction>
-      </PageWrap>
-      <Box>
-        <BoxFilter>
-          <Select
-            allowClear
-            style={{ width: "200px" }}
-            // defaultValue={filterData.LoaiSuKien}
-            placeholder={"Nhóm thiết bị"}
-            onChange={(value) => onFilter(value, "Status")}
-          >
-            <Option value={true}>Đang sử dụng</Option>
-            <Option value={false}>Không sử dụng</Option>
-          </Select>
-          <InputSearch
-            defaultValue={filterData?.Keyword}
-            placeholder={"Tìm kiếm"}
-            style={{ width: 300 }}
-            onSearch={(value) => onFilter(value, "Keyword")}
-            allowClear
-          />
         </BoxFilter>
       </Box>
       <ContentTable>
@@ -220,9 +219,9 @@ const QuanLyManHinh = (props) => {
                         </h3>
 
                         {item.diaChi && item.diaChi.length > 0 && (
-                          <h3>
+                          <h3 style={{ display: "flex" }}>
                             {item.diaChi}
-                            <PositioningIcon />
+                            <PositioningIcon style={{ marginLeft: "5px" }} />
                           </h3>
                         )}
                       </div>

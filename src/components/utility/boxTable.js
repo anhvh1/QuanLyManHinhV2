@@ -12,7 +12,7 @@ const DataTable = styled(Table)`
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    color: #c5c2c2;
+    color: #C5C2C2;
     font-size: 14px;
     line-height: 1.5714285714285714;
     list-style: none;
@@ -22,22 +22,15 @@ const DataTable = styled(Table)`
     background: transparent;
     border-radius: 8px 8px 0 0;
   }
-  :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper
-    .ant-table-thead
-    > tr
-    > th,
-  :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper
-    .ant-table-thead
-    > tr
-    > td {
+    :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper .ant-table-thead >tr>th, :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper .ant-table-thead >tr>td {
     position: relative;
-    color: #c5c2c2;
+    color: #C5C2C2;
     font-weight: 600;
     text-align: start;
     background: transparent;
     border-bottom: 1px solid #f0f0f0;
     transition: background 0.2s ease;
-  }
+}
   :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper table {
     width: 100%;
     text-align: start;
@@ -71,7 +64,6 @@ const DataTable = styled(Table)`
   }
   .ant-table-pagination.ant-pagination {
     margin: 15px 0 !important;
-    height: 150px;
   }
 
   .ant-table-body {
@@ -84,7 +76,7 @@ const DataTable = styled(Table)`
   }
 
   .ant-table-thead > tr > th {
-    color: ${palette("color", 20)};
+    color: #C5C2C2;
     font-size: 14px;
     background-color: ${palette("primary", 22)};
     border-bottom: 0;
@@ -112,7 +104,7 @@ const DataTable = styled(Table)`
 
   .ant-table-tbody > tr > td {
     font-size: 14px;
-    color: ${palette("color", 20)};
+    color: #C5C2C2;
     /* border-bottom: 1px solid ${palette("border", 0)}; */
 
     a {
@@ -401,10 +393,6 @@ const DataTable = styled(Table)`
     border-radius: 2px;
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     color: ${palette("secondary", 12)};
-  }
-  :where(.css-dev-only-do-not-override-p7e5j5).ant-table-wrapper .ant-table {
-    // border-bottom: 1px solid rgb(66, 55, 126);
-    // background: rgb(13, 5, 59);
   }
 `;
 const WDCustomizedTableWrapper = styled.div`

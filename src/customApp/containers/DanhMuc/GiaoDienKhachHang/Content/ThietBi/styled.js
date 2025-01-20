@@ -32,7 +32,7 @@ export const ContentTable = styled.div`
   .table-columns-content {
     display: grid;
     grid-template-columns: 150px 1fr; /* Cột đầu rộng 150px, cột sau chiếm phần còn lại */
-    align-items: center; /* Căn giữa nội dung theo chiều dọc */
+    // align-items: center; /* Căn giữa nội dung theo chiều dọc */
     gap: 10px; /* Khoảng cách giữa các cột */
     margin-bottom: 8px; /* Khoảng cách giữa các dòng */
     white-space: nowrap; /* Ngăn xuống dòng */
@@ -56,7 +56,7 @@ export const ContentTable = styled.div`
   .custom-pagination {
     display: flex; /* Căn chỉnh các phần tử theo chiều ngang */
     justify-content: center; /* Căn giữa pagination */
-    align-items: center; /* Căn giữa theo chiều dọc */
+    // align-items: center; /* Căn giữa theo chiều dọc */
     margin-top: 20px; /* Khoảng cách phía trên */
     gap: 8px; /* Khoảng cách giữa các phần tử pagination */
   }
@@ -95,7 +95,7 @@ export const ContentTable = styled.div`
   }
   .anticon {
     display: inline-flex;
-    align-items: center;
+    // align-items: center;
     color: #c5c2c2;
     font-style: normal;
     line-height: 0;
@@ -107,11 +107,11 @@ export const ContentTable = styled.div`
     -moz-osx-font-smoothing: grayscale;
   }
   .table-columns-left-top {
-    height: 30px;
+    height: 55px;
     padding: 10px;
   }
   .table-columns-left-img {
-    height: 300px;
+    height: 280px;
     padding: 5px;
     border-bottom: 1px solid #ffffff;
   }
@@ -122,7 +122,7 @@ export const ContentTable = styled.div`
   }
   .table-columns-left-no {
     background: #ffffff;
-    height: 290px;
+    height: 270px;
   }
 `;
 export const ContentModal = styled.div`

@@ -13,7 +13,7 @@ const WDComponentDivAction = styled.div`
   gap: 10px;
   justify-content: end;
   flex-wrap: wrap;
-  align-items: center;
+  // align-items: center;
   @media only screen and (max-width: 1336px) {
     text-align: left;
     /* display: block; */
