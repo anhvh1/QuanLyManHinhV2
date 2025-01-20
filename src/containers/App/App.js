@@ -125,11 +125,6 @@ export class App extends Component {
                           background: BackgroundLayout ? " white" : "#101349",
                         }}
                       >
-                        <img
-                          src={logo}
-                          style={{ width: "50px", height: "30px" }}
-                          alt="Footer"
-                        />
                         <span
                           style={{
                             marginTop: "10px",

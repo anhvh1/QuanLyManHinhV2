@@ -94,7 +94,6 @@ const QuanLyManHinh = (props) => {
   const hideModalAddThietBi = () => {
     setVisibleModalAddThietBi(false);
     setNhomManHinhID();
-    setfetchData(1);
   };
   const { DanhSachManHinh, TotalRow, role } = props;
 
@@ -192,7 +191,7 @@ const QuanLyManHinh = (props) => {
                         <h2>{item.tenManHinh}</h2>
                         <Tooltip
                           title={
-                            item.nhomManHinhs?.[0]?.TenNhom ||
+                            item.nhomManHinhs?.[0]?.tenNhom ||
                             "Chưa có nhóm thiết bị"
                           }
                         >
@@ -200,10 +199,13 @@ const QuanLyManHinh = (props) => {
                             onClick={() => {
                               showModalAddThietBi();
                               setmanHinhID(item.manHinhID);
-                              setNhomManHinhID(item[0]?.nhomManHinhs);
+                              setNhomManHinhID(
+                                item?.nhomManHinhs[0]?.nhomManHinhID
+                              );
+                              setfetchData(0);
                             }}
                           >
-                            <NoteIcon Note={item.nhomManHinhs?.[0]?.Mota} />
+                            <NoteIcon Note={item.nhomManHinhs?.[0]?.mota} />
                           </div>
                         </Tooltip>
                       </div>
@@ -295,6 +297,7 @@ const QuanLyManHinh = (props) => {
         manHinhID={manHinhID}
         setNhomManHinhID={setNhomManHinhID}
         NhomManHinhID={NhomManHinhID}
+        setfetchData={setfetchData}
       />
     </LayoutWrapper>
   );
