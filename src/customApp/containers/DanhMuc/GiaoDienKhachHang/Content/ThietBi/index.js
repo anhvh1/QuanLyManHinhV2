@@ -131,7 +131,6 @@ const QuanLyManHinh = (props) => {
               allowClear
             />
           </div>
-
           <div style={{ display: "flex" }} onClick={showModalAdd}>
             <SettingIcon />
             <div

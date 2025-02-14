@@ -1,10 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {Tree, Checkbox, Select, Tooltip} from 'antd';
+import {Tree, Checkbox,  Tooltip} from 'antd';
 import {
   Button,
   Modal,
   InputSearch,
   Input,
+  Select,
 } from '../../../../components/uielements/exportComponent';
 import {message} from 'antd';
 import {
@@ -50,7 +51,7 @@ export default (props) => {
     const isChecked = e.target.checked;
     setFilterParams((prevParams) => ({
       ...prevParams,
-      ThuMucID: isChecked ? null : '',
+      ThuMucID: isChecked ? null : "",
     }));
     setSelectAllFolders(isChecked);
   };
@@ -68,9 +69,9 @@ export default (props) => {
         if (rootNode) {
           const firstNodeKey = rootNode.ThuMucID.toString();
           onExpandNode([firstNodeKey], {
-            node: {props: {eventKey: firstNodeKey, isLeaf: false}},
+            node: { props: { eventKey: firstNodeKey, isLeaf: false } },
             nativeEvent: {
-              target: {outerHTML: '', parentElement: {className: ''}},
+              target: { outerHTML: "", parentElement: { className: "" } },
             },
           });
         }
@@ -94,8 +95,8 @@ export default (props) => {
     let className = info.nativeEvent.target.outerHTML.toString();
     let parentClassName =
       info.nativeEvent.target.parentElement.className.toString();
-    let checkMenu = className.includes('ant-dropdown-menu');
-    let checkNearMenu = parentClassName.includes('ant-dropdown-menu');
+    let checkMenu = className.includes("ant-dropdown-menu");
+    let checkNearMenu = parentClassName.includes("ant-dropdown-menu");
     if (!checkMenu && !checkNearMenu) {
       let key = info.node.props.eventKey.toString();
       if (key) {
@@ -108,7 +109,7 @@ export default (props) => {
             newExpandedKeys = newExpandedKeys.concat([key]);
           }
           setExpandedKeys(newExpandedKeys);
-          setKeyState((prevKey) => ({...prevKey, key: selectedKeys}));
+          setKeyState((prevKey) => ({ ...prevKey, key: selectedKeys }));
         }
       }
     }
@@ -119,7 +120,7 @@ export default (props) => {
     key: 0,
     treeKey: 0,
   });
-  const {treeKey, key} = keyState;
+  const { treeKey, key } = keyState;
   const renderTreeNodes = (data) =>
     data?.map((item) => {
       let isExpanded = expandedKeys.includes(item.ThuMucID.toString());
@@ -166,7 +167,7 @@ export default (props) => {
   };
   const onSelectTreeNode = (selectedKeys, info) => {
     const selectedNode = info.node.props.dataRef;
-    const ThuMucID = selectedNode.ThuMucID || '';
+    const ThuMucID = selectedNode.ThuMucID || "";
     setFilterParams((prev) => ({
       ...prev,
       ThuMucID: ThuMucID,
@@ -181,10 +182,10 @@ export default (props) => {
           onSelect={onSelectTreeNode}
           onExpand={onExpandNode}
           style={{
-            userSelect: 'none',
-            minHeight: '120px',
-            maxHeight: '150px',
-            overflowY: 'auto',
+            userSelect: "none",
+            minHeight: "120px",
+            maxHeight: "150px",
+            overflowY: "auto",
           }}
           expandedKeys={filterData.Keyword ? props.expandedKeys : expandedKeys}
         >
@@ -198,11 +199,11 @@ export default (props) => {
   const [DanhSachMauPhieuSuggest, setDanhSachMauPhieuSuggest] = useState([]);
   const [TotalRow, setTotalRow] = useState([]);
   const [filterParams, setFilterParams] = useState({
-    Loai: '',
-    Keyword: '',
-    ThuMucID: '',
+    Loai: "",
+    Keyword: "",
+    ThuMucID: "",
     PageSize: TotalRow,
-    Status: 'true',
+    Status: "true",
   });
   useEffect(() => {
     setFilterParams((prevParams) => ({
@@ -225,88 +226,57 @@ export default (props) => {
     });
   };
   const handleSelectChange = (value) => {
-    setFilterParams((prev) => ({...prev, Loai: value}));
+    setFilterParams((prev) => ({ ...prev, Loai: value }));
   };
   const handleSearch = (value) => {
-    setFilterParams((prev) => ({...prev, Keyword: value}));
+    setFilterParams((prev) => ({ ...prev, Keyword: value }));
   };
   const convertDurationToSeconds = (duration) => {
-    const [hours, minutes, seconds] = duration.split(':').map(Number);
+    const [hours, minutes, seconds] = duration.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
   };
   const convertSecondsToDuration = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(
+    return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
       2,
-      '0',
-    )}:${String(remainingSeconds).padStart(2, '0')}`;
+      "0"
+    )}:${String(remainingSeconds).padStart(2, "0")}`;
   };
   const columns = [
     {
-      title: 'STT',
-      align: 'center',
-      width: '5%',
+      title: "STT",
+      align: "center",
+      width: "5%",
       render: (text, record, index) => {
         const sttValue = index + 1;
         return sttValue;
       },
     },
     {
-      title: 'Thời gian bắt đầu',
-      align: 'center',
-      width: '15%',
-      render: (_, __, index) => {
-        if (index === 0) return '00:00:00';
-
-        let totalSeconds = 0;
-        for (let i = 0; i < index; i++) {
-          totalSeconds += convertDurationToSeconds(
-            dataSource[i].ThoiLuongTrinhChieu,
-          );
-        }
-
-        return convertSecondsToDuration(totalSeconds);
-      },
-    },
-
-    {
-      title: 'Thời Lượng Trình Chiếu',
-      dataIndex: 'ThoiLuongTrinhChieu',
-      key: 'ThoiLuongTrinhChieu',
-      width: '15%',
-      align: 'center',
-      render: (_, record) => (
-        <TimeInput
-          value={record.ThoiLuongTrinhChieu}
-          onChange={(value) => handleDurationChange(value, record)}
-        />
-      ),
+      title: "Tên file",
+      dataIndex: "TenFile",
+      align: "center",
+      width: "30%",
     },
     {
-      title: 'Tên file',
-      dataIndex: 'TenFile',
-      align: 'center',
-      width: '30%',
-    },
-    {
-      title: 'Thumbnail',
-      dataIndex: 'UrlFile',
-      align: 'center',
+      title: "Thumbnail",
+      dataIndex: "UrlFile",
+      align: "center",
 
-      width: '6%',
+      width: "6%",
       render: (url) => {
         if (url) {
-          if (url.startsWith('http') || url.startsWith('https')) {
+          if (url.startsWith("http") || url.startsWith("https")) {
             if (
-              url.toLowerCase().endsWith('.mp4') ||
-              url.toLowerCase().endsWith('.webm')
+              url.toLowerCase().endsWith(".mp4") ||
+              url.toLowerCase().endsWith(".webm")
             ) {
               return (
                 <video
                   src={url}
-                  style={{width: '50%', height: '50px', textAlign: 'center'}}
+                  style={{ width: "50%", height: "50px", textAlign: "center" }}
                   controls
                 />
               );
@@ -315,10 +285,10 @@ export default (props) => {
                 <img
                   src={url}
                   style={{
-                    width: '50%',
-                    height: '50px',
-                    objectFit: 'cover',
-                    textAlign: 'center',
+                    width: "50%",
+                    height: "50px",
+                    objectFit: "cover",
+                    textAlign: "center",
                   }}
                   alt="Thumbnail"
                 />
@@ -333,30 +303,62 @@ export default (props) => {
       },
     },
     {
-      title: 'Thao tác',
-      dataIndex: '', // Để trống dataIndex vì chúng ta sẽ sử dụng render để tạo nội dung
-      width: '10%',
-      align: 'center',
+      title: "Thời gian bắt đầu",
+      align: "center",
+      width: "15%",
+      render: (_, __, index) => {
+        if (index === 0) return "00:00:00";
+
+        let totalSeconds = 0;
+        for (let i = 0; i < index; i++) {
+          totalSeconds += convertDurationToSeconds(
+            dataSource[i].ThoiLuongTrinhChieu
+          );
+        }
+
+        return convertSecondsToDuration(totalSeconds);
+      },
+    },
+
+    {
+      title: "Thời Lượng Trình Chiếu",
+      dataIndex: "ThoiLuongTrinhChieu",
+      key: "ThoiLuongTrinhChieu",
+      width: "15%",
+      align: "center",
+      render: (_, record) => (
+        <TimeInput
+          value={record.ThoiLuongTrinhChieu}
+          onChange={(value) => handleDurationChange(value, record)}
+        />
+      ),
+    },
+
+    {
+      title: "Thao tác",
+      dataIndex: "", // Để trống dataIndex vì chúng ta sẽ sử dụng render để tạo nội dung
+      width: "10%",
+      align: "center",
       render: (text, record) => renderThaoTac(record),
     },
   ];
-  const TimeInput = ({value, onChange}) => {
+  const TimeInput = ({ value, onChange }) => {
     const [inputValue, setInputValue] = useState(value);
 
     const handleChange = (e) => {
       const newValue = e.target.value;
       setInputValue(newValue);
       if (/^\d{2}:\d{2}:\d{2}$/.test(newValue)) {
-        const [hours, minutes, seconds] = newValue.split(':').map(Number);
+        const [hours, minutes, seconds] = newValue.split(":").map(Number);
         const adjustedHours = hours > 23 ? 0 : hours;
         const adjustedMinutes = minutes > 59 ? 0 : minutes;
         const adjustedSeconds = seconds > 59 ? 0 : seconds;
         const correctedValue = `${String(adjustedHours).padStart(
           2,
-          '0',
-        )}:${String(adjustedMinutes).padStart(2, '0')}:${String(
-          adjustedSeconds,
-        ).padStart(2, '0')}`;
+          "0"
+        )}:${String(adjustedMinutes).padStart(2, "0")}:${String(
+          adjustedSeconds
+        ).padStart(2, "0")}`;
         setInputValue(correctedValue);
         onChange(correctedValue);
       }
@@ -365,7 +367,7 @@ export default (props) => {
       <Input
         value={inputValue}
         onChange={handleChange}
-        style={{width: 100}}
+        style={{ width: 100 }}
         placeholder="hh:mm:ss"
       />
     );
@@ -373,7 +375,7 @@ export default (props) => {
   const handleDurationChange = (value, record) => {
     const newData = dataSource.map((item) => {
       if (item.ThuTu === record.ThuTu) {
-        return {...item, ThoiLuongTrinhChieu: value};
+        return { ...item, ThoiLuongTrinhChieu: value };
       }
       return item;
     });
@@ -383,12 +385,12 @@ export default (props) => {
     const hours = Math.floor(index / 3600);
     const minutes = Math.floor((index % 3600) / 60);
     const seconds = index % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes
+    return `${hours.toString().padStart(2, "0")}:${minutes
       .toString()
-      .padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
   };
   const parseDuration = (durationString) => {
-    const [hours, minutes, seconds] = durationString.split(':').map(Number);
+    const [hours, minutes, seconds] = durationString.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
   };
 
@@ -396,9 +398,9 @@ export default (props) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-    return `${hours.toString().padStart(2, '0')}:${minutes
+    return `${hours.toString().padStart(2, "0")}:${minutes
       .toString()
-      .padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
 
   const calculateTotalDuration = (data) => {
@@ -410,8 +412,8 @@ export default (props) => {
 
   const renderThaoTac = (record) => {
     return (
-      <div className={'action-btn'}>
-        <Tooltip title={'Xóa'}>
+      <div className={"action-btn"}>
+        <Tooltip title={"Xóa"}>
           <DeleteOutlined onClick={() => handleDelete(record)} />
         </Tooltip>
       </div>
@@ -461,9 +463,9 @@ export default (props) => {
         message.error(res.data.Message);
       }
     } catch (error) {
-      console.error('Error adding thiet lap:', error);
+      console.error("Error adding thiet lap:", error);
     }
-    const {onCreate} = props;
+    const { onCreate } = props;
     onCreate();
     props.getList(filterData);
   };
@@ -477,17 +479,17 @@ export default (props) => {
       transition,
       isDragging,
     } = useSortable({
-      id: props['data-row-key'],
+      id: props["data-row-key"],
     });
 
     const style = {
       ...props.style,
       transform: CSS.Translate.toString(transform),
       transition,
-      cursor: 'move',
+      cursor: "move",
       ...(isDragging
         ? {
-            position: 'relative',
+            position: "relative",
             zIndex: 9999,
           }
         : {}),
@@ -510,10 +512,10 @@ export default (props) => {
         // https://docs.dndkit.com/api-documentation/sensors/pointer#activation-constraints
         distance: 1,
       },
-    }),
+    })
   );
 
-  const onDragEnd = ({active, over}) => {
+  const onDragEnd = ({ active, over }) => {
     if (active.id !== over?.id) {
       setDataSource((prev) => {
         const activeIndex = prev.findIndex((i) => i.ThuTu === active.id);
@@ -524,12 +526,12 @@ export default (props) => {
   };
 
   const handleDragStart = (event, item) => {
-    event.dataTransfer.setData('text/plain', JSON.stringify(item));
+    event.dataTransfer.setData("text/plain", JSON.stringify(item));
   };
 
   const handleDrop = (event, index) => {
     event.preventDefault();
-    const item = JSON.parse(event.dataTransfer.getData('text/plain'));
+    const item = JSON.parse(event.dataTransfer.getData("text/plain"));
 
     const newItem = {
       ID: item.ID,
@@ -542,7 +544,10 @@ export default (props) => {
     setDataSource((prev) => {
       const updatedDataSource = [...prev];
       updatedDataSource.splice(index, 0, newItem); // Insert at the specific index
-      return updatedDataSource.map((item, idx) => ({...item, ThuTu: idx + 1})); // Update the order
+      return updatedDataSource.map((item, idx) => ({
+        ...item,
+        ThuTu: idx + 1,
+      })); // Update the order
     });
   };
 
@@ -563,9 +568,9 @@ export default (props) => {
   return (
     <Modal
       title={`${
-        actionthietlap === 'edit' ? 'CẬP NHẬT' : 'THIẾT LẬP'
+        actionthietlap === "edit" ? "CẬP NHẬT" : "THIẾT LẬP"
       } DANH SÁCH PHÁT`}
-      width={'100%'}
+      width={"100%"}
       visible={visible}
       onCancel={props.onCancel}
       maskClosable={false}
@@ -579,36 +584,48 @@ export default (props) => {
       ]}
     >
       <LayoutWrapper>
-        <Box
+        <div
           style={{
-            float: 'left',
-            width: '25%',
-            border: '1px solid white',
+            padding: "10px 10px 0px 10px",
+            float: "left",
+            width: "25%",
+            background: "#171D60",
+            minHeight: "740px",
+            maxHeight: "740px",
+            borderRadius: "20px",
           }}
         >
           <Box>
             <div
               key={treeKey}
               style={{
-                userSelect: 'none',
-                overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
+                userSelect: "none",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                color: "gray",
+                whiteSpace: "nowrap",
               }}
               className="mg-top"
             >
-              <Checkbox onChange={onChangeCheck} checked={selectAllFolders}>
+              <Checkbox
+                onChange={onChangeCheck}
+                checked={selectAllFolders}
+                style={{
+                  color: "#FFFFFF",
+                  fontSize: "16px",
+                }}
+              >
                 Tất cả thư mục
               </Checkbox>
               {renderContent()}
             </div>
           </Box>
-          <Box>
+          <div>
             <BoxFilter>
               <Select
                 placeholder="Chọn loại"
                 onChange={handleSelectChange}
-                style={{width: 200}}
+                style={{ width: 200 }}
                 allowClear
               >
                 <Option value="1">Hình ảnh</Option>
@@ -617,65 +634,88 @@ export default (props) => {
               <InputSearch
                 placeholder="Tìm kiếm theo tên"
                 onSearch={handleSearch}
-                style={{width: 200}}
+                style={{ width: 200 }}
                 allowClear
               />
             </BoxFilter>
             <div
               style={{
-                overflowY: 'auto',
-                maxHeight: '413px',
-                minHeight: '413px',
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '10px',
+                overflowY: "auto",
+                maxHeight: "410px",
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "10px",
               }}
             >
               {DanhSachMauPhieuSuggest?.map((item) => (
                 <div
                   key={item.id}
                   style={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    width: 'calc(50% - 10px)', // Adjust width to account for gap
-                    cursor: 'pointer',
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    width: "calc(25% - 10px)", // Điều chỉnh để hiển thị 4 mục trên một dòng
+                    cursor: "pointer",
                   }}
                   draggable="true"
                   onDragStart={(event) => handleDragStart(event, item)}
                   onClick={() => handleMediaClick(item)}
                 >
-                  {item.UrlFile.toLowerCase().endsWith('.mp4') ? (
+                  {item.UrlFile.toLowerCase().endsWith(".mp4") ? (
                     <video width="100%" height="150px" controls>
                       <source src={item.UrlFile} type="video/mp4" />
                     </video>
                   ) : (
                     <img
                       style={{
-                        width: '100%',
-                        height: '150px',
-                        objectFit: 'cover',
+                        width: "100%",
+                        height: "150px",
+                        objectFit: "cover",
                       }}
                       src={item.UrlFile}
                       alt={item.TenFile}
                     />
                   )}
-                  <p style={{textAlign: 'center', marginTop: '5px'}}>
+                  <p
+                    style={{
+                      textAlign: "center",
+                      marginTop: "5px",
+                      color: "#FFFFFF",
+                      whiteSpace: "nowrap", // Ngăn xuống dòng
+                      overflow: "hidden", // Ẩn phần vượt quá
+                      textOverflow: "ellipsis", // Thêm dấu ba chấm
+                      maxWidth: "100%", // Đảm bảo không vượt quá chiều rộng của phần tử cha
+                    }}
+                  >
                     {item.TenFile}
                   </p>
                 </div>
               ))}
             </div>
-          </Box>
-        </Box>
-        <Box style={{float: 'left', width: '75%', border: '1px solid white'}}>
+          </div>
+        </div>
+        <div
+          style={{
+            float: "left",
+            width: "73%",
+            height: "740px",
+            borderRadius: "20px",
+            background: "#171D60",
+            margin: "0 0 0 2%",
+          }}
+        >
           <Box
-            style={{textAlign: 'center', paddingTop: '20px', height: '50px'}}
+            style={{
+              textAlign: "center",
+              paddingTop: "20px",
+              height: "50px",
+              color: "#FFFFFF",
+            }}
           >
-            Tổng thời gian phát:{' '}
-            <span style={{marginRight: '30px'}}>
+            Tổng thời gian phát:{" "}
+            <span style={{ marginRight: "30px" }}>
               {calculateTotalDuration(dataSource)}
-            </span>{' '}
+            </span>{" "}
             Tổng số Media: <span>{dataSource.length}</span>
           </Box>
           <Box>
@@ -696,7 +736,7 @@ export default (props) => {
                     dataSource={dataSource}
                     pagination={false}
                     scroll={{
-                      y: '600px',
+                      y: "600px",
                     }}
                     onRow={(record, index) => ({
                       onDrop: (event) => handleDrop(event, index),
@@ -707,7 +747,7 @@ export default (props) => {
               </SortableContext>
             </DndContext>
           </Box>
-        </Box>
+        </div>
       </LayoutWrapper>
     </Modal>
   );

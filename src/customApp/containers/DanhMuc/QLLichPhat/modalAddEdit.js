@@ -11,6 +11,7 @@ import {
   Modal,
   InputFormatSpecific,
   Input,
+  InputNumberFormat,
   Radio,
 } from '../../../../components/uielements/exportComponent';
 import {
@@ -397,7 +398,7 @@ export default (props) => {
           {...ITEM_LAYOUT}
           rules={[REQUIRED]}
         >
-          <Input />
+          <InputNumberFormat />
         </Item>
         <Item
           label="Trạng thái"

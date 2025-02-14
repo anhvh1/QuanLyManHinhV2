@@ -7,7 +7,7 @@ const BoxWrapper = styled.div`
   // border: 1px solid #d5d5d5;
   // background: #fafafa;
   /* margin: 8px; */
-  padding: 0px 0px 40px 0px;
+  padding: 0px 0px 20px 0px;
 
   &:last-child {
     margin-bottom: 0;

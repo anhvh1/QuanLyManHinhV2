@@ -305,8 +305,8 @@ const SignIn = (props) => {
                         onClick={togglePasswordVisibility}
                         style={{
                           position: "absolute",
-                          right: "30px", // Điều chỉnh khoảng cách từ biểu tượng đến mép phải của ô input
-                          top: "42.5%",
+                          right: "30px", 
+                          top: "34.5%",
                           transform: "translateY(-50%)",
                         }}
                       >

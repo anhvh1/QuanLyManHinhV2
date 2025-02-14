@@ -50,7 +50,7 @@ const SlideViewer = ({
     const startConnection = async () => {
       connection = new signalR.HubConnectionBuilder()
         .withUrl("https://displaycms.gosol.com.vn/slideHub", {
-          withCredentials: true,
+          withCredentials: false,
         })
         .build();
 
