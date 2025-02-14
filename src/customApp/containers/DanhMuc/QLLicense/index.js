@@ -320,7 +320,7 @@ const QLLicense = (props) => {
         </PageAction>
       </PageWrap>
       <Box>
-        <BoxFilter>
+        <BoxFilter hienthi={true}>
         {!hideSelect && (
           <TreeSelect
             showSearch
