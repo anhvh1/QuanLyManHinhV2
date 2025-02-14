@@ -362,14 +362,14 @@ const UserManagement = (props) => {
         <PageHeader>Quản lý người dùng</PageHeader>
         <PageAction>
           {role.add ? (
-            <Button onClick={showModalAddUser}>
+            <Button  type="primary" onClick={showModalAddUser}>
               <PlusOutlined />
               Thêm
             </Button>
           ) : null}
         </PageAction>
         <Box>
-          <BoxFilter>
+          <BoxFilter hienthi={true}>
             <TreeSelect
               showSearch
               treeData={DanhSachCoQuan}

@@ -94,6 +94,7 @@ const DMCoQuan = (props) => {
       content: 'Bạn có muốn xóa cơ quan đơn vị này không?',
       cancelText: 'Không',
       okText: 'Có',
+     
       onOk: () => {
         api
           .xoaCoQuan(CoQuanID)

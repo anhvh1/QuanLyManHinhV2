@@ -93,7 +93,7 @@ const QLLichPhat = (props) => {
   const deleteModalAddEdit = (LichPhatID) => {
     Modal.confirm({
       title: 'Xóa Dữ Liệu',
-      content: 'Bạn có muốn xóa chức vụ này không?',
+      content: 'Bạn có muốn xóa lịch phát này không?',
       cancelText: 'Không',
       okText: 'Có',
       onOk: () => {
@@ -381,7 +381,7 @@ const QLLichPhat = (props) => {
         </PageAction>
       </PageWrap>
       <Box>
-        <BoxFilter>
+        <BoxFilter hienthi={true}> 
         {!hideSelect && (
           <TreeSelect
             showSearch

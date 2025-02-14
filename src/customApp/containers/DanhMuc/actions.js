@@ -1,40 +1,40 @@
-import React, {useState} from 'react';
-import {useKey} from '../../CustomHook/useKey';
-import {message, Modal} from 'antd';
-import {getFilterData,changeUrlFilter} from '../../../helpers/utility';
-import moment from 'moment';
+import React, { useState } from "react";
+import { useKey } from "../../CustomHook/useKey";
+import { message, Modal } from "antd";
+import { getFilterData, changeUrlFilter } from "../../../helpers/utility";
+import moment from "moment";
 const actionsGroup = (
   filterData,
   setFilterData,
   api,
   actionProps,
-  TotalRow,
+  TotalRow
 ) => {
   const [visibleModalAddEdit, setVisibleModalAddEdit] = useState(false);
-  const [action, setAction] = useState('');
+  const [action, setAction] = useState("");
   const [modalKey, inceaseModalKey] = useKey();
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [dataModalAddEdit, setDataModalAddEdit] = useState({});
   const onTableChange = (pagination, filters, sorter) => {
     let oldFilterData = filterData;
-    let onOrder = {pagination, filters, sorter};
+    let onOrder = { pagination, filters, sorter };
     let newFilterData = getFilterData(oldFilterData, null, onOrder);
     setFilterData(newFilterData);
   };
   // const onFilter = (value, property) => {
-    
+
   //   let oldFilterData = filterData;
   //   let onFilter = {value, property};
   //   let newfilterData = getFilterData(oldFilterData, onFilter, null);
   //   setFilterData(newfilterData);
   // };
   const onFilter = (value, property) => {
-    if (property === 'GhiChu' && value) {
-      value = moment(value).format('YYYY');
+    if (property === "GhiChu" && value) {
+      value = moment(value).format("YYYY");
     }
     // get filter data
     let oldFilterData = filterData;
-    let onFilter = {value, property};
+    let onFilter = { value, property };
     let newFilterData = getFilterData(oldFilterData, onFilter, null);
     // get filter data
     setFilterData(newFilterData);
@@ -44,14 +44,15 @@ const actionsGroup = (
 
   const deleteModalAddEdit = (ID) => {
     Modal.confirm({
-      title: 'Xóa Dữ Liệu',
-      content: 'Bạn có chắc chắn muốn xóa dữ liệu này không?',
-      cancelText: 'Không',
-      okText: 'Có',
+      title: "Xóa Dữ Liệu",
+      content: "Bạn có chắc chắn muốn xóa dữ liệu này không?",
+      cancelText: "Không",
+      okText: "Có",
+
       onOk: () => {
         setConfirmLoading(true);
         api
-          .XoaDanhMucChung({ListID: [ID]})
+          .XoaDanhMucChung({ ListID: [ID] })
           .then((res) => {
             if (res.data.Status > 0) {
               setConfirmLoading(false);
@@ -86,15 +87,15 @@ const actionsGroup = (
     });
   };
   const showModalAdd = () => {
-    setAction('add');
+    setAction("add");
     setDataModalAddEdit({});
     inceaseModalKey();
     setVisibleModalAddEdit(true);
   };
   const showModalEdit = (ID) => {
-    setAction('edit');
+    setAction("edit");
     api
-      .ChiTietDanhMucChung({ID})
+      .ChiTietDanhMucChung({ ID })
       .then((res) => {
         if (res.data.Status > 0) {
           setDataModalAddEdit(res.data.Data);
@@ -116,7 +117,7 @@ const actionsGroup = (
   };
   const submitModalAddEdit = (data) => {
     setConfirmLoading(true);
-    if (action === 'add') {
+    if (action === "add") {
       api
         .ThemDanhSachChung(data)
         .then((res) => {
@@ -138,7 +139,7 @@ const actionsGroup = (
           message.error(error.toString());
         });
     }
-    if (action === 'edit') {
+    if (action === "edit") {
       api
         .SuaDanhMucChung(data)
         .then((res) => {
@@ -178,4 +179,4 @@ const actionsGroup = (
   };
 };
 
-export {actionsGroup};
+export { actionsGroup };

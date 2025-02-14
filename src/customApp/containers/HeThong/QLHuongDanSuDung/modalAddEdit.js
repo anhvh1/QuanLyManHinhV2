@@ -5,8 +5,8 @@ import {
   ITEM_LAYOUT,
   REQUIRED,
 } from '../../../../settings/constants';
-import {Form, Input, Button, Upload, message, Modal as ModalAnt} from 'antd';
-import Select, {
+import {Form, Input, Button, Upload, message,Select, Modal as ModalAnt} from 'antd';
+import  {
   Option,
   OptGroup,
 } from '../../../../components/uielements/select';

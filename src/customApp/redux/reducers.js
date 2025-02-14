@@ -17,6 +17,7 @@ import DMKhachHang from './DanhMuc/DMKhachHang/reducer';
 import QLLichPhat from './DanhMuc/QLLichPhat/reducer';
 import QLThuVien from './DanhMuc/QLThuVien/reducer';
 import QuanLyManHinh from './DanhMuc/QuanLyManHinh/reducer';
+import QLVersionApp from  './DanhMuc/QLVersionApp/reducer';
 import QuanLyNhomManHinh from './DanhMuc/QuanLyNhomManHinh/reducer';
 import CauHinhDangNhap from './HeThong/CauHinhDangNhap/reducer';
 import DMChiTieu from './DanhMuc/QLMedia/reducer';
@@ -43,4 +44,5 @@ export default {
   QLLicense,
   DMChiTieu,
   ContentMedia,
+  QLVersionApp,
 };

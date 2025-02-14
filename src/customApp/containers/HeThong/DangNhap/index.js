@@ -243,7 +243,7 @@ const SignIn = (props) => {
         <div className="header">
           <div className="header-title">
             <img src={ImageLogo} className="header-logo" />
-            <p>{Title}</p>
+            <p style={{color:"#000000"}}>{Title}</p>
           </div>
         </div>
         <div className="main">

@@ -112,10 +112,10 @@ const QuanLyManHinh = (props) => {
     <LayoutWrapper>
       <Box>
         <BoxFilter style={{ display: "flex", justifyContent: "space-between" }}>
-          <div>
+          <div >
             <Select
               allowClear
-              style={{ width: "200px" }}
+              style={{ width: "200px",marginRight: "10px" }}
               // defaultValue={filterData.LoaiSuKien}
               placeholder={"Nhóm thiết bị"}
               onChange={(value) => onFilter(value, "Status")}

@@ -93,7 +93,7 @@ const QLLicense = (props) => {
   const deleteModalAddEdit = (LicenseID) => {
     Modal.confirm({
       title: 'Xóa Dữ Liệu',
-      content: 'Bạn có muốn xóa chức vụ này không?',
+      content: 'Bạn có muốn xóa license này không?',
       cancelText: 'Không',
       okText: 'Có',
       onOk: () => {

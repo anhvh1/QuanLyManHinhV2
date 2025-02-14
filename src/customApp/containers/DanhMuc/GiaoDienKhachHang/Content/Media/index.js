@@ -708,7 +708,7 @@ const ContentMedia = (props) => {
               defaultValue={filterData?.Loai ? filterData?.Loai : null}
               placeholder="Loại"
               onChange={(value) => onFilter(value, "Loai")}
-              style={{ width: 200 }}
+              style={{ width: 200,marginRight: "10px"  }}
               allowClear
             >
               <Option value={1}>Hình ảnh</Option>
@@ -718,7 +718,7 @@ const ContentMedia = (props) => {
               defaultValue={filterData?.Status ? filterData?.Status : null}
               placeholder="Trạng thái"
               onChange={(value) => onFilter(value, "Status")}
-              style={{ width: 200 }}
+              style={{ width: 200,marginRight: "10px"  }}
             >
               <Option value={true}>Đang sử dụng</Option>
               <Option value={false}>Không sử dụng</Option>

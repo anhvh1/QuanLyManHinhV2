@@ -719,3 +719,7 @@ html[dir="rtl"] .dz-hidden-input {
   position: relative;
   display: block;
 }
+.ant-modal-confirm .ant-modal-confirm-btns .ant-btn+.ant-btn {
+  background: #1677ff;
+}
+

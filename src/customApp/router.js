@@ -94,6 +94,12 @@ const routes = [
     ),
   },
   {
+    path: "quan-ly-version-app",
+    component: asyncComponent(() =>
+      import("./containers/DanhMuc/QLVersionApp")
+    ),
+  },
+  {
     path: "quan-ly-nhom-man-hinh",
     component: asyncComponent(() =>
       import("./containers/DanhMuc/QuanLyNhomManHinh")

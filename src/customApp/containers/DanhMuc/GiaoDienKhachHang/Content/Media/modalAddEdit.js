@@ -7,7 +7,7 @@ import Constants, {
   ITEM_LAYOUT2,
   ITEM_LAYOUT_SMALL,
 } from '../../../../../../settings/constants';
-import {Row, Col} from 'antd';
+import {Row, Col,Select,} from 'antd';
 import {
   Button,
   Modal,
@@ -17,7 +17,7 @@ import {
 import Checkbox from '../../../../../../components/uielements/checkbox';
 
 import TreeSelect from '../../../../../../components/uielements/treeSelect';
-import Select, {Option} from '../../../../../../components/uielements/select';
+import  {Option} from '../../../../../../components/uielements/select';
 import {_debounce,getInfoFromToken,getLocalKey} from '../../../../../../helpers/utility';
 import api from './config';
 import layout, {StyledModalCoQuan} from './styled';

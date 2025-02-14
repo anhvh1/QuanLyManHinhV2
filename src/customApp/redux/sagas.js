@@ -21,6 +21,7 @@ import QuanLyManHinh from './DanhMuc/QuanLyManHinh/saga';
 import QuanLyNhomManHinh from './DanhMuc/QuanLyNhomManHinh/saga';
 import QLLicense from './DanhMuc/QLLicense/saga';
 import ContentMedia from './DanhMuc/ContentMedia/saga';
+import QLVersionApp from  './DanhMuc/QLVersionApp/saga';
 
 export default function* devSaga() {
   yield all([
@@ -44,5 +45,6 @@ export default function* devSaga() {
     QLThuVien(),
     DMChiTieu(),
     ContentMedia(),
+    QLVersionApp(),
   ]);
 }

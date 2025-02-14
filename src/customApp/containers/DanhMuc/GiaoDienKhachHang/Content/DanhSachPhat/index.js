@@ -91,9 +91,10 @@ const QLThuVien = (props) => {
   const deleteModalAddEdit = (DanhSachPhatID) => {
     Modal.confirm({
       title: "Xóa Dữ Liệu",
-      content: "Bạn có muốn xóa chức vụ này không?",
+      content: "Bạn có muốn xóa danh sách phát này không?",
       cancelText: "Không",
       okText: "Có",
+     
       onOk: () => {
         setConfirmLoading(true);
         api

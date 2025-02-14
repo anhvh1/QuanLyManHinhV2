@@ -94,7 +94,7 @@ const QLLichPhat = (props) => {
   const deleteModalAddEdit = (LichPhatID) => {
     Modal.confirm({
       title: "Xóa Dữ Liệu",
-      content: "Bạn có muốn xóa chức vụ này không?",
+      content: "Bạn có muốn xóa lịch phát này không?",
       cancelText: "Không",
       okText: "Có",
       onOk: () => {
@@ -393,7 +393,7 @@ const QLLichPhat = (props) => {
             )}
             <Select
               allowClear
-              style={{ width: "200px" }}
+              style={{ width: "200px" ,marginRight: "10px" }}
               defaultValue={filterData.LoaiSuKien}
               placeholder={"Loại sư kiện"}
               onChange={(value) => onFilter(value, "LoaiSuKien")}
@@ -404,7 +404,7 @@ const QLLichPhat = (props) => {
             </Select>
             <Select
               allowClear
-              style={{ width: "200px" }}
+              style={{ width: "200px" ,marginRight: "10px" }}
               defaultValue={filterData.ID}
               placeholder={"Màn hình"}
               onChange={(value, item) => {
@@ -431,7 +431,7 @@ const QLLichPhat = (props) => {
 
             <Select
               allowClear
-              style={{ width: "200px" }}
+              style={{ width: "200px" ,marginRight: "10px" }}
               defaultValue={filterData.title}
               placeholder={"Nhóm màn hình"}
               onChange={(value, item) => {

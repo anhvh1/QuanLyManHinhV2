@@ -10,10 +10,11 @@ import {
   Button,
   Upload,
   message,
+  Select,
   Radio,
   Modal as ModalAnt,
 } from 'antd';
-import Select, { Option } from '../../../../components/uielements/select';
+import  { Option } from '../../../../components/uielements/select';
 import Modal from '../../../../components/uielements/modal';
 import { getValueConfigLocalByKey } from '../../../../helpers/utility';
 import { useDispatch, useSelector } from 'react-redux';

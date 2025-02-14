@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {ITEM_LAYOUT, REQUIRED} from '../../../../settings/constants';
-import {Radio, Space} from 'antd';
+import {Radio, Space,Select,} from 'antd';
 import {
   Button,
   Modal,
   Input,
   Textarea,
 } from '../../../../components/uielements/exportComponent';
-import Select, {
+import  {
   Option,
   OptGroup,
 } from '../../../../components/uielements/select';

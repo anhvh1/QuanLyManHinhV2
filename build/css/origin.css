@@ -191,3 +191,6 @@ div::-webkit-scrollbar-thumb {
 :where(.css-cg4vza).ant-table-wrapper .ant-table {
     background: transparent;
 }
+.ant-modal-confirm .ant-modal-confirm-btns .ant-btn+.ant-btn {
+    background: #1677ff;
+  }

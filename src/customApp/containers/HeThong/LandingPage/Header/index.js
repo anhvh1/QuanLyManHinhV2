@@ -4,7 +4,12 @@ import { HeaderContainer, HeaderButton } from "../styled";
 import { motion } from "framer-motion";
 import api from "../config";
 import { message } from "antd";
+import { useHistory } from "react-router-dom";
+import Button from "../../../../../components/uielements/button";
+
 const Header = ({ infoHeader, infoGeneral, onConvertUrl }) => {
+  const history = useHistory();
+
   const heightConfig = "min-h-[700px] md:h-[100vh]";
   const [loadingDownload, setLoadingDownload] = useState(false);
   const handleDowloadLastestApp = () => {
@@ -36,9 +41,23 @@ const Header = ({ infoHeader, infoGeneral, onConvertUrl }) => {
         <div className={`px-12 ${heightConfig} bg-black bg-opacity-50`}>
           <div className="max-w-screen-xl mx-auto">
             <div className={`${heightConfig} flex flex-col`}>
-              <div className="pt-12">
+              <div
+                className="pt-12"
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
                 <p className="text-white text-lg md:text-xl lg:text-2xl xl:text-3xl font-semibold italic">
                   {CompanyName}
+                </p>
+                <p
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    cursor: "pointer",
+                    fontSize: "1.2rem",
+                  }}
+                  onClick={() => history.push("/signin")}
+                >
+                  Đăng nhập ngay
                 </p>
               </div>
 

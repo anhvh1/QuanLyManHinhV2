@@ -1,14 +1,11 @@
 import React from 'react';
-import {ComponentDivFilter} from './boxFilter.style';
-import {getConfigLocal} from '../../helpers/utility';
+import { ComponentDivFilter } from './boxFilter.style';
 
 export default (props) => {
-  const {isDashBoard, isCenter} = props;
+  const { isDashBoard, isCenter, hienthi } = props;
+
   return (
-    <ComponentDivFilter
-      isCenter={isCenter}
-      {...props}
-    >
+    <ComponentDivFilter isCenter={isCenter} hienthi={hienthi} {...props}>
       {props.children}
     </ComponentDivFilter>
   );

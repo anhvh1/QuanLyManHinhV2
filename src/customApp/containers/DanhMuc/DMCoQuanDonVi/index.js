@@ -75,6 +75,7 @@ const DMCoQuanDonVi = (props) => {
       content: 'Bạn có muốn xóa Cơ Quan Đơn Vị này không?',
       cancelText: 'Không',
       okText: 'Có',
+      
       onOk: () => {
         setConfirmLoading(true);
         api
