@@ -17,6 +17,7 @@ export const apiUrl = {
   danhsachnhommanhinh: server.v2Url + "QuanLyNhomManHinh/GetListPaging",
   xoanhommanhinh: server.v2Url + "QuanLyNhomManHinh/Delete",
   themnhommanhinh: server.v2Url + "QuanLyNhomManHinh/Insert",
+  chupanh: server.v1Url + "ManHinh/TakeScreenshot",
 };
 const api = {
   danhSachManHinh: (param) => {
@@ -46,6 +47,11 @@ const api = {
   },
   suaManHinh: (param) => {
     return apiPostAuth(apiUrl.suamanhinh, {
+      ...param,
+    });
+  },
+  ChupAnh: (param) => {
+    return apiPostAuth(apiUrl.chupanh, {
       ...param,
     });
   },

@@ -1,4 +1,4 @@
-import { Modal, Table, Tooltip, message, Pagination, Flex } from "antd";
+import { Modal, Table, Tooltip, message, Pagination, Flex, Spin } from "antd";
 import actions from "../../../../../redux/DanhMuc/ContentThietBi/actions";
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
@@ -51,6 +51,8 @@ const QuanLyManHinh = (props) => {
   const [selectedRowsKey, setSelectedRowsKey] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [requestType, setrequestType] = useState();
+  console.log("requestType", requestType);
   const pageSize = 3; // Number of items per page
 
   document.title = "Quản Lý Màn Hình";
@@ -108,14 +110,30 @@ const QuanLyManHinh = (props) => {
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
+  const ChupAnh = (data) => {
+    api
+      .ChupAnh({ HardwareKey: data })
+      .then((response) => {
+        if (response.data.Status >= 0) {
+          message.destroy();
+          message.success(response.data.Message);
+          // setfetchData(4);
+        } else {
+          message.error(response.data.Message);
+        }
+      })
+      .catch((error) => {
+        Modal.error(Constants.API_ERROR);
+      });
+  };
   return (
     <LayoutWrapper>
       <Box>
         <BoxFilter style={{ display: "flex", justifyContent: "space-between" }}>
-          <div >
+          <div>
             <Select
               allowClear
-              style={{ width: "200px",marginRight: "10px" }}
+              style={{ width: "200px", marginRight: "10px" }}
               // defaultValue={filterData.LoaiSuKien}
               placeholder={"Nhóm thiết bị"}
               onChange={(value) => onFilter(value, "Status")}
@@ -168,14 +186,33 @@ const QuanLyManHinh = (props) => {
                         year: "numeric",
                       })}
                     </div>
-
                     <div className="table-columns-left-img">
-                      {" "}
-                      <div className="table-columns-left-no"></div>
+                      {item.isLoading & (requestType == 0) ? (
+                        <Spin />
+                      ) : (
+                        <img
+                          className="table-columns-left-no"
+                          src={item.urlFile}
+                          alt="ảnh thiết bị"
+                        />
+                      )}
                     </div>
                     <div className="table-columns-left-bottom">
-                      {" "}
-                      <CameraIcon />
+                      <CameraIcon
+                        onClick={() => {
+                          ChupAnh(item.hardwareKey);
+                          console.log("index", index);
+                          setrequestType(0);
+                          item.isLoading = true;
+                          // setfetchData(3);
+                        }}
+                        disabled={!item.trangThai}
+                        className={`${
+                          item.trangThai
+                            ? "cursor-pointer hover:text-blue-500"
+                            : "cursor-not-allowed opacity-50"
+                        }`}
+                      />
                     </div>
                   </div>
                   <div className="table-columns-right">
@@ -269,6 +306,7 @@ const QuanLyManHinh = (props) => {
           filterData={filterData}
           setfetchData={setfetchData}
           fetchData1={fetchData}
+          setrequestType={setrequestType}
         ></SlideViewer>
 
         <Pagination

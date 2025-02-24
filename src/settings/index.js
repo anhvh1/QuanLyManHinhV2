@@ -4,7 +4,8 @@ export default {
     // v2Url: 'https://qlvh.gosol.com.vn/api/v2/', // api public
     // v2Url: 'http://192.168.100.45:3082/api/v2/', // api dev
   //   v2Url: 'https://apiqlvbtest.gosol.com.vn/api/v1/', // api dev
-       v2Url: 'https://displaycms.gosol.com.vn/api/v2/' // api dev
+       v2Url: 'https://displaycms.gosol.com.vn/api/v2/' ,// api dev
+       v1Url: 'https://displaycms.gosol.com.vn/api/v1/'
 };
 const siteConfig = {
   siteName: 'SMARTSIGNAGE',

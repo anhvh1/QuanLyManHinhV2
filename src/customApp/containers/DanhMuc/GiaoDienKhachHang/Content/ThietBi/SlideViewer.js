@@ -12,6 +12,7 @@ const SlideViewer = ({
   filterData,
   setfetchData,
   fetchData1,
+  setrequestType,
 }) => {
   const [connectionStatus, setConnectionStatus] = useState("Disconnected");
   const access_token = getLocalKey("access_token");
@@ -63,6 +64,7 @@ const SlideViewer = ({
 
         // Lắng nghe thông điệp từ server
         connection.on("RequestType", async (data) => {
+          setrequestType(data.requestType);
           if (data.requestType === 4) {
             await fetchData(); // Gọi lại API khi nhận được requestType = 4
           }
@@ -94,7 +96,7 @@ const SlideViewer = ({
       if (reconnectTimer) clearTimeout(reconnectTimer);
       if (connection) connection.stop();
     };
-  }, [filterData]);
+  }, []);
 
   // Thêm useEffect để lắng nghe thay đổi của fetchData
   useEffect(() => {
@@ -135,7 +137,6 @@ const SlideViewer = ({
       try {
         await connection.start();
         setConnectionStatus("Connected");
-
         // Gọi API lần đầu khi kết nối thành công
         await fetchData();
         // Lắng nghe thông điệp từ server
