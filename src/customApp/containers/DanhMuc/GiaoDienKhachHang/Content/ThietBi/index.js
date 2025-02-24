@@ -52,7 +52,7 @@ const QuanLyManHinh = (props) => {
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [requestType, setrequestType] = useState();
-  console.log("requestType", requestType);
+
   const pageSize = 3; // Number of items per page
 
   document.title = "Quản Lý Màn Hình";
@@ -117,7 +117,9 @@ const QuanLyManHinh = (props) => {
         if (response.data.Status >= 0) {
           message.destroy();
           message.success(response.data.Message);
-          // setfetchData(4);
+          if (requestType === 4) {
+            setfetchData(4);
+          }
         } else {
           message.error(response.data.Message);
         }
@@ -187,7 +189,7 @@ const QuanLyManHinh = (props) => {
                       })}
                     </div>
                     <div className="table-columns-left-img">
-                      {item.isLoading & (requestType == 0) ? (
+                    {item.isLoading & (requestType == 0) ? (
                         <Spin />
                       ) : (
                         <img
@@ -198,7 +200,7 @@ const QuanLyManHinh = (props) => {
                       )}
                     </div>
                     <div className="table-columns-left-bottom">
-                      <CameraIcon
+                    <CameraIcon
                         onClick={() => {
                           ChupAnh(item.hardwareKey);
                           console.log("index", index);

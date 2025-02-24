@@ -51,7 +51,7 @@ export const ContentTable = styled.div`
   }
   .table-columns-bottom {
     margin-top: 10px;
-    line-height: 28px;
+    line-height: 26px;
   }
   .custom-pagination {
     display: flex; /* Căn chỉnh các phần tử theo chiều ngang */
