@@ -189,7 +189,7 @@ const QuanLyManHinh = (props) => {
                       })}
                     </div>
                     <div className="table-columns-left-img">
-                    {item.isLoading & (requestType == 0) ? (
+                      {item.isLoading & (requestType == 0) ? (
                         <Spin />
                       ) : (
                         <img
@@ -200,13 +200,15 @@ const QuanLyManHinh = (props) => {
                       )}
                     </div>
                     <div className="table-columns-left-bottom">
-                    <CameraIcon
+                      <CameraIcon
                         onClick={() => {
-                          ChupAnh(item.hardwareKey);
+                          if (!item.trangThai) return;
+
                           console.log("index", index);
                           setrequestType(0);
                           item.isLoading = true;
-                          // setfetchData(3);
+
+                          ChupAnh(item.hardwareKey);
                         }}
                         disabled={!item.trangThai}
                         className={`${
@@ -223,6 +225,7 @@ const QuanLyManHinh = (props) => {
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
+                          marginBottom: "5px",
                         }}
                       >
                         <h2>{item.tenManHinh}</h2>
@@ -246,16 +249,20 @@ const QuanLyManHinh = (props) => {
                           </div>
                         </Tooltip>
                       </div>
-                      <div
+                      {/* <div
                         style={{
                           display: "flex",
                           justifyContent: "space-between",
                         }}
-                      >
-                        <h3 style={{ color: item.trangThai ? "green" : "red" }}>
-                          {item.trangThai ? "Hoạt động" : "Tạm ngừng"}
-                        </h3>
-
+                      ></div> */}
+                    </div>
+                    <div className="table-columns-bottom">
+                      <div className="table-columns-content">
+                        <strong>Hardwarekey:</strong>
+                        <span>{item.hardwareKey || "-"}</span>
+                      </div>
+                      <div className="table-columns-content">
+                        <strong>Địa chỉ:</strong>
                         {item.diaChi && item.diaChi.length > 0 && (
                           <h3 style={{ display: "flex" }}>
                             {item.diaChi}
@@ -263,11 +270,11 @@ const QuanLyManHinh = (props) => {
                           </h3>
                         )}
                       </div>
-                    </div>
-                    <div className="table-columns-bottom">
                       <div className="table-columns-content">
-                        <strong>Hardwarekey:</strong>
-                        <span>{item.hardwareKey || "-"}</span>
+                        <strong>Trạng thái:</strong>
+                        <h3 style={{ color: item.trangThai ? "green" : "red" }}>
+                          {item.trangThai ? "Hoạt động" : "Tạm ngừng"}
+                        </h3>
                       </div>
                       <div className="table-columns-content">
                         <strong>Địa chỉ mac: </strong>{" "}
