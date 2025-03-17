@@ -358,7 +358,7 @@ const Topbar = (props) => {
               // handleGetListChild();
             }}
           />
-          <Link
+          {/* <Link
             to={"/dashboard"}
             style={{ display: "flex", fontSize: 18,marginTop:"15px" }}
             onClick={() => {
@@ -366,11 +366,11 @@ const Topbar = (props) => {
               dispatch(props.changeMaMenuActive(""));
               props.changeCurrent([]);
             }}
-          >
+          > */}
             <img src={Go} alt={""} style={{ width: "54px", height: "39px" }} />
 
             <h4 className={"triggerHeader"}>Go Smart Signage</h4>
-          </Link>
+          {/* </Link> */}
         </div>
         {/* <Menu
             onClick={handleClick}

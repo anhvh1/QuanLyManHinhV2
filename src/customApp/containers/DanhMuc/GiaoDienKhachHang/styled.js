@@ -22,7 +22,8 @@ export const StyledButton = styled.div`
   }
 `;
 export const Layout = styled.div`
-  padding: 0px;
+  padding: 0pc 0px 20px 0px;
+  
 `;
 export const MenuContent = styled.div`
   display: flex;

@@ -82,23 +82,12 @@ const ModalAddEdit = (props) => {
     setListFileDinhKem(newListFileDinhKem);
   };
   const beforeUploadFile = (file, callback, listFile) => {
-    const FileLimit = getValueConfigLocalByKey("data_config")?.fileLimit;
-    const isLt2M = file.size / 1024 / 1024 < FileLimit;
-    const ListFileExist = [];
-    listFile?.forEach((file) => {
-      const ExistFile = ListFileDinhKem.filter(
-        (item) => item.TenFileGoc === file.name
-      );
-      if (ExistFile.length) {
-        ListFileExist.push(file);
-      }
-    });
-    if (!isLt2M) {
-      message.error(`File đính kèm phải nhỏ hơn ${FileLimit}MB`);
-    } else {
-      getBase64(file, callback, listFile);
+    const isAPK = file.type === "application/vnd.android.package-archive" || file.name.endsWith(".apk");
+    if (!isAPK) {
+      message.error("Chỉ được phép tải lên file .apk");
+      return false;
     }
-    // }
+    getBase64(file, callback, listFile);
     return false;
   };
   const { confirmLoading, visible, onCancel, action, dataModalAddEdit } = props;
@@ -144,7 +133,7 @@ const ModalAddEdit = (props) => {
           {...ITEM_LAYOUT}
           rules={[REQUIRED]}
         >
-          <Select allowClear placeholder={"Chọn bảo tàng"}>
+          <Select allowClear placeholder={"Chọn trạng thái"}>
             <Option value={true}>Hoạt động</Option>
             <Option value={false}>Không hoạt động</Option>
           </Select>
