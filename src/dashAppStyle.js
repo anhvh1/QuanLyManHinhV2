@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { palette, font } from 'styled-theme';
 
 const DashAppHolder = styled.div`
-  font-family: ${font('primary', 0)};
+  font-family: "Poppins", sans-serif;
 
   h1,
   h2,

@@ -41,7 +41,7 @@ const BoxWrapper = styled.div`
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    color: #FFFFFF;
+    color: #333;
     font-size: 14px;
     line-height: 1.5714285714285714;
     list-style: none;

@@ -844,14 +844,14 @@ const DMChiTieu = (props) => {
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
-            color: "#FFFFFF",
+            color: "#333",
             fontSize: "16px",
             padding: "20px 20px 20px 6px",
           }}
         >
           <Checkbox
             style={{
-              color: "#FFFFFF",
+              color: "#333",
               fontSize: "16px",
             }}
             checked={checked}

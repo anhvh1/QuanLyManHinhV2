@@ -308,7 +308,7 @@ export default (props) => {
           marginBottom: '30px',
         }}
       >
-        <div style={{color: 'red', fontSize: '20px', fontFamily: 'Inter'}}>
+        <div style={{color: 'red', fontSize: '20px', fontFamily: 'Poppins, sans-serif'}}>
           Chú ý: Mỗi tệp đính kèm có dung lượng tối đa 300MB
         </div>
         <div>

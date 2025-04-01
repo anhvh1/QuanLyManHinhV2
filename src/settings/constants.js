@@ -150,7 +150,7 @@ module.exports = Object.freeze({
     tableToXls: {
       border: 'none',
       fontSize: '14pt',
-      fontFamily: 'Times New Roman',
+      fontFamily: 'Poppins, sans-serif',
     },
     tableToXls_td: {border: 'none'},
     tableToXls_tableTd: {border: '1px solid #333'},
@@ -177,7 +177,7 @@ module.exports = Object.freeze({
     tableData: {
       border: '1px solid #333',
       fontSize: '13pt',
-      fontFamily: 'Times New Roman',
+      fontFamily: 'Poppins, sans-serif',
     },
     tableData_td: {border: '1px solid #333'},
     tableData_th: {border: '1px solid #333'},

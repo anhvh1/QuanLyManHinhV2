@@ -31,7 +31,7 @@ html,
 body,
 html a {
   margin-bottom: 0;
-  font-family: "Roboto", sans-serif;
+  font-family: "Poppins", sans-serif;
   /* font-family: "Roboto", sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -283,10 +283,10 @@ html[dir="rtl"] .dz-hidden-input {
 .ant-table-wrapper {
   overflow-x: hidden !important;
 }
-.ant-menu-submenu-expand-icon,
+/* .ant-menu-submenu-expand-icon,
 .ant-menu-submenu-arrow {
   color: black !important;
-}
+} */
 /* .ant-form-item-label {
   display: flex !important;
   align-items: center !important;
@@ -796,3 +796,4 @@ th {
   color: #ff6b00 !important;
   border-left: 3px solid #ff6b00 !important;
 }
+

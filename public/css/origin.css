@@ -155,7 +155,7 @@ div::-webkit-scrollbar-thumb {
 
 .ant-table-header {
     overflow-y: hidden !important;
-    width: calc(100% - 9px) !important;
+    width: 100% !important;
 }
 
 .ant-table-fixed-left .ant-table-header {

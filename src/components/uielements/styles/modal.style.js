@@ -54,9 +54,9 @@ const ModalWrapper = styled(Modal)`
   .ant-modal-body {
     padding: ${(props) =>
       props?.padding || props?.padding === 0 ? props.padding : '8px 24'}px;
-    /* max-height: calc(100vh - 190px); */
-    max-height: 100vh;
-    min-height: 120px;
+    max-height: calc(100vh - 192px);
+    /* max-height: 100vh;
+    min-height: 120px; */
     overflow: auto;
     margin-bottom: 10px;
   }

@@ -32,6 +32,8 @@ import {
   ClockCircleOutlined,
 } from "@ant-design/icons";
 import PageWrap from "../../../../components/utility/PageWrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPhotoVideo } from "@fortawesome/free-solid-svg-icons";
 const QLThuVien = (props) => {
   const [filterData, setFilterData] = useState(
     queryString.parse(props.location.search)
@@ -400,8 +402,12 @@ const QLThuVien = (props) => {
                           fontSize: "14px",
                         }}
                       >
-                        <FileOutlined style={{ marginRight: "5px" }} />
-                        {item.TongSoMedia} media
+                        {/* Sử dụng Font Awesome Icon */}
+                        <FontAwesomeIcon
+                          icon={faPhotoVideo}
+                          style={{ marginRight: "5px" }}
+                        />
+                        {item.TongSoMedia} Media
                       </span>
                       <span
                         style={{

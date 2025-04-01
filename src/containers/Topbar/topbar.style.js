@@ -171,7 +171,7 @@ const TopbarWrapper = styled.div`
 
         &:before {
           content: "\f20e";
-          font-family: "Ionicons";
+          font-family: "Poppins", sans-serif;
           font-size: 26px;
           color: inherit;
           line-height: 0;

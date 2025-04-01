@@ -401,7 +401,7 @@ const Topbar = (props) => {
           closable={true}
           onClose={closeDrawer}
           open={visibleDrawer}
-          bodyStyle={{ height: "calc(100% - 60px)" }}
+          // bodyStyle={{ height: "calc(100% - 60px)" }}
         >
           {validFile ? (
             <div style={{ textAlign: "center", height: "100%" }}>

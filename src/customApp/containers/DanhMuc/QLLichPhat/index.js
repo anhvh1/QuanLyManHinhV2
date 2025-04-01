@@ -401,7 +401,7 @@ const QLLichPhat = (props) => {
             allowClear
             style={{width: '200px'}}
             defaultValue={filterData.LoaiSuKien}
-            placeholder={'Loại sư kiện'}
+            placeholder={'Loại sự kiện'}
             onChange={(value) => onFilter(value, 'LoaiSuKien')}
           >
             {DanhSachLoaiSuKien?.map((item) => (

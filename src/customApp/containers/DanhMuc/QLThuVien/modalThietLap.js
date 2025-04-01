@@ -259,7 +259,7 @@ export default (props) => {
       width: "30%",
     },
     {
-      title: "Thumbnail",
+      title: "Media",
       dataIndex: "UrlFile",
       align: "center",
 
@@ -274,7 +274,11 @@ export default (props) => {
               return (
                 <video
                   src={url}
-                  style={{ width: "50%", height: "50px", textAlign: "center" }}
+                  style={{
+                    width: "100%",
+                    minHeight: "150px",
+                    textAlign: "center",
+                  }}
                   controls
                 />
               );
@@ -283,12 +287,10 @@ export default (props) => {
                 <img
                   src={url}
                   style={{
-                    width: "50%",
-                    height: "50px",
-                    objectFit: "cover",
-                    textAlign: "center",
+                    width: "100%",
+                    height: "auto",
                   }}
-                  alt="Thumbnail"
+                  alt="Media"
                 />
               );
             }
@@ -582,6 +584,7 @@ export default (props) => {
         actionthietlap === "edit" ? "CẬP NHẬT" : "THIẾT LẬP"
       } DANH SÁCH PHÁT`}
       width={"100%"}
+      height={"auto"}
       visible={visible}
       onCancel={props.onCancel}
       maskClosable={false}
@@ -595,7 +598,7 @@ export default (props) => {
       ]}
     >
       <LayoutWrapper>
-        <div
+        <Box
           style={{
             // padding: "10px 10px 0px 10px",
             float: "left",
@@ -698,32 +701,38 @@ export default (props) => {
             >
               {DanhSachMauPhieuSuggest?.map((item, index) => (
                 <div
-                key={item.id || index}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "10px",
-                  cursor: "pointer",
-                  backgroundColor: index % 2 === 0 ? "rgba(255, 255, 255, 0.2)" : "transparent",
-                  transition: "all 0.3s ease-in-out", // Giúp hiệu ứng chuyển mượt
-                  borderRadius: "8px", // Thêm bo góc để mềm mại hơn
-                }}
-                draggable="true"
-                onDragStart={(event) => handleDragStart(event, item)}
-                onClick={() => handleMediaClick(item)}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow = "0px 4px 12px rgba(0, 0, 0, 0.2)";
-                  e.currentTarget.style.transform = "scale(1.05)";
-                  e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.3)"; // Sáng hơn khi hover
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow = "none";
-                  e.currentTarget.style.transform = "scale(1)"; // Quay lại kích thước ban đầu
-                  e.currentTarget.style.backgroundColor =
-                    index % 2 === 0 ? "rgba(255, 255, 255, 0.2)" : "transparent"; // Quay lại màu nền ban đầu
-                }}
-              >
-              
+                  key={item.id || index}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    padding: "10px",
+                    cursor: "pointer",
+                    backgroundColor:
+                      index % 2 === 0
+                        ? "rgba(255, 255, 255, 0.2)"
+                        : "transparent",
+                    transition: "all 0.3s ease-in-out", // Giúp hiệu ứng chuyển mượt
+                    borderRadius: "8px", // Thêm bo góc để mềm mại hơn
+                  }}
+                  draggable="true"
+                  onDragStart={(event) => handleDragStart(event, item)}
+                  onClick={() => handleMediaClick(item)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0px 4px 12px rgba(0, 0, 0, 0.2)";
+                    e.currentTarget.style.transform = "scale(1.05)";
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(255, 255, 255, 0.3)"; // Sáng hơn khi hover
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.transform = "scale(1)"; // Quay lại kích thước ban đầu
+                    e.currentTarget.style.backgroundColor =
+                      index % 2 === 0
+                        ? "rgba(255, 255, 255, 0.2)"
+                        : "transparent"; // Quay lại màu nền ban đầu
+                  }}
+                >
                   <div
                     style={{
                       width: "40px",
@@ -816,8 +825,8 @@ export default (props) => {
               ))}
             </div>
           </div>
-        </div>
-        <div
+        </Box>
+        <Box
           style={{
             float: "left",
             width: "73%",
@@ -839,7 +848,7 @@ export default (props) => {
           >
             Danh sách phát: {TenDanhSachPhat}
           </h3>
-          <Box
+          <div
             style={{
               textAlign: "center",
               paddingTop: "20px",
@@ -852,8 +861,8 @@ export default (props) => {
               {calculateTotalDuration(dataSource)}
             </span>{" "}
             Tổng số Media: <span>{dataSource.length}</span>
-          </Box>
-          <Box>
+          </div>
+          <div>
             <DndContext sensors={sensors} onDragEnd={onDragEnd}>
               <SortableContext
                 items={dataSource.map((i) => i.ThuTu)}
@@ -881,8 +890,8 @@ export default (props) => {
                 </div>
               </SortableContext>
             </DndContext>
-          </Box>
-        </div>
+          </div>
+        </Box>
       </LayoutWrapper>
     </Modal>
   );

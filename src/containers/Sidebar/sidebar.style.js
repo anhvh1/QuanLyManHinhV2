@@ -9,9 +9,9 @@ const widthExpanded = "280px";
 const SidebarWrapper = styled.div`
   .triggerHeader {
     /* color: ${palette("text", 5)}; */
-    color: #000;
+    color: #333;
     font-family: "Poppins", sans-serif;
-    font-size: 25px;
+    font-size: 24px;
     font-weight: 600;
     text-align: center;
     text-underline-position: from-font;
@@ -282,20 +282,11 @@ const SidebarWrapper = styled.div`
           opacity: 1;
           left: auto;
           right: 25px;
-
           &:before,
           &:after {
             background: #999;
             width: 8px;
             ${transition()};
-          }
-
-          &:before {
-            transform: rotate(-45deg) translateX(3px);
-          }
-
-          &:after {
-            transform: rotate(45deg) translateX(-3px);
           }
         }
       }
@@ -306,7 +297,6 @@ const SidebarWrapper = styled.div`
       /* .parent-menu__item {
         border-left: 3px solid #ff6b00;
       } */
-      
 
       .ant-menu-inline,
       .ant-menu-submenu-vertical {
