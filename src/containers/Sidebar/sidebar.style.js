@@ -4,10 +4,24 @@ import { transition, borderRadius } from "../../settings/style-util";
 
 const widthCollaped = "50px";
 const widthCollapedMobile = "0px";
-const widthExpanded = "240px";
+const widthExpanded = "280px";
 
 const SidebarWrapper = styled.div`
-  padding: 0px 5px 0px 5px;
+  .triggerHeader {
+    /* color: ${palette("text", 5)}; */
+    color: #000;
+    font-family: "Poppins", sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+    text-align: center;
+    text-underline-position: from-font;
+    text-decoration-skip-ink: none;
+    @media only screen and (max-width: 500px) {
+      display: none;
+    }
+    margin-bottom: 35px;
+  }
+  /* padding: 0px 5px 0px 5px; */
   .ant-menu-title-content {
     font-size: 14px;
   }
@@ -23,22 +37,23 @@ const SidebarWrapper = styled.div`
       height: 25px;
     }
     .nav-text {
-      font-weight: 600;
+      font-family: "Poppins", sans-serif;
     }
   }
   .isomorphicSidebar {
-    background: #101349;
-    padding:0px 10px;
+    background-color: #fff;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.12);
     z-index: 999;
     /* background: ${palette("primary", 14)};
     color: ${palette("secondary", 1)}; */
     // background: ${palette("sidebar", 0)};
-    color: #ffffff;
+    color: #666;
     width: ${widthExpanded} !important;
     flex: 0 0 ${widthExpanded} !important;
     max-width: ${widthExpanded} !important;
     min-width: ${widthExpanded} !important;
-    border-right: 1px solid #ffffff33;
+    transition: all 0.3s ease;
+    border-right: 1px solid rgba(0, 0, 0, 0.05);
     .scrollarea {
       height: calc(100vh - 70px);
     }
@@ -106,11 +121,12 @@ const SidebarWrapper = styled.div`
     }
 
     .isoDashboardMenu {
-      padding-top: 15px;
+      border-top: 1px solid #f0f0f0;
+      padding: 20px 10px;
       padding-bottom: 35px;
       border-inline-end: none !important;
       background: transparent;
-      margin-top: 70px;
+      /* margin-top: 70px; */
       a {
         text-decoration: none;
         font-weight: 400;
@@ -168,9 +184,9 @@ const SidebarWrapper = styled.div`
       }
 
       .nav-text {
-        font-size: 14px;
+        font-size: 17.5px;
         /* color: inherit; */
-        color: #ffffff;
+        color: #666;
         ${transition()};
         /* color :  */
       }
@@ -199,7 +215,7 @@ const SidebarWrapper = styled.div`
           .ant-menu-item-selected
         ):hover
         a {
-        color: #ffffff !important;
+        color: #ff6b00 !important;
       }
       /* .ant-menu-item-active .ant-menu-title-content {
         .nav-text {
@@ -207,31 +223,31 @@ const SidebarWrapper = styled.div`
         }
       } */
       .ant-menu-item-selected {
-        background-color: #1058af !important;
+        background-color: rgba(255, 107, 0, 0.08) !important;
         border-radius: 111px;
         /* background-color: ${palette("sidebar", 2)}; */
         /* background-color: ${palette("secondary", 1)} !important; */
         .anticon {
-          color: #ffffff !important;
+          color: #ff6b00 !important;
           /* color: #FFFFFF; */
           /* color: ${palette("primary", 14)}; */
         }
 
         i {
-          color: #ffffff !important;
+          color: #ff6b00 !important;
           /* color: #FFFFFF; */
           /* color: ${palette("primary", 14)}; */
         }
 
         ion-icon {
-          color: #ffffff !important;
+          color: #ff6b00 !important;
           /* color: #FFFFFF; */
           /* color: ${palette("primary", 14)}; */
         }
 
         .nav-text,
         .ant-menu-title-content {
-          color: #ffffff !important;
+          color: #ff6b00 !important;
           /* color: #FFFFFF; */
           /* color: ${palette("primary", 14)}; */
         }
@@ -239,6 +255,9 @@ const SidebarWrapper = styled.div`
         &::after {
           border-right: 0;
         }
+      }
+      .ant-menu-item .ant-menu-item-only-child :hover {
+        background-color: red !important;
       }
     }
 
@@ -280,7 +299,13 @@ const SidebarWrapper = styled.div`
           }
         }
       }
-
+      .menu-topbar.popupSubMenuInline .ant-menu-submenu-title:hover {
+        background-color: rgba(255, 107, 0, 0.08) !important;
+        color: #ff6b00 !important;
+      }
+      .parent-menu__item {
+        border-left: 3px solid #ff6b00;
+      }
       .ant-menu-inline,
       .ant-menu-submenu-vertical {
         > li:not(.ant-menu-item-group) {
@@ -289,12 +314,13 @@ const SidebarWrapper = styled.div`
           font-size: 13px;
           font-weight: 400;
           margin: 0;
+          height: 50px;
           color: inherit;
           ${transition()};
 
           &:hover {
             a {
-              color: #ffffff !important;
+              color: #ff6b00 !important;
             }
           }
         }
@@ -350,6 +376,52 @@ const SidebarWrapper = styled.div`
       }
     }
   }
+  :where(.css-dev-only-do-not-override-cg4vza).ant-menu-light:not(
+    .ant-menu-horizontal
+  )
+  .ant-menu-item:not(.ant-menu-item-selected):hover,
+:where(.css-dev-only-do-not-override-cg4vza).ant-menu-light
+  > .ant-menu:not(.ant-menu-horizontal)
+  .ant-menu-item:not(.ant-menu-item-selected):hover {
+  background-color: rgba(255, 107, 0, 0.08) !important;
+  color: #ff6b00;
+}
+/* .ant-menu-submenu-title :hover {
+  background-color: rgba(255, 107, 0, 0.08) ;
+} */
+:where(.css-dev-only-do-not-override-cg4vza).ant-menu-inline.ant-menu-root
+  .ant-menu-submenu-title
+  > .ant-menu-title-content
+  :hover {
+  background-color: transparent !important;
+  color: #ff6b00;
+}
+:where(.css-dev-only-do-not-override-cg4vza)
+  .ant-menu
+  .ant-menu-submenu-inline.parent-menu__item:hover
+  > div {
+  background-color: rgba(255, 107, 0, 0.08) !important;
+  color: #ff6b00;
+}
+:where(.css-dev-only-do-not-override-cg4vza).ant-layout-header {
+  height: 64px;
+  padding: 0 20px;
+  color: rgba(0, 0, 0, 0.88);
+  line-height: 64px;
+  background: #001529;
+}
+.isomorphicSidebar .ant-menu-submenu-inline > .ant-menu-submenu-title,
+.edfafv
+  .isomorphicSidebar
+  .ant-menu-submenu-vertical
+  > .ant-menu-submenu-title {
+  width: 100%;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 50px;
+}
+
 `;
 
 export default SidebarWrapper;

@@ -1,40 +1,45 @@
-import React, {useEffect, useState} from 'react';
-import {Tree, Checkbox,  Tooltip} from 'antd';
+import React, { useEffect, useState } from "react";
+import { Tree, Checkbox, Tooltip } from "antd";
 import {
   Button,
   Modal,
   InputSearch,
   Input,
   Select,
-} from '../../../../components/uielements/exportComponent';
-import {message} from 'antd';
+} from "../../../../components/uielements/exportComponent";
+import { message } from "antd";
 import {
   customizeFormValidator as Form,
   useForm,
-} from '../../../../components/uielements/formValidator';
-import BoxTable from '../../../../components/utility/boxTable';
-import LayoutWrapper from '../../../../components/utility/layoutWrapper';
-import Box from '../../../../components/utility/box';
-import {EmptyTable} from '../../../../components/utility/boxTable';
-import api from './config';
+} from "../../../../components/uielements/formValidator";
+import BoxTable from "../../../../components/utility/boxTable";
+import LayoutWrapper from "../../../../components/utility/layoutWrapper";
+import Box from "../../../../components/utility/box";
+import { EmptyTable } from "../../../../components/utility/boxTable";
+import api from "./config";
 import {
   DeleteOutlined,
   FolderOutlined,
   FolderOpenOutlined,
   HomeOutlined,
-} from '@ant-design/icons';
-import BoxFilter from '../../../../components/utility/boxFilter';
-import {changeUrlFilter} from '../../../../helpers/utility';
-import {DndContext, PointerSensor, useSensor, useSensors} from '@dnd-kit/core';
-import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
+} from "@ant-design/icons";
+import BoxFilter from "../../../../components/utility/boxFilter";
+import { changeUrlFilter } from "../../../../helpers/utility";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
   arrayMove,
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
-const {TreeNode} = Tree;
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+const { TreeNode } = Tree;
 export default (props) => {
   const [form] = useForm();
   const [expandedKeys, setExpandedKeys] = useState([]);
@@ -46,15 +51,8 @@ export default (props) => {
     actionthietlap,
     danhSachDMThuVien,
     filterData,
+    TenDanhSachPhat,
   } = props;
-  const onChangeCheck = (e) => {
-    const isChecked = e.target.checked;
-    setFilterParams((prevParams) => ({
-      ...prevParams,
-      ThuMucID: isChecked ? null : "",
-    }));
-    setSelectAllFolders(isChecked);
-  };
   const filterTreeNode = (dataRoot) => {
     return dataRoot;
   };
@@ -381,14 +379,6 @@ export default (props) => {
     });
     setDataSource(newData);
   };
-  const formatTime = (index) => {
-    const hours = Math.floor(index / 3600);
-    const minutes = Math.floor((index % 3600) / 60);
-    const seconds = index % 60;
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  };
   const parseDuration = (durationString) => {
     const [hours, minutes, seconds] = durationString.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
@@ -565,6 +555,27 @@ export default (props) => {
     };
     setDataSource((prev) => [...prev, newItem]);
   };
+  const renderSelectOptions = (folder, level = 0) => {
+    // Create indentation based on level
+    const indent = "\u00A0".repeat(level * 4);
+    const icon = folder.ThuMucID === 1 ? <HomeOutlined /> : <FolderOutlined />;
+
+    const options = [
+      <Option key={folder.ThuMucID} value={folder.ThuMucID}>
+        {icon} {indent}
+        {folder.TenThuMuc}
+      </Option>,
+    ];
+
+    // Recursively add children
+    if (folder.Children && folder.Children.length > 0) {
+      folder.Children.forEach((child) => {
+        options.push(...renderSelectOptions(child, level + 1));
+      });
+    }
+
+    return options;
+  };
   return (
     <Modal
       title={`${
@@ -586,109 +597,221 @@ export default (props) => {
       <LayoutWrapper>
         <div
           style={{
-            padding: "10px 10px 0px 10px",
+            // padding: "10px 10px 0px 10px",
             float: "left",
             width: "25%",
-            background: "#171D60",
+            // background: "#171D60",
             minHeight: "740px",
             maxHeight: "740px",
             borderRadius: "20px",
           }}
         >
-          <Box>
-            <div
-              key={treeKey}
+          <h3
+            style={{
+              margin: 0,
+              padding: "15px",
+              borderBottom: "1px solid #eee",
+              fontSize: "1.5rem",
+              marginBottom: "10px",
+              color: "#333",
+            }}
+          >
+            Media của bạn
+          </h3>
+          {/* <Box> */}
+          <div
+            key={treeKey}
+            style={{
+              userSelect: "none",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              color: "gray",
+              whiteSpace: "nowrap",
+              marginTop: "20px",
+            }}
+            className="mg-top"
+          >
+            <Select
+              placeholder="Chọn thư mục"
               style={{
-                userSelect: "none",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                color: "gray",
-                whiteSpace: "nowrap",
+                width: "100%",
+                marginBottom: "10px",
+                color: "#333",
               }}
-              className="mg-top"
+              onChange={(value) => {
+                setFilterParams((prev) => ({
+                  ...prev,
+                  ThuMucID: value === "all" ? null : value,
+                }));
+                setSelectAllFolders(value === "all");
+              }}
+              value={
+                selectAllFolders ? "all" : filterParams.ThuMucID || undefined
+              }
+              allowClear
+              dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
             >
-              <Checkbox
-                onChange={onChangeCheck}
-                checked={selectAllFolders}
-                style={{
-                  color: "#FFFFFF",
-                  fontSize: "16px",
-                }}
-              >
+              <Option value="all" style={{ fontWeight: "bold" }}>
                 Tất cả thư mục
-              </Checkbox>
-              {renderContent()}
-            </div>
-          </Box>
+              </Option>
+              {DSFilter &&
+                DSFilter.map((folder) => renderSelectOptions(folder))}
+            </Select>
+          </div>
+          {/* </Box> */}
           <div>
             <BoxFilter>
-              <Select
-                placeholder="Chọn loại"
-                onChange={handleSelectChange}
-                style={{ width: 200 }}
-                allowClear
-              >
-                <Option value="1">Hình ảnh</Option>
-                <Option value="2">Video</Option>
-              </Select>
               <InputSearch
                 placeholder="Tìm kiếm theo tên"
                 onSearch={handleSearch}
-                style={{ width: 200 }}
+                style={{ width: " 100% ", marginBottom: "10px", color: "#333" }}
                 allowClear
               />
+              <Button
+                type={filterParams.Loai === "" ? "primary" : "default"}
+                onClick={() => handleSelectChange("")}
+                style={{ marginRight: "10px" }}
+              >
+                Tất cả
+              </Button>
+              <Button
+                type={filterParams.Loai === "1" ? "primary" : "default"}
+                onClick={() => handleSelectChange("1")}
+                style={{ marginRight: "10px" }}
+              >
+                Ảnh
+              </Button>
+              <Button
+                type={filterParams.Loai === "2" ? "primary" : "default"}
+                onClick={() => handleSelectChange("2")}
+                style={{ marginRight: "10px" }}
+              >
+                Video
+              </Button>
             </BoxFilter>
             <div
               style={{
                 overflowY: "auto",
-                maxHeight: "410px",
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "10px",
+                marginTop: "20px",
+                maxHeight: "480px",
               }}
             >
-              {DanhSachMauPhieuSuggest?.map((item) => (
+              {DanhSachMauPhieuSuggest?.map((item, index) => (
                 <div
-                  key={item.id}
+                  key={item.id || index}
                   style={{
                     display: "flex",
-                    flexDirection: "column",
                     alignItems: "center",
-                    width: "calc(25% - 10px)", // Điều chỉnh để hiển thị 4 mục trên một dòng
+                    padding: "10px",
+                    borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
                     cursor: "pointer",
+                    backgroundColor:
+                      index % 2 === 0
+                        ? "rgba(255, 255, 255, 0.2)"
+                        : "transparent",
                   }}
                   draggable="true"
                   onDragStart={(event) => handleDragStart(event, item)}
                   onClick={() => handleMediaClick(item)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 8px 16px rgba(0,0,0,0.15)";
+                    e.currentTarget.style.transform = "translateY(-5px)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 2px 8px rgba(0,0,0,0.09)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                  }}
                 >
-                  {item.UrlFile.toLowerCase().endsWith(".mp4") ? (
-                    <video width="100%" height="150px" controls>
-                      <source src={item.UrlFile} type="video/mp4" />
-                    </video>
-                  ) : (
-                    <img
-                      style={{
-                        width: "100%",
-                        height: "150px",
-                        objectFit: "cover",
-                      }}
-                      src={item.UrlFile}
-                      alt={item.TenFile}
-                    />
-                  )}
-                  <p
+                  <div
                     style={{
+                      width: "40px",
                       textAlign: "center",
-                      marginTop: "5px",
-                      color: "#FFFFFF",
-                      whiteSpace: "nowrap", // Ngăn xuống dòng
-                      overflow: "hidden", // Ẩn phần vượt quá
-                      textOverflow: "ellipsis", // Thêm dấu ba chấm
-                      maxWidth: "100%", // Đảm bảo không vượt quá chiều rộng của phần tử cha
+                      marginRight: "10px",
+                      color: "#333",
                     }}
                   >
-                    {item.TenFile}
-                  </p>
+                    {index + 1}
+                  </div>
+                  <div
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      marginRight: "15px",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {item.UrlFile?.toLowerCase().endsWith(".mp4") ? (
+                      <div
+                        style={{
+                          position: "relative",
+                          width: "60px",
+                          height: "60px",
+                        }}
+                      >
+                        <video
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                          src={item.UrlFile}
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            backgroundColor: "rgba(0,0,0,0.5)",
+                            borderRadius: "50%",
+                            width: "24px",
+                            height: "24px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <span style={{ color: "#333", fontSize: "12px" }}>
+                            ▶
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <img
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                        src={item.UrlFile}
+                        alt={item.TenFile}
+                      />
+                    )}
+                  </div>
+                  <div style={{ flex: 1, overflow: "hidden" }}>
+                    <p
+                      style={{
+                        color: "#333",
+                        margin: 0,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {item.TenFile}
+                    </p>
+                    <p
+                      style={{
+                        color: "#333",
+                        margin: "5px 0 0 0",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {item.ThoiLuongTrinhChieu || "00:15"}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -700,16 +823,28 @@ export default (props) => {
             width: "73%",
             height: "740px",
             borderRadius: "20px",
-            background: "#171D60",
+            // background: "#171D60",
             margin: "0 0 0 2%",
           }}
         >
+          <h3
+            style={{
+              margin: 0,
+              padding: "15px",
+              borderBottom: "1px solid #eee",
+              fontSize: "1.5rem",
+              marginBottom: "10px",
+              color: "#333",
+            }}
+          >
+            Danh sách phát: {TenDanhSachPhat}
+          </h3>
           <Box
             style={{
               textAlign: "center",
               paddingTop: "20px",
               height: "50px",
-              color: "#FFFFFF",
+              color: "#333",
             }}
           >
             Tổng thời gian phát:{" "}
@@ -752,5 +887,3 @@ export default (props) => {
     </Modal>
   );
 };
-
-

@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import {palette} from 'styled-theme';
 const Wrapper = styled.div`
+
   .Wrapper-listmenu__active {
     overflow: hidden;
     /* width: 0; */

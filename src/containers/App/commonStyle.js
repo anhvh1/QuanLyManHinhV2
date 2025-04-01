@@ -24,7 +24,7 @@ const AppHolder = styled.div`
   } */
 
   .ant-layout {
-    background: ${palette('secondary', 1)};
+    /* background: ${palette('secondary', 1)}; */
 
     &.outerLayout {
       &::-webkit-scrollbar {
@@ -64,7 +64,7 @@ const AppHolder = styled.div`
       overflow: auto;
       overflow-x: hidden;
       /* background: ${palette('primary', 20)}; */
-      background: #fff;
+      /* background: #fff; */
     }
   }
 

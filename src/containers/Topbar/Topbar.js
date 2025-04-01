@@ -73,13 +73,13 @@ const Topbar = (props) => {
   const { ListSideBar } = useSelector((state) => state.ListSideBar);
   const { SoLieuCanhBao } = useSelector((state) => state.DashBoard);
   const dispatch = useDispatch();
-
+  console.log("document.title", document.title);
   useEffect(() => {
     // props.checkKeKhai();
     dispatch(actionSidebar.getList());
     dispatch(actions.getSoLieuCanhBao());
   }, []);
-
+  const tenchucnang = localStorage.getItem("TenChucNang");
   const showDrawer = () => {
     const arrayKey = current;
     let link = "";
@@ -345,11 +345,11 @@ const Topbar = (props) => {
           collapsed ? "isomorphicTopbar collapsed" : "isomorphicTopbar"
         }
         style={{
-          background: "#101349",
+          background: "#fff",
         }}
       >
         <div className="isoLeft">
-          <MenuOutlined
+          {/* <MenuOutlined
             className={
               collapsed ? "triggerBtn menuCollapsed" : "triggerBtn menuOpen"
             }
@@ -357,7 +357,7 @@ const Topbar = (props) => {
               toggleCollapsed();
               // handleGetListChild();
             }}
-          />
+          /> */}
           {/* <Link
             to={"/dashboard"}
             style={{ display: "flex", fontSize: 18,marginTop:"15px" }}
@@ -367,10 +367,8 @@ const Topbar = (props) => {
               props.changeCurrent([]);
             }}
           > */}
-            <img src={Go} alt={""} style={{ width: "54px", height: "39px" }} />
 
-            <h4 className={"triggerHeader"}>Go Smart Signage</h4>
-          {/* </Link> */}
+          <h1 className={"triggerHeader"}>{tenchucnang}</h1>
         </div>
         {/* <Menu
             onClick={handleClick}
@@ -392,7 +390,7 @@ const Topbar = (props) => {
           <p className="isoUser">
             <TopbarUser locale={locale} />
           </p>
-          <p style={{ marginTop: "10px", color: "white" }}>{TenNguoiDung}</p>
+          {/* <p style={{ marginTop: "10px", color: "#333" }}>{TenNguoiDung}</p> */}
         </div>
 
         <Drawer

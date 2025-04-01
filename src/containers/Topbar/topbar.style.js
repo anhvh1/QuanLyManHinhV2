@@ -27,19 +27,15 @@ const TopbarWrapper = styled.div`
   .ant-menu {
   }
   .isomorphicTopbar {
-    padding: 0 50px;
-    height: 90px;
+    padding: 15px 50px;
     display: flex;
+    margin: 20px;
+    border-radius: 10px;
     justify-content: space-between;
-    // background-color: #192168;
     border-bottom: 1px solid #ffffff33;
-    // padding: 30px 0px;
-    /* padding: 0 0; */
-     z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    background: #fff;
     ${transition()};
-    position: fixed;
-    width: 100%;
-    /* border: none; */
     &::after {
       top: 0;
       z-index: -1;
@@ -139,19 +135,13 @@ const TopbarWrapper = styled.div`
       /* padding: 0 10px; */
 
       .triggerHeader {
-        /* color: ${palette("text", 5)}; */
-        color: #013cc6;
-        display: inline-block;
-        font-family: Poppins;
-        font-size: 35px;
-        font-weight: 500;
-        line-height: 48px;
-        text-align: left;
-        text-underline-position: from-font;
-        text-decoration-skip-ink: none;
-        @media only screen and (max-width: 500px) {
-          display: none;
-        }
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
       }
 
       img {
@@ -196,12 +186,11 @@ const TopbarWrapper = styled.div`
 
     .isoRight {
       display: flex;
+      justify-content: end;
       align-items: center;
       background: #ffffff0d;
       border-radius: 10px;
-      height: 50px;
       width: 200px;
-      margin-top: 18px;
       padding-left: 10px;
       .question-circle {
         color: #fff;
@@ -335,23 +324,23 @@ const TopbarWrapper = styled.div`
       }
 
       .nav-text {
-        font-size: 14px;
-        color: #fff;
+        font-size: 16px;
+        color: #666;
         ${transition()};
       }
 
       .ant-menu-item-selected {
         //background-color: ${palette("primary", 15)} !important;
         .anticon {
-          color: #fff;
+          color: #ff6b00;
         }
 
         i {
-          color: #fff;
+          color: #ff6b00;
         }
 
         .nav-text {
-          color: #fff;
+          color: #666;
         }
       }
 
@@ -366,7 +355,7 @@ const TopbarWrapper = styled.div`
         &:hover {
           i,
           .nav-text {
-            color: #ffffff;
+            color: #ff6b00;
           }
         }
       }

@@ -1,20 +1,22 @@
-import React, {Component, useEffect} from 'react';
-import {connect} from 'react-redux';
-import clone from 'clone';
-import {Link} from 'react-router-dom';
-import {Layout, Tooltip} from 'antd';
-import Menu from '../../components/uielements/menu';
-import SidebarWrapper from './sidebar.style';
-import appActions from '../../redux/app/actions';
-import actionSidebar from '../../customApp/redux/HeThong/Sidebar/actions';
-import {store} from '../../redux/store';
-import {useState} from 'react';
-import {useSelector} from 'react-redux';
-import {useDispatch} from 'react-redux';
-import {Redirect, useHistory} from 'react-router-dom';
+import React, { Component, useEffect } from "react";
+import { connect } from "react-redux";
+import clone from "clone";
+import { Link } from "react-router-dom";
+import { Layout, Tooltip } from "antd";
+import Menu from "../../components/uielements/menu";
+import SidebarWrapper from "./sidebar.style";
+import appActions from "../../redux/app/actions";
+import actionSidebar from "../../customApp/redux/HeThong/Sidebar/actions";
+import { store } from "../../redux/store";
+import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { Redirect, useHistory } from "react-router-dom";
+import { MenuOutlined } from "@ant-design/icons";
+import Go from "./go.png";
 const SubMenu = Menu.SubMenu;
-const {Sider} = Layout;
-const {Item} = Menu;
+const { Sider } = Layout;
+const { Item } = Menu;
 const {
   toggleOpenDrawer,
   changeOpenKeys,
@@ -24,10 +26,11 @@ const {
   changeListChild,
   changeMaMenuActive,
 } = appActions;
-import {getInfoFromToken} from '../../helpers/utility';
-import {createTreeSidebar, getLocalKey} from '../../helpers/utility';
+import { getInfoFromToken } from "../../helpers/utility";
+import { createTreeSidebar, getLocalKey } from "../../helpers/utility";
+
 const stripTrailingSlash = (str) => {
-  if (str.substr(-1) === '/') {
+  if (str.substr(-1) === "/") {
     return str.substr(0, str.length - 1);
   }
   return str;
@@ -36,15 +39,15 @@ const stripTrailingSlash = (str) => {
 const Sidebar = (props) => {
   const [width, setWidth] = useState(0);
   // const {ListSideBar} = useSelector((state) => state.ListSideBar);
-  const access_token = getLocalKey('access_token');
+  const access_token = getLocalKey("access_token");
   const dataUnzip = getInfoFromToken(access_token);
   const ListChucNang = dataUnzip?.ChucNang;
-  
+
   const ListChucNangCha = [];
   ListChucNang?.forEach((item) => {
     if (
       !ListChucNangCha.find(
-        (ChucNangCha) => ChucNangCha.ChucNangID === item.ChucNangChaID,
+        (ChucNangCha) => ChucNangCha.ChucNangID === item.ChucNangChaID
       )
     ) {
       ListChucNangCha.push({
@@ -60,12 +63,12 @@ const Sidebar = (props) => {
   }
   const [MaRedirect, setMaRedirect] = useState();
   const history = useHistory();
-  const {ListChild} = props;
+  const { ListChild } = props;
 
   useEffect(() => {
     props.checkKeKhai();
     setWidth(window.innerWidth);
-    window.addEventListener('resize', (e) => {
+    window.addEventListener("resize", (e) => {
       setWidth(e.target.innerWidth);
     });
   }, []);
@@ -81,15 +84,15 @@ const Sidebar = (props) => {
     // dispatch(actionSidebar.getList());
   }, []);
 
-  const {app} = props;
+  const { app } = props;
 
   const onOpenChange = (newOpenKeys) => {
-    const {app, changeOpenKeys} = props;
+    const { app, changeOpenKeys } = props;
     const latestOpenKey = newOpenKeys.find(
-      (key) => !(app.openKeys.indexOf(key) > -1),
+      (key) => !(app.openKeys.indexOf(key) > -1)
     );
     const latestCloseKey = app.openKeys.find(
-      (key) => !(newOpenKeys.indexOf(key) > -1),
+      (key) => !(newOpenKeys.indexOf(key) > -1)
     );
     let nextOpenKeys = [];
     if (latestOpenKey) {
@@ -103,14 +106,14 @@ const Sidebar = (props) => {
 
   const getAncestorKeys = (key) => {
     const map = {
-      sub3: ['sub2'],
+      sub3: ["sub2"],
     };
     return map[key] || [];
   };
 
-  const getMenuItem = ({singleOption, submenuStyle, submenuColor}) => {
-    const {TenChucNang, Icon, Children, HienThi, MaChucNang} = singleOption;
-    const checkBaoCao = MaChucNang?.includes('bao-cao');
+  const getMenuItem = ({ singleOption, submenuStyle, submenuColor }) => {
+    const { TenChucNang, Icon, Children, HienThi, MaChucNang } = singleOption;
+    const checkBaoCao = MaChucNang?.includes("bao-cao");
     const url = stripTrailingSlash(props.url);
 
     if (Children && Children.length > 0) {
@@ -123,16 +126,16 @@ const Sidebar = (props) => {
             <span className="isoMenuHolder" data_key={MaChucNang}>
               <div className="wrapper-content__item">
                 {/* <img src={Icon} /> */}
-                <span className="nav-text">{TenChucNang}</span>
+                <span className="nav-text" style={{padding:"20px 10px"}}>{TenChucNang}</span>
               </div>
             </span>
           }
           popupClassName={
             Children.length > 2
-              ? 'menu-topbar popupSubMenuInline'
+              ? "menu-topbar popupSubMenuInline"
               : Children.length === 2
-              ? 'menu-topbar_SubMenuInline popupSubMenuInline'
-              : 'popupSubMenuInline'
+              ? "menu-topbar_SubMenuInline popupSubMenuInline"
+              : "popupSubMenuInline"
           }
         >
           {Children.map((child, indexChild) => {
@@ -144,6 +147,9 @@ const Sidebar = (props) => {
                     key={child.MaChucNang}
                     to={`${url}/${child.MaChucNang}`}
                     class="parent nav-text"
+                    onClick={() => {
+                      localStorage.setItem("TenChucNang", child.TenChucNang);
+                    }}
                   >
                     {child.TenChucNang}
                   </Link>
@@ -181,12 +187,12 @@ const Sidebar = (props) => {
   const getListOption = (optionsUsing) => {
     let role = store.getState().Auth.role;
     if (!role) {
-      let roleStore = localStorage.getItem('role');
+      let roleStore = localStorage.getItem("role");
       role = JSON.parse(roleStore);
     }
     let user = store.getState().Auth.user;
     if (!user) {
-      let userStore = localStorage.getItem('user');
+      let userStore = localStorage.getItem("user");
       user = JSON.parse(userStore);
     }
     const isAdmin = user?.NguoiDungID === 1;
@@ -206,7 +212,7 @@ const Sidebar = (props) => {
           }
           // }
         });
-        if (Children.length) listOptions.push({...menu, Children});
+        if (Children.length) listOptions.push({ ...menu, Children });
       } else {
         // if ((role && role[menu.key] && role[menu.key].view) && menu.showMenu || menu.noRole) {
         if (isAdmin) {
@@ -234,10 +240,10 @@ const Sidebar = (props) => {
     return listOptions;
   };
 
-  const {toggleOpenDrawer, customizedTheme, height} = props;
+  const { toggleOpenDrawer, customizedTheme, height } = props;
   const collapsed = clone(app.collapsed) && !clone(app.openDrawer);
-  const {openDrawer} = app;
-  const mode = collapsed === true ? 'vertical' : 'inline';
+  const { openDrawer } = app;
+  const mode = collapsed === true ? "vertical" : "inline";
   const onMouseEnter = () => {
     if (openDrawer === false) {
       toggleOpenDrawer();
@@ -250,7 +256,7 @@ const Sidebar = (props) => {
   };
 
   const submenuStyle = {
-    backgroundColor: 'rgba(0,0,0,0.3)',
+    backgroundColor: "rgba(0,0,0,0.3)",
     color: customizedTheme.textColor,
   };
   const submenuColor = {
@@ -260,7 +266,7 @@ const Sidebar = (props) => {
   //get list option ------- #################
   let role = store.getState().Auth.role;
   if (!role) {
-    let roleStore = localStorage.getItem('role');
+    let roleStore = localStorage.getItem("role");
     role = JSON.parse(roleStore);
   }
 
@@ -268,7 +274,7 @@ const Sidebar = (props) => {
 
   const url = stripTrailingSlash(props.url);
   useEffect(() => {
-    if (MaRedirect || MaRedirect === '') {
+    if (MaRedirect || MaRedirect === "") {
       history.push(`${url}/${MaRedirect}`);
     }
   }, [MaRedirect]);
@@ -278,10 +284,10 @@ const Sidebar = (props) => {
       {/* {width <= 500 ?  */}
       <SidebarWrapper
         style={{
-          userSelect: 'none',
+          userSelect: "none",
           gridTemplateColumns:
-            ListChild && ListChild.length > 0 ? '80px 210px' : '75px',
-            background:"#101349",
+            ListChild && ListChild.length > 0 ? "80px 210px" : "75px",
+          background: "#fff",
         }}
       >
         <Sider
@@ -297,10 +303,22 @@ const Sidebar = (props) => {
             style={{
               height,
               maxHeight: height,
-              overflowY: 'auto',
-              overflowX: 'hidden',
+              overflowY: "auto",
+              overflowX: "hidden",
             }}
           >
+            <img
+              src={Go}
+              alt={""}
+              style={{
+                width: "50px",
+                height: "40px",
+                display: "block",
+                margin: "25px auto 20px auto",
+              }}
+            />
+
+            <h2 className={"triggerHeader"}>Go Smart Signage</h2>
             <Menu
               onClick={handleClick}
               theme="light"
@@ -311,7 +329,7 @@ const Sidebar = (props) => {
               onOpenChange={onOpenChange}
             >
               {listOptions.map((singleOption) =>
-                getMenuItem({submenuStyle, submenuColor, singleOption}),
+                getMenuItem({ submenuStyle, submenuColor, singleOption })
               )}
             </Menu>
           </div>
@@ -338,5 +356,5 @@ export default connect(
     toggleCollapsed,
     checkKeKhai,
     changeMaMenuActive,
-  },
+  }
 )(Sidebar);
