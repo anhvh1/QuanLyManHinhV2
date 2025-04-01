@@ -698,32 +698,32 @@ export default (props) => {
             >
               {DanhSachMauPhieuSuggest?.map((item, index) => (
                 <div
-                  key={item.id || index}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    padding: "10px",
-                    borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-                    cursor: "pointer",
-                    backgroundColor:
-                      index % 2 === 0
-                        ? "rgba(255, 255, 255, 0.2)"
-                        : "transparent",
-                  }}
-                  draggable="true"
-                  onDragStart={(event) => handleDragStart(event, item)}
-                  onClick={() => handleMediaClick(item)}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow =
-                      "0 8px 16px rgba(0,0,0,0.15)";
-                    e.currentTarget.style.transform = "translateY(-5px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow =
-                      "0 2px 8px rgba(0,0,0,0.09)";
-                    e.currentTarget.style.transform = "translateY(0)";
-                  }}
-                >
+                key={item.id || index}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "10px",
+                  cursor: "pointer",
+                  backgroundColor: index % 2 === 0 ? "rgba(255, 255, 255, 0.2)" : "transparent",
+                  transition: "all 0.3s ease-in-out", // Giúp hiệu ứng chuyển mượt
+                  borderRadius: "8px", // Thêm bo góc để mềm mại hơn
+                }}
+                draggable="true"
+                onDragStart={(event) => handleDragStart(event, item)}
+                onClick={() => handleMediaClick(item)}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = "0px 4px 12px rgba(0, 0, 0, 0.2)";
+                  e.currentTarget.style.transform = "scale(1.05)";
+                  e.currentTarget.style.backgroundColor = "rgba(255, 255, 255, 0.3)"; // Sáng hơn khi hover
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = "none";
+                  e.currentTarget.style.transform = "scale(1)"; // Quay lại kích thước ban đầu
+                  e.currentTarget.style.backgroundColor =
+                    index % 2 === 0 ? "rgba(255, 255, 255, 0.2)" : "transparent"; // Quay lại màu nền ban đầu
+                }}
+              >
+              
                   <div
                     style={{
                       width: "40px",

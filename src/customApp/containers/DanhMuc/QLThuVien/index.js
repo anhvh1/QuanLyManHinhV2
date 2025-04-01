@@ -272,13 +272,7 @@ const QLThuVien = (props) => {
   return (
     <LayoutWrapper>
       <PageWrap>
-        <PageHeader>Quản Lý Danh Sách Phát</PageHeader>
-        <PageAction>
-          <Button type="primary" onClick={showModalAdd}>
-            <PlusOutlined />
-            Thêm mới
-          </Button>
-        </PageAction>
+        {/* <PageHeader>Quản Lý Danh Sách Phát</PageHeader> */}
       </PageWrap>
       <Box>
         <BoxFilter>
@@ -289,6 +283,12 @@ const QLThuVien = (props) => {
             onSearch={(value) => onFilter(value, "Keyword")}
             allowClear
           />
+          <PageAction>
+            <Button type="primary" onClick={showModalAdd}>
+              <PlusOutlined />
+              Thêm mới
+            </Button>
+          </PageAction>
         </BoxFilter>
         {/* Replace BoxTable with card-based layout */}
         <div
