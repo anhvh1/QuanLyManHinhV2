@@ -786,9 +786,13 @@ th {
   align-items: center;
   height: 50px;
 }
-:where(.css-dev-only-do-not-override-cg4vza) .ant-menu .ant-menu-submenu-inline.parent-menu__item.ant-menu-submenu-selected > div,
-:where(.css-dev-only-do-not-override-cg4vza) .ant-menu .ant-menu-submenu-inline.parent-menu__item.ant-menu-submenu-active > div {
+.ant-menu
+  .ant-menu-submenu-inline.parent-menu__item.ant-menu-submenu-selected
+  > div,
+.ant-menu
+  .ant-menu-submenu-inline.parent-menu__item.ant-menu-submenu-active
+  > div {
   background-color: rgba(255, 107, 0, 0.08) !important;
-  color: #ff6b00;
-  border-left: 3px solid #ff6b00;
+  color: #ff6b00 !important;
+  border-left: 3px solid #ff6b00 !important;
 }

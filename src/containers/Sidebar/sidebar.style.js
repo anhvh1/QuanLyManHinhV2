@@ -224,7 +224,7 @@ const SidebarWrapper = styled.div`
       } */
       .ant-menu-item-selected {
         background-color: rgba(255, 107, 0, 0.08) !important;
-        border-radius: 111px;
+        /* border-radius: 111px; */
         /* background-color: ${palette("sidebar", 2)}; */
         /* background-color: ${palette("secondary", 1)} !important; */
         .anticon {
@@ -303,9 +303,11 @@ const SidebarWrapper = styled.div`
         background-color: rgba(255, 107, 0, 0.08) !important;
         color: #ff6b00 !important;
       }
-      .parent-menu__item {
+      /* .parent-menu__item {
         border-left: 3px solid #ff6b00;
-      }
+      } */
+      
+
       .ant-menu-inline,
       .ant-menu-submenu-vertical {
         > li:not(.ant-menu-item-group) {
@@ -377,51 +379,50 @@ const SidebarWrapper = styled.div`
     }
   }
   :where(.css-dev-only-do-not-override-cg4vza).ant-menu-light:not(
-    .ant-menu-horizontal
-  )
-  .ant-menu-item:not(.ant-menu-item-selected):hover,
-:where(.css-dev-only-do-not-override-cg4vza).ant-menu-light
-  > .ant-menu:not(.ant-menu-horizontal)
-  .ant-menu-item:not(.ant-menu-item-selected):hover {
-  background-color: rgba(255, 107, 0, 0.08) !important;
-  color: #ff6b00;
-}
-/* .ant-menu-submenu-title :hover {
+      .ant-menu-horizontal
+    )
+    .ant-menu-item:not(.ant-menu-item-selected):hover,
+  :where(.css-dev-only-do-not-override-cg4vza).ant-menu-light
+    > .ant-menu:not(.ant-menu-horizontal)
+    .ant-menu-item:not(.ant-menu-item-selected):hover {
+    background-color: rgba(255, 107, 0, 0.08) !important;
+    color: #ff6b00;
+  }
+  /* .ant-menu-submenu-title :hover {
   background-color: rgba(255, 107, 0, 0.08) ;
 } */
-:where(.css-dev-only-do-not-override-cg4vza).ant-menu-inline.ant-menu-root
-  .ant-menu-submenu-title
-  > .ant-menu-title-content
-  :hover {
-  background-color: transparent !important;
-  color: #ff6b00;
-}
-:where(.css-dev-only-do-not-override-cg4vza)
-  .ant-menu
-  .ant-menu-submenu-inline.parent-menu__item:hover
-  > div {
-  background-color: rgba(255, 107, 0, 0.08) !important;
-  color: #ff6b00;
-}
-:where(.css-dev-only-do-not-override-cg4vza).ant-layout-header {
-  height: 64px;
-  padding: 0 20px;
-  color: rgba(0, 0, 0, 0.88);
-  line-height: 64px;
-  background: #001529;
-}
-.isomorphicSidebar .ant-menu-submenu-inline > .ant-menu-submenu-title,
-.edfafv
-  .isomorphicSidebar
-  .ant-menu-submenu-vertical
-  > .ant-menu-submenu-title {
-  width: 100%;
-  display: flex;
-  -webkit-box-align: center;
-  align-items: center;
-  height: 50px;
-}
-
+  :where(.css-dev-only-do-not-override-cg4vza).ant-menu-inline.ant-menu-root
+    .ant-menu-submenu-title
+    > .ant-menu-title-content
+    :hover {
+    background-color: transparent !important;
+    color: #ff6b00;
+  }
+  :where(.css-dev-only-do-not-override-cg4vza)
+    .ant-menu
+    .ant-menu-submenu-inline.parent-menu__item:hover
+    > div {
+    background-color: rgba(255, 107, 0, 0.08) !important;
+    color: #ff6b00;
+  }
+  :where(.css-dev-only-do-not-override-cg4vza).ant-layout-header {
+    height: 64px;
+    padding: 0 20px;
+    color: rgba(0, 0, 0, 0.88);
+    line-height: 64px;
+    background: #001529;
+  }
+  .isomorphicSidebar .ant-menu-submenu-inline > .ant-menu-submenu-title,
+  .edfafv
+    .isomorphicSidebar
+    .ant-menu-submenu-vertical
+    > .ant-menu-submenu-title {
+    width: 100%;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    height: 50px;
+  }
 `;
 
 export default SidebarWrapper;
