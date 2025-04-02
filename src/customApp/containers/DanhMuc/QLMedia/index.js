@@ -3,11 +3,9 @@ import { connect } from "react-redux";
 import queryString from "query-string";
 import actions from "../../../redux/DanhMuc/QLMedia/actions";
 import api, { apiUrl } from "./config";
-// import getApi from '../../BaoCao/QLMauPhieu/config';
 import Constants from "../../../../settings/constants";
 import Select, { Option } from "../../../../components/uielements/select";
 import BoxTable from "../../../../components/utility/boxTable";
-
 import LayoutWrapper from "../../../../components/utility/layoutWrapper";
 import PageHeader from "../../../../components/utility/pageHeader";
 import PageAction from "../../../../components/utility/pageAction";
@@ -26,6 +24,8 @@ import {
   Dropdown,
   Tooltip,
   Checkbox,
+  Pagination,
+  Image,
 } from "antd";
 import Button from "../../../../components/uielements/button";
 import {
@@ -40,13 +40,10 @@ import {
   PlusOutlined,
   FolderOpenOutlined,
   HomeOutlined,
+  EyeOutlined,
 } from "@ant-design/icons";
-import TreeData from "./treeData";
-import { RedTree } from "./styled";
-import { getRoleByKey } from "../../../../helpers/utility";
 import PageWrap from "../../../../components/utility/PageWrap";
 import ModalAddEditMedia from "./modalAddEditMedi";
-// import {mapCotIDToDataTable} from '../../BaoCao/Shared/table';
 import { useSelector, useDispatch } from "react-redux";
 import { InputSearch } from "../../../../components/uielements/input";
 import { formDataCaller } from "../../../../api/formDataCaller";
@@ -64,9 +61,8 @@ const DMChiTieu = (props) => {
   const [filterData, setFilterData] = useState(
     queryString.parse(props.location.search)
   );
-  const [filterDataMedia, setFilterDataMedia] = useState(
-    queryString.parse(props.location.search)
-  );
+  const [filterData1, setFilterData1] = useState("");
+  console.log("filterData1", filterData1);
   const [keyState, setKeyState] = useState({
     key: 0,
     treeKey: 0,
@@ -94,9 +90,7 @@ const DMChiTieu = (props) => {
     dataModalAddEdit,
     modalKey,
   } = stateModalAddEdit;
-
   const { treeKey, key } = keyState;
-  // get api danhsachcaccap
   const danhSachCacCap = async () => {
     try {
       const res = await api.danhSachCacCapDonVi();
@@ -109,6 +103,7 @@ const DMChiTieu = (props) => {
     dispatch(actions.getInitData());
     danhSachCacCap();
     dispatch(actionsCoQuan.getInitData());
+    setFilterData([]);
   }, []);
 
   const filterTreeNode = (dataRoot) => {
@@ -126,7 +121,7 @@ const DMChiTieu = (props) => {
     //get filter data
     let oldFilterData = { ...filterData };
     let onFilter = { value, property };
-    let newFilterData = getFilterData(oldFilterData, onFilter, null);
+    let newFilterData = getFilterData(oldFilterData, null, onOrder);
     //get filter data
     setFilterData(newFilterData);
     changeUrlFilter(newFilterData);
@@ -170,34 +165,24 @@ const DMChiTieu = (props) => {
   const findObjectByThuMucID = (arr, ThuMucID) => {
     for (let i = 0; i < arr.length; i++) {
       const currentObject = arr[i];
-
       if (currentObject.ThuMucID === ThuMucID) {
-        // Nếu tìm thấy đối tượng với ThuMucID phù hợp, trả về nó
         return currentObject;
       }
-
-      // Nếu không, kiểm tra children của đối tượng hiện tại bằng cách đệ quy
       if (currentObject.children && currentObject.children.length > 0) {
         const resultInChildren = findObjectByThuMucID(
           currentObject.children,
           ThuMucID
         );
-
-        // Nếu tìm thấy trong children, trả về kết quả
         if (resultInChildren !== null) {
           return resultInChildren;
         }
       }
     }
-
-    // Nếu không tìm thấy đối tượng nào có ThuMucID phù hợp, trả về null
     return null;
   };
 
   //Modal add -----------------------------------------------------
   const showModalAdd = (ThuMucID, ThuMucChaID, TenThuMuc) => {
-    // const objParent = findObjectByThuMucID(DSFilter, ThuMucChaID);
-    // !props.role.add
     if (false) {
       message.destroy();
       message.warning("Bạn không có quyền thực hiện chức năng này");
@@ -390,6 +375,7 @@ const DMChiTieu = (props) => {
     }
   }, [DSFilter, initialized]);
   const [openMenuKey, setOpenMenuKey] = useState(null);
+  console.log("openMenuKey", openMenuKey);
   const access_token = getLocalKey("access_token");
   const dataUnzip = getInfoFromToken(access_token);
   const ListNguoiDung = dataUnzip?.NguoiDung?.NguoiDungID;
@@ -442,7 +428,7 @@ const DMChiTieu = (props) => {
             overlay={menu}
             placement="bottomLeft"
             trigger={["contextMenu"]}
-            visible={isMenuOpen} // Đặt visible của Dropdown
+            // visible={isMenuOpen} // Đặt visible của Dropdown
             onVisibleChange={(visible) => {
               if (visible) {
                 setOpenMenuKey(item.ThuMucID); // Mở menu khi dropdown mở
@@ -491,16 +477,11 @@ const DMChiTieu = (props) => {
       // Lưu ThuMucID vào filterData để cập nhật lại giá trị cho InputSearch
       const newFilterData = { ...filterData, ThuMucID: selectedNode.ThuMucID };
       setFilterData(newFilterData);
+      setFilterData1(selectedNode.TenThuMuc);
       // Gọi hàm onFilter để áp dụng bộ lọc mới
       onFilter(selectedNode.ThuMucID, "ThuMucID");
     }
     setChecked(false);
-  };
-  const onCheckboxChange = (e) => {
-    setChecked(e.target.checked);
-    if (e.target.checked) {
-      onFilter(null, "ThuMucID"); // Call onFilter with value null when checkbox is checked
-    }
   };
   const renderContent = () => {
     if (DanhSachThuMuc?.length) {
@@ -519,25 +500,6 @@ const DMChiTieu = (props) => {
       return <EmptyTable loading={props.TableLoading} />;
     }
   };
-
-  //Render action ---------------------------------------------
-  const renderActionAdd = () => {
-    return (
-      <span>
-        <Button
-          type="primary"
-          onClick={() => showModalAdd("", "", "")}
-          className="d-none"
-        >
-          <PlusOutlined />
-          Thêm mới
-        </Button>
-      </span>
-    );
-  };
-
-  //Render ----------------------------------------------------
-  const { role } = props;
   const columns = [
     {
       title: "STT",
@@ -824,60 +786,48 @@ const DMChiTieu = (props) => {
   };
   return (
     <LayoutWrapper>
-      <PageWrap>
-        <PageHeader>Quản Lý Media</PageHeader>
-        <PageAction>{role?.add ? renderActionAdd() : ""}</PageAction>
-        <PageAction>
-          {/* {role ? role.add ?  */}
-          <Button type="primary" onClick={showModalAddMedia}>
-            <PlusOutlined />
-            Thêm mới
-          </Button>
-          {/* //  : '' : ''} */}
-        </PageAction>
-      </PageWrap>
-
-      <Box style={{ float: "left", width: "15%" }}>
-        <div
-          style={{
-            maxWidth: "100%",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-            color: "#333",
-            fontSize: "16px",
-            padding: "20px 20px 20px 6px",
-          }}
-        >
-          <Checkbox
-            style={{
-              color: "#333",
-              fontSize: "16px",
-            }}
-            checked={checked}
-            onChange={onCheckboxChange}
-          >
-            Tất cả thư mục
-          </Checkbox>
-        </div>
-        <div
-          key={treeKey}
-          style={{
-            userSelect: "none",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-          className="mg-top"
-        >
-          {renderContent()}
-        </div>
-      </Box>
-
-      <Box style={{ float: "left", width: "85%" }}>
+      <Box>
         <BoxFilter>
           <Select
-            defaultValue={filterData.Loai ? filterData.Loai : null}
+            style={{
+              fontSize: "16px",
+              width: 200,
+            }}
+            value={checked ? "all" : filterData1 || undefined}
+            allowClear={false}
+            showSearch={false}
+            onChange={(value) => {
+              if (value === "all") {
+                setChecked(true);
+                onFilter(null, "ThuMucID");
+              } else {
+                setChecked(false);
+                onFilter(value, "ThuMucID");
+              }
+            }}
+            placeholder="Chọn thư mục"
+            dropdownRender={(menu) => (
+              <div>
+                {menu}
+                <div
+                  key={treeKey}
+                  style={{
+                    userSelect: "none",
+                    overflow: "auto",
+                    maxHeight: "400px",
+                    padding: "8px",
+                    borderTop: "1px solid #e8e8e8",
+                  }}
+                >
+                  {renderContent()}
+                </div>
+              </div>
+            )}
+          >
+            <Option value="all">Tất cả thư mục</Option>
+          </Select>
+          <Select
+            // defaultValue={filterData.Loai ? filterData.Loai : null}
             placeholder="Loại"
             onChange={(value) => onFilter(value, "Loai")}
             style={{ width: 200 }}
@@ -887,7 +837,7 @@ const DMChiTieu = (props) => {
             <Option value={2}>Video</Option>
           </Select>
           <Select
-            defaultValue={filterData.Status ? filterData.Status : null}
+            // defaultValue={filterData.Status ? filterData.Status : null}
             placeholder="Trạng thái"
             onChange={(value) => onFilter(value, "Status")}
             style={{ width: 200 }}
@@ -902,21 +852,313 @@ const DMChiTieu = (props) => {
             onSearch={(value) => onFilter(value, "Keyword")}
             style={{ width: 300 }}
           />
+          <PageAction>
+            <Button type="primary" onClick={showModalAddMedia}>
+              <PlusOutlined />
+              Thêm mới
+            </Button>
+          </PageAction>
         </BoxFilter>
-        <BoxTable
-          columns={columns}
-          dataSource={DanhSachMedia}
-          onChange={onTableChange}
-          pagination={{
-            showSizeChanger: true,
-            showTotal: (total, range) =>
-              `Từ ${range[0]} đến ${range[1]} trên ${total} kết quả`,
-            total: TotalRow,
-            current: PageNumber,
-            pageSize: PageSize,
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "50px",
+            padding: "20px 0",
           }}
-          rowKey={(record) => record.ID}
-        />
+        >
+          {DanhSachMedia &&
+            DanhSachMedia.map((item, index) => (
+              <div
+                key={item.ID}
+                className="media-card"
+                style={{
+                  border: "1px solid #e8e8e8",
+                  borderRadius: "8px",
+                  overflow: "hidden",
+                  boxShadow: "0 2px 8px rgba(0,0,0,0.09)",
+                  width: "320px",
+                  transition: "all 0.3s ease",
+                  background: "#fff",
+                }}
+              >
+                {/* Preview Section */}
+                <div
+                  style={{
+                    position: "relative",
+                    height: "180px",
+                    background: "#f5f5f5",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      width: "100%",
+                      height: "100%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    {item.Loai === 2 ? (
+                      <video
+                        src={item.UrlFile}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                        controls
+                      />
+                    ) : (
+                      <img
+                        src={item.UrlFile}
+                        alt={item.TenFile}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    )}
+                  </div>
+
+                  {/* File Type Indicator */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "10px",
+                      right: "10px",
+                      padding: "4px 8px",
+                      borderRadius: "4px",
+                      background: "rgba(0,0,0,0.5)",
+                      color: "#fff",
+                      fontSize: "12px",
+                    }}
+                  >
+                    {item.Loai === 1 ? "Hình ảnh" : "Video"}
+                  </div>
+                </div>
+
+                {/* File Info Section */}
+                <div style={{ padding: "16px" }}>
+                  <h3
+                    style={{
+                      margin: 0,
+                      fontSize: "16px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {item.TenFile}
+                  </h3>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginTop: "8px",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div>
+                      <span style={{ fontSize: "14px", color: "#8c8c8c" }}>
+                        {item.KichThuoc}
+                      </span>
+                    </div>
+
+                    <div
+                      style={{
+                        padding: "2px 8px",
+                        borderRadius: "10px",
+                        background: item.TrangThai ? "#e6f7ff" : "#f5f5f5",
+                        color: item.TrangThai ? "#1890ff" : "#8c8c8c",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {item.TrangThai ? "Đang sử dụng" : "Không sử dụng"}
+                    </div>
+                  </div>
+
+                  {/* Tags Section */}
+                  {item.ListTag && item.ListTag.length > 0 && (
+                    <div
+                      style={{
+                        marginTop: "8px",
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "4px",
+                      }}
+                    >
+                      {item.ListTag.map((tag, index) => (
+                        <span
+                          key={index}
+                          style={{
+                            padding: "2px 8px",
+                            background: "rgb(242, 242, 242)",
+                            borderRadius: "10px",
+                            fontSize: "12px",
+                          }}
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  <div
+                    style={{
+                      marginTop: "12px",
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      gap: "10px",
+                    }}
+                  >
+                    {/* <Tooltip title="Xem trước">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "28px",
+                          height: "28px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                          color: "rgba(0, 0, 0, 0.65)",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = "#52c41a";
+                          e.currentTarget.style.color = "#fff";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = "transparent";
+                          e.currentTarget.style.color = "rgba(0, 0, 0, 0.65)";
+                        }}
+                        onClick={() => {
+                          Modal.info({
+                            icon: null,
+                            width: 800,
+                            content: (
+                              <div style={{ textAlign: "center" }}>
+                                {item.Loai === 2 ? (
+                                  <video
+                                    src={item.UrlFile}
+                                    style={{
+                                      maxWidth: "100%",
+                                      maxHeight: "70vh",
+                                    }}
+                                    controls
+                                    autoPlay
+                                  />
+                                ) : (
+                                  <img
+                                    src={item.UrlFile}
+                                    alt={item.TenFile}
+                                    style={{
+                                      maxWidth: "100%",
+                                      maxHeight: "70vh",
+                                    }}
+                                  />
+                                )}
+                              </div>
+                            ),
+                            okText: "Đóng",
+                            okButtonProps: {
+                              style: {
+                                background: "#1677ff",
+                                border: "#1677ff",
+                              },
+                            },
+                          });
+                        }}
+                      >
+                        <EyeOutlined />
+                      </div>
+                    </Tooltip> */}
+                    <Tooltip color="#1890ff" title="Sửa">
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "28px",
+                          height: "28px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                          color: "rgba(0, 0, 0, 0.65)",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = "#1890ff";
+                          e.currentTarget.style.color = "#fff";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = "transparent";
+                          e.currentTarget.style.color = "rgba(0, 0, 0, 0.65)";
+                        }}
+                        onClick={() => showModalEditEdit(item.ID)}
+                      >
+                        <EditOutlined />
+                      </div>
+                    </Tooltip>
+                    <Tooltip color="#ff4d4f" title={"Xóa"}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "28px",
+                          height: "28px",
+                          borderRadius: "4px",
+                          cursor: "pointer",
+                          transition: "all 0.3s ease",
+                          color: "rgba(0, 0, 0, 0.65)",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = "#ff4d4f";
+                          e.currentTarget.style.color = "#fff";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = "transparent";
+                          e.currentTarget.style.color = "rgba(0, 0, 0, 0.65)";
+                        }}
+                        onClick={() => deleteModalAddEdit(item.ID)}
+                      >
+                        <DeleteOutlined />
+                      </div>
+                    </Tooltip>
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "16px",
+          }}
+        >
+          <Pagination
+            showSizeChanger={false}
+            showTotal={(total, range) =>
+              `Từ ${range[0]} đến ${range[1]} trên ${total} kết quả`
+            }
+            total={TotalRow}
+            current={PageNumber}
+            pageSize={PageSize}
+            onChange={(page, pageSize) => {
+              onTableChange({ current: page, pageSize }, null, null);
+            }}
+            onShowSizeChange={(current, size) => {
+              onTableChange({ current: 1, pageSize: size }, null, null);
+            }}
+          />
+        </div>
       </Box>
       <ModalEdit
         confirmLoading={confirmLoading}

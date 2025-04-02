@@ -502,7 +502,7 @@ const QLThuVien = (props) => {
           }}
         >
           <Pagination
-            showSizeChanger={true}
+            showSizeChanger={false}
             showTotal={(total, range) =>
               `Từ ${range[0]} đến ${range[1]} trên ${total} kết quả`
             }

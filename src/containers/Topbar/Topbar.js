@@ -368,7 +368,7 @@ const Topbar = (props) => {
             }}
           > */}
 
-          <h1 className={"triggerHeader"}>{tenchucnang}</h1>
+          <h1 className={"triggerHeader"}>{document.title}</h1>
         </div>
         {/* <Menu
             onClick={handleClick}
