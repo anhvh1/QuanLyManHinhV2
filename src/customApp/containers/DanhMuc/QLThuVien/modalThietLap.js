@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Tree, Checkbox, Tooltip } from "antd";
+import { Tree, Tooltip } from "antd";
 import {
   Button,
   Modal,
@@ -22,7 +22,10 @@ import {
   FolderOutlined,
   FolderOpenOutlined,
   HomeOutlined,
+  ClockCircleOutlined,
 } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPhotoVideo } from "@fortawesome/free-solid-svg-icons";
 import BoxFilter from "../../../../components/utility/boxFilter";
 import { changeUrlFilter } from "../../../../helpers/utility";
 import {
@@ -31,7 +34,6 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { restrictToVerticalAxis } from "@dnd-kit/modifiers";
 import {
   arrayMove,
   SortableContext,
@@ -58,7 +60,6 @@ export default (props) => {
   };
   const DSFilter = filterTreeNode(danhSachDMThuVien);
   const [initialized, setInitialized] = useState(false);
-
   useEffect(() => {
     if (DSFilter.length && !initialized) {
       setTimeout(() => {
@@ -88,7 +89,6 @@ export default (props) => {
         });
     }
   }, []);
-
   const onExpandNode = (selectedKeys, info) => {
     let className = info.nativeEvent.target.outerHTML.toString();
     let parentClassName =
@@ -113,7 +113,6 @@ export default (props) => {
     }
     return renderContent();
   };
-
   const [keyState, setKeyState] = useState({
     key: 0,
     treeKey: 0,
@@ -262,7 +261,6 @@ export default (props) => {
       title: "Media",
       dataIndex: "UrlFile",
       align: "center",
-
       width: "6%",
       render: (url) => {
         if (url) {
@@ -308,18 +306,15 @@ export default (props) => {
       width: "15%",
       render: (_, __, index) => {
         if (index === 0) return "00:00:00";
-
         let totalSeconds = 0;
         for (let i = 0; i < index; i++) {
           totalSeconds += convertDurationToSeconds(
             dataSource[i].ThoiLuongTrinhChieu
           );
         }
-
         return convertSecondsToDuration(totalSeconds);
       },
     },
-
     {
       title: "Thời Lượng Trình Chiếu",
       dataIndex: "ThoiLuongTrinhChieu",
@@ -333,20 +328,23 @@ export default (props) => {
         />
       ),
     },
-
     {
       title: "Thao tác",
-      dataIndex: "", // Để trống dataIndex vì chúng ta sẽ sử dụng render để tạo nội dung
+      dataIndex: "",
       width: "10%",
       align: "center",
       render: (text, record) => renderThaoTac(record),
     },
   ];
   const TimeInput = ({ value, onChange }) => {
-    const [inputValue, setInputValue] = useState(value);
-
+    const [inputValue, setInputValue] = useState(value || "00:00:00");
     const handleChange = (e) => {
       const newValue = e.target.value;
+      if (!newValue || newValue.trim() === "") {
+        setInputValue("00:00:00");
+        onChange("00:00:00");
+        return;
+      }
       setInputValue(newValue);
       if (/^\d{2}:\d{2}:\d{2}$/.test(newValue)) {
         const [hours, minutes, seconds] = newValue.split(":").map(Number);
@@ -363,10 +361,17 @@ export default (props) => {
         onChange(correctedValue);
       }
     };
+    const handleBlur = () => {
+      if (!inputValue || !/^\d{2}:\d{2}:\d{2}$/.test(inputValue)) {
+        setInputValue("00:00:00");
+        onChange("00:00:00");
+      }
+    };
     return (
       <Input
         value={inputValue}
         onChange={handleChange}
+        onBlur={handleBlur}
         style={{ width: 100 }}
         placeholder="hh:mm:ss"
       />
@@ -385,7 +390,6 @@ export default (props) => {
     const [hours, minutes, seconds] = durationString.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
   };
-
   const formatDuration = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -394,14 +398,12 @@ export default (props) => {
       .toString()
       .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
-
   const calculateTotalDuration = (data) => {
     const totalSeconds = data.reduce((total, item) => {
       return total + parseDuration(item.ThoiLuongTrinhChieu);
     }, 0);
     return formatDuration(totalSeconds);
   };
-
   const renderThaoTac = (record) => {
     return (
       <div className={"action-btn"}>
@@ -412,16 +414,14 @@ export default (props) => {
     );
   };
   const handleDelete = (record) => {
-    // Filter out the record to be deleted from dataSource
     const newData = dataSource.filter((item) => item.ThuTu !== record.ThuTu);
-    // Update dataSource with the new filtered data
     setDataSource(newData);
   };
   useEffect(() => {
     if (props.dataThietLap && Array.isArray(props.dataThietLap)) {
       const newData = props.dataThietLap.map((item, index) => ({
         ...item,
-        STT: index + 1, // Đổi từ item.ThuTu thành index + 1
+        STT: index + 1,
       }));
       setDataSource(newData);
     }
@@ -433,7 +433,7 @@ export default (props) => {
       const params = {
         DanhSachPhatID: danhSachPhatID,
         DanhSachMediaID: dataSource.map((item, index) => {
-          const sttValue = index + 1; // Tính giá trị STT
+          const sttValue = index + 1;
           return {
             ID: item.ID,
             TenFile: item.TenFile,
@@ -441,7 +441,7 @@ export default (props) => {
             TrangThai: item.TrangThai,
             Tag: null,
             ThuMucID: item.ThuMucID,
-            ThuTu: sttValue, // Gán giá trị STT cho ThuTu
+            ThuTu: sttValue,
           };
         }),
         TongThoiGianPhat: totalDuration,
@@ -461,7 +461,6 @@ export default (props) => {
     onCreate();
     props.getList(filterData);
   };
-  const [hoverIndex, setHoverIndex] = useState(null);
   const Row = (props) => {
     const {
       attributes,
@@ -473,7 +472,6 @@ export default (props) => {
     } = useSortable({
       id: props["data-row-key"],
     });
-
     const style = {
       ...props.style,
       transform: CSS.Translate.toString(transform),
@@ -486,7 +484,6 @@ export default (props) => {
           }
         : {}),
     };
-
     return (
       <tr
         {...props}
@@ -497,7 +494,6 @@ export default (props) => {
       />
     );
   };
-
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -506,7 +502,6 @@ export default (props) => {
       },
     })
   );
-
   const onDragEnd = ({ active, over }) => {
     if (active.id !== over?.id) {
       setDataSource((prev) => {
@@ -516,60 +511,51 @@ export default (props) => {
       });
     }
   };
-
   const handleDragStart = (event, item) => {
     event.dataTransfer.setData("text/plain", JSON.stringify(item));
   };
-
   const handleDrop = (event, index) => {
     event.preventDefault();
     const item = JSON.parse(event.dataTransfer.getData("text/plain"));
-
     const newItem = {
       ID: item.ID,
       TenFile: item.TenFile,
       UrlFile: item.UrlFile,
       ThoiLuongTrinhChieu: item.ThoiLuongTrinhChieu,
-      ThuTu: index + 1, // Assign the new order number based on the drop index
+      ThuTu: index + 1,
     };
-
     setDataSource((prev) => {
       const updatedDataSource = [...prev];
-      updatedDataSource.splice(index, 0, newItem); // Insert at the specific index
+      updatedDataSource.splice(index, 0, newItem);
       return updatedDataSource.map((item, idx) => ({
         ...item,
         ThuTu: idx + 1,
-      })); // Update the order
+      }));
     });
   };
-
   const handleDragOver = (event, index) => {
     event.preventDefault();
-    setHoverIndex(index !== undefined ? index : null);
   };
+
   const handleMediaClick = (item) => {
     const newItem = {
       ID: item.ID,
       TenFile: item.TenFile,
       UrlFile: item.UrlFile,
       ThoiLuongTrinhChieu: item.ThoiLuongTrinhChieu,
-      ThuTu: dataSource.length + 1, // Assign the next order number
+      ThuTu: dataSource.length + 1,
     };
     setDataSource((prev) => [...prev, newItem]);
   };
   const renderSelectOptions = (folder, level = 0) => {
-    // Create indentation based on level
     const indent = "\u00A0".repeat(level * 4);
     const icon = folder.ThuMucID === 1 ? <HomeOutlined /> : <FolderOutlined />;
-
     const options = [
       <Option key={folder.ThuMucID} value={folder.ThuMucID}>
-        {icon} {indent}
+        {indent}
         {folder.TenThuMuc}
       </Option>,
     ];
-
-    // Recursively add children
     if (folder.Children && folder.Children.length > 0) {
       folder.Children.forEach((child) => {
         options.push(...renderSelectOptions(child, level + 1));
@@ -600,12 +586,10 @@ export default (props) => {
       <LayoutWrapper>
         <Box
           style={{
-            // padding: "10px 10px 0px 10px",
             float: "left",
-            width: "25%",
-            // background: "#171D60",
-            minHeight: "740px",
-            maxHeight: "740px",
+            width: "28%",
+            // minHeight: "740px",
+            // maxHeight: "740px",
             borderRadius: "20px",
           }}
         >
@@ -621,7 +605,6 @@ export default (props) => {
           >
             Media của bạn
           </h3>
-          {/* <Box> */}
           <div
             key={treeKey}
             style={{
@@ -661,7 +644,6 @@ export default (props) => {
                 DSFilter.map((folder) => renderSelectOptions(folder))}
             </Select>
           </div>
-          {/* </Box> */}
           <div>
             <BoxFilter>
               <InputSearch
@@ -711,8 +693,8 @@ export default (props) => {
                       index % 2 === 0
                         ? "rgba(255, 255, 255, 0.2)"
                         : "transparent",
-                    transition: "all 0.3s ease-in-out", // Giúp hiệu ứng chuyển mượt
-                    borderRadius: "8px", // Thêm bo góc để mềm mại hơn
+                    transition: "all 0.3s ease-in-out",
+                    borderRadius: "8px",
                   }}
                   draggable="true"
                   onDragStart={(event) => handleDragStart(event, item)}
@@ -722,15 +704,15 @@ export default (props) => {
                       "0px 4px 12px rgba(0, 0, 0, 0.2)";
                     e.currentTarget.style.transform = "scale(1.05)";
                     e.currentTarget.style.backgroundColor =
-                      "rgba(255, 255, 255, 0.3)"; // Sáng hơn khi hover
+                      "rgba(255, 255, 255, 0.3)";
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.boxShadow = "none";
-                    e.currentTarget.style.transform = "scale(1)"; // Quay lại kích thước ban đầu
+                    e.currentTarget.style.transform = "scale(1)";
                     e.currentTarget.style.backgroundColor =
                       index % 2 === 0
                         ? "rgba(255, 255, 255, 0.2)"
-                        : "transparent"; // Quay lại màu nền ban đầu
+                        : "transparent";
                   }}
                 >
                   <div
@@ -829,10 +811,9 @@ export default (props) => {
         <Box
           style={{
             float: "left",
-            width: "73%",
-            height: "740px",
+            width: "70%",
+            // height: "740px",
             borderRadius: "20px",
-            // background: "#171D60",
             margin: "0 0 0 2%",
           }}
         >
@@ -842,7 +823,6 @@ export default (props) => {
               padding: "15px",
               borderBottom: "1px solid #eee",
               fontSize: "1.5rem",
-              marginBottom: "10px",
               color: "#333",
             }}
           >
@@ -850,17 +830,29 @@ export default (props) => {
           </h3>
           <div
             style={{
-              textAlign: "center",
-              paddingTop: "20px",
-              height: "50px",
+              padding: "10px",
               color: "#333",
+              display: "flex",
+              backgroundColor: "#f5f5f5",
+              borderBottom: "1px solid #eee",
+              gap: "20px",
+              margin: "15px 0px 10px 0px",
             }}
           >
-            Tổng thời gian phát:{" "}
+            <span>
+              {" "}
+              <FontAwesomeIcon
+                icon={faPhotoVideo}
+                style={{ color: "#4a6cf7" }}
+              />{" "}
+              {dataSource.length}
+            </span>
             <span style={{ marginRight: "30px" }}>
+              <ClockCircleOutlined
+                style={{ marginRight: "5px", color: "#4a6cf7" }}
+              />
               {calculateTotalDuration(dataSource)}
             </span>{" "}
-            Tổng số Media: <span>{dataSource.length}</span>
           </div>
           <div>
             <DndContext sensors={sensors} onDragEnd={onDragEnd}>
@@ -868,24 +860,67 @@ export default (props) => {
                 items={dataSource.map((i) => i.ThuTu)}
                 strategy={verticalListSortingStrategy}
               >
-                <div>
+                <div
+                  style={{ minHeight: "300px" }}
+                  onDrop={(event) => {
+                    event.preventDefault();
+                    if (dataSource.length === 0) {
+                      const item = JSON.parse(
+                        event.dataTransfer.getData("text/plain")
+                      );
+                      const newItem = {
+                        ID: item.ID,
+                        TenFile: item.TenFile,
+                        UrlFile: item.UrlFile,
+                        ThoiLuongTrinhChieu: item.ThoiLuongTrinhChieu,
+                        ThuTu: 1,
+                      };
+                      setDataSource([newItem]);
+                    }
+                  }}
+                  onDragOver={(event) => event.preventDefault()}
+                >
                   <BoxTable
                     components={{
                       body: {
                         row: Row,
                       },
                     }}
-                    rowKey="ThuTu" // Thay đổi rowKey thành "ThuTu"
+                    rowKey="ThuTu"
                     columns={columns}
                     dataSource={dataSource}
                     pagination={false}
-                    scroll={{
-                      y: "600px",
-                    }}
                     onRow={(record, index) => ({
                       onDrop: (event) => handleDrop(event, index),
                       onDragOver: (event) => handleDragOver(event, index),
                     })}
+                    locale={{
+                      emptyText: (
+                        <div
+                          style={{
+                            padding: "40px 0",
+                            textAlign: "center",
+                            borderRadius: "8px",
+                            margin: "20px 0",
+                            color: "#999",
+                            fontSize: "14px",
+                            // border: "3px dashed #ddd",
+                            // backgroundColor: "#f9f9f9",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faPhotoVideo}
+                            style={{
+                              color: "#ddd",
+                              fontSize: "3rem",
+                              marginBottom: "10px",
+                            }}
+                          />
+                          <p>Kéo và thả media từ danh sách bên trái vào đây</p>
+                        </div>
+                      ),
+                    }}
                   />
                 </div>
               </SortableContext>

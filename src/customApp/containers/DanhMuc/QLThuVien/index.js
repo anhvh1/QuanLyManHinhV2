@@ -219,26 +219,6 @@ const QLThuVien = (props) => {
         message.error(error.toString());
       });
   };
-  const renderThaoTac = (record) => {
-    return (
-      <div className={"action-btn"}>
-        <Tooltip title={"Sửa"}>
-          <EditOutlined onClick={() => showModalEdit(record.DanhSachPhatID)} />
-        </Tooltip>
-
-        <Tooltip title={"Xóa"}>
-          <DeleteOutlined
-            onClick={() => deleteModalAddEdit(record.DanhSachPhatID)}
-          />
-        </Tooltip>
-        <Tooltip title={"Thiết lập"}>
-          <FieldTimeOutlined
-            onClick={() => showModalThietLap(record.DanhSachPhatID)}
-          />
-        </Tooltip>
-      </div>
-    );
-  };
   const {
     DanhSachQLThuVien,
     DanhSachDMThuVien,
@@ -252,25 +232,7 @@ const QLThuVien = (props) => {
   const PageSize = filterData.PageSize
     ? parseInt(filterData.PageSize)
     : getDefaultPageSize();
-  //   const responsiveStyles = `
-  //   .playlist-card {
-  //     width: 100%;
-  //     max-width: 100%;
-  //     min-width: 300px;
-  //   }
-
-  //   @media (min-width: 576px) {
-  //     .playlist-card {
-  //       width: calc(50% - 20px);
-  //     }
-  //   }
-
-  //   @media (min-width: 992px) {
-  //     .playlist-card {
-  //       width: calc(33.33% - 20px);
-  //     }
-  //   }
-  // `;
+  
   return (
     <LayoutWrapper>
       <PageWrap>
@@ -314,6 +276,7 @@ const QLThuVien = (props) => {
                   minWidth: "300px",
                   transition: "all 0.3s ease",
                   cursor: "pointer",
+                  background: "#fff",
                   ":hover": {
                     boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
                     transform: "translateY(-5px)",
@@ -337,7 +300,7 @@ const QLThuVien = (props) => {
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    background: "#f7f7f7",
+                    gap: "10px",
                   }}
                 >
                   <h3
@@ -353,27 +316,105 @@ const QLThuVien = (props) => {
                     {item.TenDanhSachPhat}
                   </h3>
                   <div
-                    className={"action-btn"}
-                    style={{ display: "flex", gap: "10px" }}
+                    style={{
+                      padding: "12px 16px",
+                      // borderBottom: "1px solid #e8e8e8",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
                   >
-                    <Tooltip title={"Sửa"}>
-                      <EditOutlined
-                        onClick={() => showModalEdit(item.DanhSachPhatID)}
-                      />
-                    </Tooltip>
-                    <Tooltip title={"Xóa"}>
-                      <DeleteOutlined
-                        onClick={() => deleteModalAddEdit(item.DanhSachPhatID)}
-                      />
-                    </Tooltip>
-                    <Tooltip title={"Thiết lập"}>
-                      <FieldTimeOutlined
-                        onClick={() => {
-                          showModalThietLap(item.DanhSachPhatID);
-                          setTenDanhSachPhat(item.TenDanhSachPhat);
-                        }}
-                      />
-                    </Tooltip>
+                    <div
+                      className={"action-btn"}
+                      style={{ display: "flex", gap: "10px" }}
+                    >
+                      <Tooltip color="#1890ff" title={"Sửa"}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "28px",
+                            height: "28px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            color: "rgba(0, 0, 0, 0.65)",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = "#1890ff";
+                            e.currentTarget.style.color = "#fff";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              "transparent";
+                            e.currentTarget.style.color = "rgba(0, 0, 0, 0.65)";
+                          }}
+                          onClick={() => showModalEdit(item.DanhSachPhatID)}
+                        >
+                          <EditOutlined />
+                        </div>
+                      </Tooltip>
+                      <Tooltip color="#ff4d4f" title={"Xóa"}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "28px",
+                            height: "28px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            color: "rgba(0, 0, 0, 0.65)",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = "#ff4d4f";
+                            e.currentTarget.style.color = "#fff";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              "transparent";
+                            e.currentTarget.style.color = "rgba(0, 0, 0, 0.65)";
+                          }}
+                          onClick={() =>
+                            deleteModalAddEdit(item.DanhSachPhatID)
+                          }
+                        >
+                          <DeleteOutlined />
+                        </div>
+                      </Tooltip>
+                      <Tooltip color="#52c41a" title={"Thiết lập"}>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            width: "28px",
+                            height: "28px",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                            color: "rgba(0, 0, 0, 0.65)",
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = "#52c41a";
+                            e.currentTarget.style.color = "#fff";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              "transparent";
+                            e.currentTarget.style.color = "rgba(0, 0, 0, 0.65)";
+                          }}
+                          onClick={() => {
+                            showModalThietLap(item.DanhSachPhatID);
+                            setTenDanhSachPhat(item.TenDanhSachPhat);
+                          }}
+                        >
+                          <FieldTimeOutlined />
+                        </div>
+                      </Tooltip>
+                    </div>
                   </div>
                 </div>
 
@@ -384,7 +425,7 @@ const QLThuVien = (props) => {
                       flexWrap: "wrap",
                       justifyContent: "space-between",
                       alignItems: "center",
-                      marginTop: "10px",
+                      margin: "20px 0px",
                     }}
                   >
                     <div
@@ -392,7 +433,7 @@ const QLThuVien = (props) => {
                         display: "flex",
                         flexWrap: "wrap",
                         gap: "10px",
-                        marginBottom: "8px",
+                        // marginBottom: "8px",
                       }}
                     >
                       <span
@@ -405,7 +446,7 @@ const QLThuVien = (props) => {
                         {/* Sử dụng Font Awesome Icon */}
                         <FontAwesomeIcon
                           icon={faPhotoVideo}
-                          style={{ marginRight: "5px" }}
+                          style={{ marginRight: "5px", color: "#4a6cf7" }}
                         />
                         {item.TongSoMedia} Media
                       </span>
@@ -416,13 +457,16 @@ const QLThuVien = (props) => {
                           fontSize: "14px",
                         }}
                       >
-                        <ClockCircleOutlined style={{ marginRight: "5px" }} />
+                        <ClockCircleOutlined
+                          style={{ marginRight: "5px", color: "#4a6cf7" }}
+                        />
                         {item.TongThoiGianPhat}
                       </span>
                     </div>
                     <div
                       style={{
-                        padding: "2px 8px",
+                        padding: "0px 8px",
+                        margin: "0px 20px",
                         borderRadius: "10px",
                         background: item.TrangThai ? "#e6f7ff" : "#f5f5f5",
                         color: item.TrangThai ? "#1890ff" : "#8c8c8c",
