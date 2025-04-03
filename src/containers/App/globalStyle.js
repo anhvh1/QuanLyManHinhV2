@@ -7,10 +7,22 @@ export default createGlobalStyle`
       background: ${palette("primary", 21)} !important;
   }
   .nav-text {
-      font-size: 14px;
-      color: #FFFFFF !important;
-
+      font-size: 16px;
+      color: #666 !important;
       ${transition()};
+      display: inline-block; /* Đảm bảo hiệu ứng hoạt động đúng */
+      transition: transform 0.3s ease-in-out, color 0.3s ease; /* Hiệu ứng mượt cho cả transform và màu */
+  }
+  .nav-text:hover {
+    color: #ff6b00 !important;  
+    transform: translateX(5px); /* Dịch chữ sang phải 5px */
+  }
+  .ant-menu-item-selected > .isoMenuHolder .nav-text,
+  .ant-menu-item-selected > a .nav-text {
+    color: #ff6b00 !important;
+  }
+  .ant-menu-submenu-selected > .ant-menu-submenu-title .nav-text {
+    color: #ff6b00 !important;
   }
       .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-inline .ant-menu-inline > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a, .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-vertical .ant-menu-inline > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a, .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-inline .ant-menu-submenu-vertical > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a, .cPRnUO .isomorphicSidebar .isoDashboardMenu .ant-menu-submenu-vertical .ant-menu-submenu-vertical > .ant-menu-item:not(.ant-menu-item-group):not(.ant-menu-item-selected):hover a {
     color: rgb(0, 0, 0) !important;

@@ -74,25 +74,12 @@ export class App extends Component {
                       }
                     />
                   </Debounce>
-                  <Topbar BackgroundLayout={BackgroundLayout} url={url} />
-                  {/* <button
-                    style={{
-                      position: "fixed",
-                      top:30,
-                      right: 255,
-                      border: "none",
-                      cursor: "pointer",
-                      background: BackgroundLayout ? "white" : "#101349",
-                    }}
-                    
-                  >
-                    {BackgroundLayout ? <MoonIcon onClick={this.toggleBackgroundLayout} /> : <SunIcon onClick={this.toggleBackgroundLayout} />}
-                  </button> */}
                   <Layout
                     style={{ flexDirection: "row", overflowX: "hidden" }}
                     className={"middleLayout"}
                   >
-                    {IsAdmin ? <Sidebar url={url} /> : null}
+                    {/* {IsAdmin ?  : null} */}
+                    <Sidebar url={url} />
                     <Notification url={url} />
                     <Layout
                       className="isoContentMainLayout"
@@ -100,15 +87,17 @@ export class App extends Component {
                         height: height,
                       }}
                     >
+                      <Topbar BackgroundLayout={BackgroundLayout} url={url} />
                       <Content
                         className="isomorphicContent"
                         style={{
-                          padding: "100px 50px 35px 50px",
+                          padding: " 20px 20px",
                           display: "grid",
                           gridTemplateColumns: ListMenuActive?.length
                             ? "11% 89%"
                             : "100%",
                           overflow: "auto",
+
                           background: "#fff",
                         }}
                       >
@@ -122,14 +111,14 @@ export class App extends Component {
                           textAlign: "center",
                           borderTop: "1px solid #FFFFFF33",
                           padding: "10px 50px",
-                          background: BackgroundLayout ? " white" : "#101349",
+                          background: BackgroundLayout ? " white" : "#fff",
                         }}
                       >
                         <span
                           style={{
                             marginTop: "10px",
                             marginLeft: "10px",
-                            color: "#FFFFFF",
+                            color: "#333",
                           }}
                         >
                           {siteConfig.footerText}

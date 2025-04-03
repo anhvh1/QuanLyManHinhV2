@@ -1,34 +1,34 @@
-import React, {Component, useEffect, useState} from 'react';
-import {connect} from 'react-redux';
-import queryString from 'query-string';
-import actions from '../../../redux/DanhMuc/DMCoQuan/actions';
-import api from './config';
-import Constants from '../../../../settings/constants';
-import Select, {Option} from '../../../../components/uielements/select';
+import React, { Component, useEffect, useState } from "react";
+import { connect } from "react-redux";
+import queryString from "query-string";
+import actions from "../../../redux/DanhMuc/DMCoQuan/actions";
+import api from "./config";
+import Constants from "../../../../settings/constants";
+import Select, { Option } from "../../../../components/uielements/select";
 
-import LayoutWrapper from '../../../../components/utility/layoutWrapper';
-import PageHeader from '../../../../components/utility/pageHeader';
-import PageAction from '../../../../components/utility/pageAction';
-import Box from '../../../../components/utility/box';
-import BoxFilter from '../../../../components/utility/boxFilter';
-import {EmptyTable} from '../../../../components/utility/boxTable';
+import LayoutWrapper from "../../../../components/utility/layoutWrapper";
+import PageHeader from "../../../../components/utility/pageHeader";
+import PageAction from "../../../../components/utility/pageAction";
+import Box from "../../../../components/utility/box";
+import BoxFilter from "../../../../components/utility/boxFilter";
+import { EmptyTable } from "../../../../components/utility/boxTable";
 
-import ModalEdit from './modalAddEdit';
-import {Modal, message, Input, Tree, Menu, Dropdown} from 'antd';
-import Button from '../../../../components/uielements/button';
-import {changeUrlFilter, getFilterData} from '../../../../helpers/utility';
-import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
-import TreeData from './treeData';
-import {RedTree, StyledBoxDMCoQuan} from './styled';
-import {getRoleByKey} from '../../../../helpers/utility';
-import PageWrap from '../../../../components/utility/PageWrap';
-import {InputSearch} from '../../../../components/uielements/input';
-const {TreeNode} = Tree;
+import ModalEdit from "./modalAddEdit";
+import { Modal, message, Input, Tree, Menu, Dropdown } from "antd";
+import Button from "../../../../components/uielements/button";
+import { changeUrlFilter, getFilterData } from "../../../../helpers/utility";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import TreeData from "./treeData";
+import { RedTree, StyledBoxDMCoQuan } from "./styled";
+import { getRoleByKey } from "../../../../helpers/utility";
+import PageWrap from "../../../../components/utility/PageWrap";
+import { InputSearch } from "../../../../components/uielements/input";
+const { TreeNode } = Tree;
 const DMCoQuan = (props) => {
-  document.title = 'Danh mục cơ quan đơn vị';
+  document.title = "Danh mục cơ quan đơn vị";
   const [expandedKeys, setExpandedKeys] = useState([]);
   const [filterData, setFilterData] = useState(
-    queryString.parse(props.location.search),
+    queryString.parse(props.location.search)
   );
   const [keyState, setKeyState] = useState({
     key: 0,
@@ -37,14 +37,14 @@ const DMCoQuan = (props) => {
   const [stateModalAddEdit, setStateModalAddEdit] = useState({
     confirmLoading: false,
     visibleModalAddEdit: false,
-    action: '',
+    action: "",
     dataModalAddEdit: {
       DanhSachTinh: [],
       Data: null,
     },
     modalKey: 0,
   });
-  const {DanhSachCoQuan} = props;
+  const { DanhSachCoQuan } = props;
   const [DanhSachCacCap, setDanhSachCacCap] = useState([]);
   const {
     confirmLoading,
@@ -54,7 +54,7 @@ const DMCoQuan = (props) => {
     modalKey,
   } = stateModalAddEdit;
 
-  const {treeKey, key} = keyState;
+  const { treeKey, key } = keyState;
   // get api danhsachcaccap
   //thay đổi
   //dsad
@@ -78,8 +78,8 @@ const DMCoQuan = (props) => {
   //filter --------------------------------------------------
   const onFilter = (value, property) => {
     //get filter data
-    let oldFilterData = {...filterData};
-    let onFilter = {value, property};
+    let oldFilterData = { ...filterData };
+    let onFilter = { value, property };
     let newFilterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data
     setFilterData(newFilterData);
@@ -92,11 +92,11 @@ const DMCoQuan = (props) => {
     //   message.warning('Bạn không có quyền thực hiện chức năng này');
     // } else {
     Modal.confirm({
-      title: 'Xóa dữ liệu',
-      content: 'Bạn có muốn xóa cơ quan đơn vị này không?',
-      cancelText: 'Không',
-      okText: 'Có',
-     
+      title: "Xóa dữ liệu",
+      content: "Bạn có muốn xóa cơ quan đơn vị này không?",
+      cancelText: "Không",
+      okText: "Có",
+
       onOk: () => {
         api
           .xoaCoQuan(CoQuanID)
@@ -109,7 +109,7 @@ const DMCoQuan = (props) => {
               message.success(response.data.Result.Message);
             } else {
               Modal.error({
-                title: 'Lỗi',
+                title: "Lỗi",
                 content: response.data.Result.Message,
               });
             }
@@ -126,7 +126,7 @@ const DMCoQuan = (props) => {
   const showModalAdd = (CoQuanChaID, TenCoQuanCha) => {
     if (!props.role.add) {
       message.destroy();
-      message.warning('Bạn không có quyền thực hiện chức năng này');
+      message.warning("Bạn không có quyền thực hiện chức năng này");
     } else {
       if (!CoQuanChaID) {
         let newModalKey = modalKey + 1;
@@ -143,11 +143,11 @@ const DMCoQuan = (props) => {
           },
           confirmLoading: false,
           modalKey: newModalKey,
-          action: 'add',
+          action: "add",
         }));
       } else
         api
-          .chiTietCoQuan({ID: CoQuanChaID})
+          .chiTietCoQuan({ ID: CoQuanChaID })
           .then((response) => {
             if (response.data.Status > 0) {
               let Data = response.data.Data;
@@ -156,17 +156,17 @@ const DMCoQuan = (props) => {
                 ...prevState,
                 visibleModalAddEdit: true,
                 dataModalAddEdit: {
-                  Data: {...Data, CoQuanChaID},
+                  Data: { ...Data, CoQuanChaID },
                   CoQuanChaID,
                   TenCoQuanCha,
                 },
                 confirmLoading: false,
                 modalKey: newModalKey,
-                action: 'add',
+                action: "add",
               }));
             } else {
               Modal.error({
-                title: 'Lỗi',
+                title: "Lỗi",
                 content: response.data.Message,
               });
             }
@@ -182,10 +182,10 @@ const DMCoQuan = (props) => {
   const showModalEdit = (CoQuanID, TenCoQuanCha) => {
     if (!props.role.edit) {
       message.destroy();
-      message.warning('Bạn không có quyền thực hiện chức năng này');
+      message.warning("Bạn không có quyền thực hiện chức năng này");
     } else {
       api
-        .chiTietCoQuan({ID: CoQuanID})
+        .chiTietCoQuan({ ID: CoQuanID })
         .then((response) => {
           if (response.data.Status > 0) {
             let Data = response.data.Data;
@@ -200,11 +200,11 @@ const DMCoQuan = (props) => {
               },
               confirmLoading: false,
               modalKey: newModalKey,
-              action: 'edit',
+              action: "edit",
             }));
           } else {
             Modal.error({
-              title: 'Lỗi',
+              title: "Lỗi",
               content: response.data.Message,
             });
           }
@@ -219,13 +219,16 @@ const DMCoQuan = (props) => {
     setStateModalAddEdit((prevState) => ({
       dataModalAddEdit: {},
       visibleModalAddEdit: false,
-      action: '',
+      action: "",
     }));
   };
 
   const submitModalEdit = (data) => {
-    setStateModalAddEdit((prevState) => ({...prevState, confirmLoading: true}));
-    if (action === 'add') {
+    setStateModalAddEdit((prevState) => ({
+      ...prevState,
+      confirmLoading: true,
+    }));
+    if (action === "add") {
       api
         .themCoQuan(data)
         .then((response) => {
@@ -242,7 +245,7 @@ const DMCoQuan = (props) => {
             props.getList(filterData); //get list
           } else {
             Modal.error({
-              title: 'Lỗi',
+              title: "Lỗi",
               content: response.data.Message,
             });
           }
@@ -267,7 +270,7 @@ const DMCoQuan = (props) => {
             props.getList(filterData); //get list
           } else {
             Modal.error({
-              title: 'Lỗi',
+              title: "Lỗi",
               content: response.data.Message,
             });
           }
@@ -278,14 +281,13 @@ const DMCoQuan = (props) => {
     }
   };
 
-
   //Tree -------------------------------------------------------------
   const onExpandNode = (selectedKeys, info) => {
     let className = info.nativeEvent.target.outerHTML.toString();
     let parentClassName =
       info.nativeEvent.target.parentElement.className.toString();
-    let checkMenu = className.includes('ant-dropdown-menu');
-    let checkNearMenu = parentClassName.includes('ant-dropdown-menu');
+    let checkMenu = className.includes("ant-dropdown-menu");
+    let checkNearMenu = parentClassName.includes("ant-dropdown-menu");
     if (!checkMenu && !checkNearMenu) {
       //neu dang k click menu drop
       let key = info.node.props.eventKey.toString();
@@ -299,7 +301,7 @@ const DMCoQuan = (props) => {
             newExpandedKeys = newExpandedKeys.concat([key]);
           }
           setExpandedKeys(newExpandedKeys);
-          setKeyState((prevKey) => ({...prevKey, key: selectedKeys}));
+          setKeyState((prevKey) => ({ ...prevKey, key: selectedKeys }));
         }
       }
     }
@@ -353,7 +355,7 @@ const DMCoQuan = (props) => {
           <Dropdown
             overlay={menu}
             placement="bottomLeft"
-            trigger={['contextMenu']}
+            trigger={["contextMenu"]}
             visible={openedMenuKey === item.key}
             onVisibleChange={(visible) => {
               if (visible) {
@@ -365,7 +367,7 @@ const DMCoQuan = (props) => {
           >
             <span
               className="title-tree"
-              style={item.ID === props.styled ? {color: 'red'} : {}}
+              style={item.ID === props.styled ? { color: "red" } : {}}
             >
               {item.title}
             </span>
@@ -433,7 +435,7 @@ const DMCoQuan = (props) => {
       <span>
         <Button
           type="primary"
-          onClick={() => showModalAdd('', '', '')}
+          onClick={() => showModalAdd("", "", "")}
           className="d-none"
         >
           <PlusOutlined />
@@ -444,13 +446,13 @@ const DMCoQuan = (props) => {
   };
 
   //Render ----------------------------------------------------
-  const {role} = props;
-  const user = JSON.parse(localStorage.getItem('user'));
+  const { role } = props;
+  const user = JSON.parse(localStorage.getItem("user"));
   return (
     <LayoutWrapper>
       <PageWrap>
-        <PageHeader>DANH MỤC CƠ QUAN, ĐƠN VỊ</PageHeader>
-        <PageAction>{role?.add ? renderActionAdd() : ''}</PageAction>
+        {/* <PageHeader>DANH MỤC CƠ QUAN, ĐƠN VỊ</PageHeader> */}
+        <PageAction>{role?.add ? renderActionAdd() : ""}</PageAction>
       </PageWrap>
       <StyledBoxDMCoQuan>
         <Box className="box">
@@ -470,11 +472,11 @@ const DMCoQuan = (props) => {
               allowClear
               defaultValue={filterData.Keyword}
               placeholder="Tìm kiếm theo tên cơ quan, đơn vị"
-              onSearch={(value) => onFilter(value, 'Keyword')}
-              style={{width: 300}}
+              onSearch={(value) => onFilter(value, "Keyword")}
+              style={{ width: 300 }}
             />
           </BoxFilter>
-          <div key={treeKey} style={{userSelect: 'none'}} className="mg-top">
+          <div key={treeKey} style={{ userSelect: "none" }} className="mg-top">
             {renderContent()}
           </div>
         </Box>

@@ -75,7 +75,10 @@ export default (props) => {
         message.warning('Chưa chọn file đính kèm');
         return;
       }
+
       const maxSize = 300 * 1024 * 1024; // 300MB in bytes
+      const filesData = [];
+
       for (let index = 0; index < fileList.length; index++) {
         const fileItem = fileList[index];
         if (fileItem.file.size > maxSize) {
@@ -92,23 +95,30 @@ export default (props) => {
           const formattedDuration = isImage
             ? '00:01:00'
             : formatTime(durationInSeconds);
-          const newValue = {
-            ...values,
-            TenFile: fileItem.TenFile || fileItem.TenFilegoc,
-            Loai: isImage ? '1' : '2',
-            ThoiLuongTrinhChieu: formattedDuration,
-            KichThuoc: formatFileSize(fileItem.file.size),
-            TrangThai: true,
-            Tag: fileItem.ListTag,
-          };
-          const {onCreate} = props;
-          await onCreate(newValue, fileItem.file);
+
+          filesData.push({
+            fileData: {
+              ...values,
+              TenFile: fileItem.TenFile || fileItem.TenFilegoc,
+              Loai: isImage ? '1' : '2',
+              ThoiLuongTrinhChieu: formattedDuration,
+              KichThuoc: formatFileSize(fileItem.file.size),
+              TrangThai: true,
+              Tag: fileItem.ListTag,
+            },
+            file: fileItem.file
+          });
         } catch (error) {
-          console.error(`Failed to upload file ${fileItem.file.name}:`, error);
+          console.error(`Failed to process file ${fileItem.file.name}:`, error);
         }
       }
+
+      const {onCreate} = props;
+      await onCreate(filesData);
     });
   };
+
+  // Remove or modify onone function as it's no longer needed
   const onone = async (e) => {
     e.preventDefault();
     form.validateFields().then(async (values) => {
@@ -118,11 +128,10 @@ export default (props) => {
         return;
       }
 
-      const index = 0;
-      const fileItem = fileList[index];
+      const filesData = [];
+      const fileItem = fileList[0];
 
       try {
-        // Kiểm tra loại file và lấy thời lượng tương ứng
         const isImage = fileItem.file.type.startsWith('image/');
         const durationInSeconds = isImage
           ? 60
@@ -131,19 +140,21 @@ export default (props) => {
           ? '00:01:00'
           : formatTime(durationInSeconds);
 
-        const newValue = {
-          ...values,
-          TenFile: fileItem.TenFile || fileItem.TenFilegoc,
-          Loai: isImage ? '1' : '2',
-          ThoiLuongTrinhChieu: formattedDuration,
-          KichThuoc: formatFileSize(fileItem.file.size),
-          TrangThai: true,
-          Tag: fileItem.ListTag,
-        };
+        filesData.push({
+          fileData: {
+            ...values,
+            TenFile: fileItem.TenFile || fileItem.TenFilegoc,
+            Loai: isImage ? '1' : '2',
+            ThoiLuongTrinhChieu: formattedDuration,
+            KichThuoc: formatFileSize(fileItem.file.size),
+            TrangThai: true,
+            Tag: fileItem.ListTag,
+          },
+          file: fileItem.file
+        });
 
         const {onCreate} = props;
-        await onCreate(newValue, fileList[index].file);
-        // handleCancelFile(index);
+        await onCreate(filesData);
         setLoading(true);
       } catch (error) {
         console.error(`Failed to upload file ${fileItem.file.name}:`, error);
@@ -308,7 +319,7 @@ export default (props) => {
           marginBottom: '30px',
         }}
       >
-        <div style={{color: 'red', fontSize: '20px', fontFamily: 'Inter'}}>
+        <div style={{color: 'red', fontSize: '20px', fontFamily: 'Poppins, sans-serif'}}>
           Chú ý: Mỗi tệp đính kèm có dung lượng tối đa 300MB
         </div>
         <div>

@@ -1,40 +1,47 @@
-import React, {useEffect, useState} from 'react';
-import {Tree, Checkbox,  Tooltip} from 'antd';
+import React, { useEffect, useState } from "react";
+import { Tree, Tooltip } from "antd";
 import {
   Button,
   Modal,
   InputSearch,
   Input,
   Select,
-} from '../../../../components/uielements/exportComponent';
-import {message} from 'antd';
+} from "../../../../components/uielements/exportComponent";
+import { message } from "antd";
 import {
   customizeFormValidator as Form,
   useForm,
-} from '../../../../components/uielements/formValidator';
-import BoxTable from '../../../../components/utility/boxTable';
-import LayoutWrapper from '../../../../components/utility/layoutWrapper';
-import Box from '../../../../components/utility/box';
-import {EmptyTable} from '../../../../components/utility/boxTable';
-import api from './config';
+} from "../../../../components/uielements/formValidator";
+import BoxTable from "../../../../components/utility/boxTable";
+import LayoutWrapper from "../../../../components/utility/layoutWrapper";
+import Box from "../../../../components/utility/box";
+import { EmptyTable } from "../../../../components/utility/boxTable";
+import api from "./config";
 import {
   DeleteOutlined,
   FolderOutlined,
   FolderOpenOutlined,
   HomeOutlined,
-} from '@ant-design/icons';
-import BoxFilter from '../../../../components/utility/boxFilter';
-import {changeUrlFilter} from '../../../../helpers/utility';
-import {DndContext, PointerSensor, useSensor, useSensors} from '@dnd-kit/core';
-import {restrictToVerticalAxis} from '@dnd-kit/modifiers';
+  ClockCircleOutlined,
+} from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPhotoVideo } from "@fortawesome/free-solid-svg-icons";
+import BoxFilter from "../../../../components/utility/boxFilter";
+import { changeUrlFilter } from "../../../../helpers/utility";
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
 import {
   arrayMove,
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import {CSS} from '@dnd-kit/utilities';
-const {TreeNode} = Tree;
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+const { TreeNode } = Tree;
 export default (props) => {
   const [form] = useForm();
   const [expandedKeys, setExpandedKeys] = useState([]);
@@ -46,21 +53,13 @@ export default (props) => {
     actionthietlap,
     danhSachDMThuVien,
     filterData,
+    TenDanhSachPhat,
   } = props;
-  const onChangeCheck = (e) => {
-    const isChecked = e.target.checked;
-    setFilterParams((prevParams) => ({
-      ...prevParams,
-      ThuMucID: isChecked ? null : "",
-    }));
-    setSelectAllFolders(isChecked);
-  };
   const filterTreeNode = (dataRoot) => {
     return dataRoot;
   };
   const DSFilter = filterTreeNode(danhSachDMThuVien);
   const [initialized, setInitialized] = useState(false);
-
   useEffect(() => {
     if (DSFilter.length && !initialized) {
       setTimeout(() => {
@@ -90,7 +89,6 @@ export default (props) => {
         });
     }
   }, []);
-
   const onExpandNode = (selectedKeys, info) => {
     let className = info.nativeEvent.target.outerHTML.toString();
     let parentClassName =
@@ -115,7 +113,6 @@ export default (props) => {
     }
     return renderContent();
   };
-
   const [keyState, setKeyState] = useState({
     key: 0,
     treeKey: 0,
@@ -261,10 +258,9 @@ export default (props) => {
       width: "30%",
     },
     {
-      title: "Thumbnail",
+      title: "Media",
       dataIndex: "UrlFile",
       align: "center",
-
       width: "6%",
       render: (url) => {
         if (url) {
@@ -276,7 +272,11 @@ export default (props) => {
               return (
                 <video
                   src={url}
-                  style={{ width: "50%", height: "50px", textAlign: "center" }}
+                  style={{
+                    width: "100%",
+                    minHeight: "150px",
+                    textAlign: "center",
+                  }}
                   controls
                 />
               );
@@ -285,12 +285,10 @@ export default (props) => {
                 <img
                   src={url}
                   style={{
-                    width: "50%",
-                    height: "50px",
-                    objectFit: "cover",
-                    textAlign: "center",
+                    width: "100%",
+                    height: "auto",
                   }}
-                  alt="Thumbnail"
+                  alt="Media"
                 />
               );
             }
@@ -308,18 +306,15 @@ export default (props) => {
       width: "15%",
       render: (_, __, index) => {
         if (index === 0) return "00:00:00";
-
         let totalSeconds = 0;
         for (let i = 0; i < index; i++) {
           totalSeconds += convertDurationToSeconds(
             dataSource[i].ThoiLuongTrinhChieu
           );
         }
-
         return convertSecondsToDuration(totalSeconds);
       },
     },
-
     {
       title: "Thời Lượng Trình Chiếu",
       dataIndex: "ThoiLuongTrinhChieu",
@@ -333,20 +328,23 @@ export default (props) => {
         />
       ),
     },
-
     {
       title: "Thao tác",
-      dataIndex: "", // Để trống dataIndex vì chúng ta sẽ sử dụng render để tạo nội dung
+      dataIndex: "",
       width: "10%",
       align: "center",
       render: (text, record) => renderThaoTac(record),
     },
   ];
   const TimeInput = ({ value, onChange }) => {
-    const [inputValue, setInputValue] = useState(value);
-
+    const [inputValue, setInputValue] = useState(value || "00:00:00");
     const handleChange = (e) => {
       const newValue = e.target.value;
+      if (!newValue || newValue.trim() === "") {
+        setInputValue("00:00:00");
+        onChange("00:00:00");
+        return;
+      }
       setInputValue(newValue);
       if (/^\d{2}:\d{2}:\d{2}$/.test(newValue)) {
         const [hours, minutes, seconds] = newValue.split(":").map(Number);
@@ -363,10 +361,17 @@ export default (props) => {
         onChange(correctedValue);
       }
     };
+    const handleBlur = () => {
+      if (!inputValue || !/^\d{2}:\d{2}:\d{2}$/.test(inputValue)) {
+        setInputValue("00:00:00");
+        onChange("00:00:00");
+      }
+    };
     return (
       <Input
         value={inputValue}
         onChange={handleChange}
+        onBlur={handleBlur}
         style={{ width: 100 }}
         placeholder="hh:mm:ss"
       />
@@ -381,19 +386,10 @@ export default (props) => {
     });
     setDataSource(newData);
   };
-  const formatTime = (index) => {
-    const hours = Math.floor(index / 3600);
-    const minutes = Math.floor((index % 3600) / 60);
-    const seconds = index % 60;
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-  };
   const parseDuration = (durationString) => {
     const [hours, minutes, seconds] = durationString.split(":").map(Number);
     return hours * 3600 + minutes * 60 + seconds;
   };
-
   const formatDuration = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
@@ -402,14 +398,12 @@ export default (props) => {
       .toString()
       .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
   };
-
   const calculateTotalDuration = (data) => {
     const totalSeconds = data.reduce((total, item) => {
       return total + parseDuration(item.ThoiLuongTrinhChieu);
     }, 0);
     return formatDuration(totalSeconds);
   };
-
   const renderThaoTac = (record) => {
     return (
       <div className={"action-btn"}>
@@ -420,16 +414,14 @@ export default (props) => {
     );
   };
   const handleDelete = (record) => {
-    // Filter out the record to be deleted from dataSource
     const newData = dataSource.filter((item) => item.ThuTu !== record.ThuTu);
-    // Update dataSource with the new filtered data
     setDataSource(newData);
   };
   useEffect(() => {
     if (props.dataThietLap && Array.isArray(props.dataThietLap)) {
       const newData = props.dataThietLap.map((item, index) => ({
         ...item,
-        STT: index + 1, // Đổi từ item.ThuTu thành index + 1
+        STT: index + 1,
       }));
       setDataSource(newData);
     }
@@ -441,7 +433,7 @@ export default (props) => {
       const params = {
         DanhSachPhatID: danhSachPhatID,
         DanhSachMediaID: dataSource.map((item, index) => {
-          const sttValue = index + 1; // Tính giá trị STT
+          const sttValue = index + 1;
           return {
             ID: item.ID,
             TenFile: item.TenFile,
@@ -449,7 +441,7 @@ export default (props) => {
             TrangThai: item.TrangThai,
             Tag: null,
             ThuMucID: item.ThuMucID,
-            ThuTu: sttValue, // Gán giá trị STT cho ThuTu
+            ThuTu: sttValue,
           };
         }),
         TongThoiGianPhat: totalDuration,
@@ -469,7 +461,6 @@ export default (props) => {
     onCreate();
     props.getList(filterData);
   };
-  const [hoverIndex, setHoverIndex] = useState(null);
   const Row = (props) => {
     const {
       attributes,
@@ -481,7 +472,6 @@ export default (props) => {
     } = useSortable({
       id: props["data-row-key"],
     });
-
     const style = {
       ...props.style,
       transform: CSS.Translate.toString(transform),
@@ -494,7 +484,6 @@ export default (props) => {
           }
         : {}),
     };
-
     return (
       <tr
         {...props}
@@ -505,7 +494,6 @@ export default (props) => {
       />
     );
   };
-
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -514,7 +502,6 @@ export default (props) => {
       },
     })
   );
-
   const onDragEnd = ({ active, over }) => {
     if (active.id !== over?.id) {
       setDataSource((prev) => {
@@ -524,46 +511,58 @@ export default (props) => {
       });
     }
   };
-
   const handleDragStart = (event, item) => {
     event.dataTransfer.setData("text/plain", JSON.stringify(item));
   };
-
   const handleDrop = (event, index) => {
     event.preventDefault();
     const item = JSON.parse(event.dataTransfer.getData("text/plain"));
-
     const newItem = {
       ID: item.ID,
       TenFile: item.TenFile,
       UrlFile: item.UrlFile,
       ThoiLuongTrinhChieu: item.ThoiLuongTrinhChieu,
-      ThuTu: index + 1, // Assign the new order number based on the drop index
+      ThuTu: index + 1,
     };
-
     setDataSource((prev) => {
       const updatedDataSource = [...prev];
-      updatedDataSource.splice(index, 0, newItem); // Insert at the specific index
+      updatedDataSource.splice(index, 0, newItem);
       return updatedDataSource.map((item, idx) => ({
         ...item,
         ThuTu: idx + 1,
-      })); // Update the order
+      }));
     });
   };
-
   const handleDragOver = (event, index) => {
     event.preventDefault();
-    setHoverIndex(index !== undefined ? index : null);
   };
+
   const handleMediaClick = (item) => {
     const newItem = {
       ID: item.ID,
       TenFile: item.TenFile,
       UrlFile: item.UrlFile,
       ThoiLuongTrinhChieu: item.ThoiLuongTrinhChieu,
-      ThuTu: dataSource.length + 1, // Assign the next order number
+      ThuTu: dataSource.length + 1,
     };
     setDataSource((prev) => [...prev, newItem]);
+  };
+  const renderSelectOptions = (folder, level = 0) => {
+    const indent = "\u00A0".repeat(level * 4);
+    const icon = folder.ThuMucID === 1 ? <HomeOutlined /> : <FolderOutlined />;
+    const options = [
+      <Option key={folder.ThuMucID} value={folder.ThuMucID}>
+        {indent}
+        {folder.TenThuMuc}
+      </Option>,
+    ];
+    if (folder.Children && folder.Children.length > 0) {
+      folder.Children.forEach((child) => {
+        options.push(...renderSelectOptions(child, level + 1));
+      });
+    }
+
+    return options;
   };
   return (
     <Modal
@@ -571,6 +570,7 @@ export default (props) => {
         actionthietlap === "edit" ? "CẬP NHẬT" : "THIẾT LẬP"
       } DANH SÁCH PHÁT`}
       width={"100%"}
+      height={"auto"}
       visible={visible}
       onCancel={props.onCancel}
       maskClosable={false}
@@ -584,173 +584,350 @@ export default (props) => {
       ]}
     >
       <LayoutWrapper>
-        <div
+        <Box
           style={{
-            padding: "10px 10px 0px 10px",
             float: "left",
-            width: "25%",
-            background: "#171D60",
-            minHeight: "740px",
-            maxHeight: "740px",
+            width: "28%",
+            // minHeight: "740px",
+            // maxHeight: "740px",
             borderRadius: "20px",
           }}
         >
-          <Box>
-            <div
-              key={treeKey}
+          <h3
+            style={{
+              margin: 0,
+              padding: "15px",
+              borderBottom: "1px solid #eee",
+              fontSize: "1.5rem",
+              marginBottom: "10px",
+              color: "#333",
+            }}
+          >
+            Media của bạn
+          </h3>
+          <div
+            key={treeKey}
+            style={{
+              userSelect: "none",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              color: "gray",
+              whiteSpace: "nowrap",
+              marginTop: "20px",
+            }}
+            className="mg-top"
+          >
+            <Select
+              placeholder="Chọn thư mục"
               style={{
-                userSelect: "none",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                color: "gray",
-                whiteSpace: "nowrap",
+                width: "100%",
+                marginBottom: "10px",
+                color: "#333",
               }}
-              className="mg-top"
+              onChange={(value) => {
+                setFilterParams((prev) => ({
+                  ...prev,
+                  ThuMucID: value === "all" ? null : value,
+                }));
+                setSelectAllFolders(value === "all");
+              }}
+              value={
+                selectAllFolders ? "all" : filterParams.ThuMucID || undefined
+              }
+              allowClear
+              dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
             >
-              <Checkbox
-                onChange={onChangeCheck}
-                checked={selectAllFolders}
-                style={{
-                  color: "#FFFFFF",
-                  fontSize: "16px",
-                }}
-              >
+              <Option value="all" style={{ fontWeight: "bold" }}>
                 Tất cả thư mục
-              </Checkbox>
-              {renderContent()}
-            </div>
-          </Box>
+              </Option>
+              {DSFilter &&
+                DSFilter.map((folder) => renderSelectOptions(folder))}
+            </Select>
+          </div>
           <div>
             <BoxFilter>
-              <Select
-                placeholder="Chọn loại"
-                onChange={handleSelectChange}
-                style={{ width: 200 }}
-                allowClear
-              >
-                <Option value="1">Hình ảnh</Option>
-                <Option value="2">Video</Option>
-              </Select>
               <InputSearch
                 placeholder="Tìm kiếm theo tên"
                 onSearch={handleSearch}
-                style={{ width: 200 }}
+                style={{ width: " 100% ", marginBottom: "10px", color: "#333" }}
                 allowClear
               />
+              <Button
+                type={filterParams.Loai === "" ? "primary" : "default"}
+                onClick={() => handleSelectChange("")}
+                style={{ marginRight: "10px" }}
+              >
+                Tất cả
+              </Button>
+              <Button
+                type={filterParams.Loai === "1" ? "primary" : "default"}
+                onClick={() => handleSelectChange("1")}
+                style={{ marginRight: "10px" }}
+              >
+                Ảnh
+              </Button>
+              <Button
+                type={filterParams.Loai === "2" ? "primary" : "default"}
+                onClick={() => handleSelectChange("2")}
+                style={{ marginRight: "10px" }}
+              >
+                Video
+              </Button>
             </BoxFilter>
             <div
               style={{
                 overflowY: "auto",
-                maxHeight: "410px",
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "10px",
+                marginTop: "20px",
+                maxHeight: "480px",
               }}
             >
-              {DanhSachMauPhieuSuggest?.map((item) => (
+              {DanhSachMauPhieuSuggest?.map((item, index) => (
                 <div
-                  key={item.id}
+                  key={item.id || index}
                   style={{
                     display: "flex",
-                    flexDirection: "column",
                     alignItems: "center",
-                    width: "calc(25% - 10px)", // Điều chỉnh để hiển thị 4 mục trên một dòng
+                    padding: "10px",
                     cursor: "pointer",
+                    backgroundColor:
+                      index % 2 === 0
+                        ? "rgba(255, 255, 255, 0.2)"
+                        : "transparent",
+                    transition: "all 0.3s ease-in-out",
+                    borderRadius: "8px",
                   }}
                   draggable="true"
                   onDragStart={(event) => handleDragStart(event, item)}
                   onClick={() => handleMediaClick(item)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0px 4px 12px rgba(0, 0, 0, 0.2)";
+                    e.currentTarget.style.transform = "scale(1.05)";
+                    e.currentTarget.style.backgroundColor =
+                      "rgba(255, 255, 255, 0.3)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = "none";
+                    e.currentTarget.style.transform = "scale(1)";
+                    e.currentTarget.style.backgroundColor =
+                      index % 2 === 0
+                        ? "rgba(255, 255, 255, 0.2)"
+                        : "transparent";
+                  }}
                 >
-                  {item.UrlFile.toLowerCase().endsWith(".mp4") ? (
-                    <video width="100%" height="150px" controls>
-                      <source src={item.UrlFile} type="video/mp4" />
-                    </video>
-                  ) : (
-                    <img
-                      style={{
-                        width: "100%",
-                        height: "150px",
-                        objectFit: "cover",
-                      }}
-                      src={item.UrlFile}
-                      alt={item.TenFile}
-                    />
-                  )}
-                  <p
+                  <div
                     style={{
+                      width: "40px",
                       textAlign: "center",
-                      marginTop: "5px",
-                      color: "#FFFFFF",
-                      whiteSpace: "nowrap", // Ngăn xuống dòng
-                      overflow: "hidden", // Ẩn phần vượt quá
-                      textOverflow: "ellipsis", // Thêm dấu ba chấm
-                      maxWidth: "100%", // Đảm bảo không vượt quá chiều rộng của phần tử cha
+                      marginRight: "10px",
+                      color: "#333",
                     }}
                   >
-                    {item.TenFile}
-                  </p>
+                    {index + 1}
+                  </div>
+                  <div
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      marginRight: "15px",
+                      flexShrink: 0,
+                    }}
+                  >
+                    {item.UrlFile?.toLowerCase().endsWith(".mp4") ? (
+                      <div
+                        style={{
+                          position: "relative",
+                          width: "60px",
+                          height: "60px",
+                        }}
+                      >
+                        <video
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                          src={item.UrlFile}
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            backgroundColor: "rgba(0,0,0,0.5)",
+                            borderRadius: "50%",
+                            width: "24px",
+                            height: "24px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <span style={{ color: "#333", fontSize: "12px" }}>
+                            ▶
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <img
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                        src={item.UrlFile}
+                        alt={item.TenFile}
+                      />
+                    )}
+                  </div>
+                  <div style={{ flex: 1, overflow: "hidden" }}>
+                    <p
+                      style={{
+                        color: "#333",
+                        margin: 0,
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {item.TenFile}
+                    </p>
+                    <p
+                      style={{
+                        color: "#333",
+                        margin: "5px 0 0 0",
+                        fontSize: "12px",
+                      }}
+                    >
+                      {item.ThoiLuongTrinhChieu || "00:15"}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-        <div
+        </Box>
+        <Box
           style={{
             float: "left",
-            width: "73%",
-            height: "740px",
+            width: "70%",
+            // height: "740px",
             borderRadius: "20px",
-            background: "#171D60",
             margin: "0 0 0 2%",
           }}
         >
-          <Box
+          <h3
             style={{
-              textAlign: "center",
-              paddingTop: "20px",
-              height: "50px",
-              color: "#FFFFFF",
+              margin: 0,
+              padding: "15px",
+              borderBottom: "1px solid #eee",
+              fontSize: "1.5rem",
+              color: "#333",
             }}
           >
-            Tổng thời gian phát:{" "}
+            Danh sách phát: {TenDanhSachPhat}
+          </h3>
+          <div
+            style={{
+              padding: "10px",
+              color: "#333",
+              display: "flex",
+              backgroundColor: "#f5f5f5",
+              borderBottom: "1px solid #eee",
+              gap: "20px",
+              margin: "15px 0px 10px 0px",
+            }}
+          >
+            <span>
+              {" "}
+              <FontAwesomeIcon
+                icon={faPhotoVideo}
+                style={{ color: "#4a6cf7" }}
+              />{" "}
+              {dataSource.length}
+            </span>
             <span style={{ marginRight: "30px" }}>
+              <ClockCircleOutlined
+                style={{ marginRight: "5px", color: "#4a6cf7" }}
+              />
               {calculateTotalDuration(dataSource)}
             </span>{" "}
-            Tổng số Media: <span>{dataSource.length}</span>
-          </Box>
-          <Box>
+          </div>
+          <div>
             <DndContext sensors={sensors} onDragEnd={onDragEnd}>
               <SortableContext
                 items={dataSource.map((i) => i.ThuTu)}
                 strategy={verticalListSortingStrategy}
               >
-                <div>
+                <div
+                  style={{ minHeight: "300px" }}
+                  onDrop={(event) => {
+                    event.preventDefault();
+                    if (dataSource.length === 0) {
+                      const item = JSON.parse(
+                        event.dataTransfer.getData("text/plain")
+                      );
+                      const newItem = {
+                        ID: item.ID,
+                        TenFile: item.TenFile,
+                        UrlFile: item.UrlFile,
+                        ThoiLuongTrinhChieu: item.ThoiLuongTrinhChieu,
+                        ThuTu: 1,
+                      };
+                      setDataSource([newItem]);
+                    }
+                  }}
+                  onDragOver={(event) => event.preventDefault()}
+                >
                   <BoxTable
                     components={{
                       body: {
                         row: Row,
                       },
                     }}
-                    rowKey="ThuTu" // Thay đổi rowKey thành "ThuTu"
+                    rowKey="ThuTu"
                     columns={columns}
                     dataSource={dataSource}
                     pagination={false}
-                    scroll={{
-                      y: "600px",
-                    }}
                     onRow={(record, index) => ({
                       onDrop: (event) => handleDrop(event, index),
                       onDragOver: (event) => handleDragOver(event, index),
                     })}
+                    locale={{
+                      emptyText: (
+                        <div
+                          style={{
+                            padding: "40px 0",
+                            textAlign: "center",
+                            borderRadius: "8px",
+                            margin: "20px 0",
+                            color: "#999",
+                            fontSize: "14px",
+                            // border: "3px dashed #ddd",
+                            // backgroundColor: "#f9f9f9",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <FontAwesomeIcon
+                            icon={faPhotoVideo}
+                            style={{
+                              color: "#ddd",
+                              fontSize: "3rem",
+                              marginBottom: "10px",
+                            }}
+                          />
+                          <p>Kéo và thả media từ danh sách bên trái vào đây</p>
+                        </div>
+                      ),
+                    }}
                   />
                 </div>
               </SortableContext>
             </DndContext>
-          </Box>
-        </div>
+          </div>
+        </Box>
       </LayoutWrapper>
     </Modal>
   );
 };
-
-

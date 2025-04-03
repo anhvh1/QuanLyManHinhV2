@@ -19,7 +19,7 @@ export default function (props) {
 
   return (
     <div style={{display: 'none'}} ref={excelRef}>
-      <table style={{fontFamily: 'Times New Roman'}}>
+      <table style={{fontFamily: 'Poppins, sans-serif'}}>
         <tr>
           <th style={{...styleTable.th, width: 50}}>STT</th>
           <th style={{...styleTable.th, width: 250}}>Tên người dùng</th>

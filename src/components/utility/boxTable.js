@@ -19,8 +19,73 @@ const DataTable = styled(Table)`
     .ant-table-selection-column .ant-checkbox-wrapper {
       line-height: initial;
     }
+    overflow-x: auto;
+    /* min-height: calc(100vh - 40vh); */
+    max-height: calc(100vh - 390px);
+    .selected__table {
+      /* display: inline-block; */
+      /* .ant-checkbox {
+        display: inline-block;
+        height: 16px;
+      } */
+    }
+    /* .selected__table label {
+      line-height: auto !important;
+    } */
+    .ant-table-selection-column .ant-checkbox-wrapper {
+      /* line-height: initial; */
+    }
+    background: #f2f6fc;
+    .ant-table-tbody {
+      /* background: ${palette("secondary", 12)}; */
+    }
+    /* .ant-table-wrapper .ant-table-tbody > tr.ant-table-row:hover > td {
+      background: auto !important;
+    } */
+  }
+  .ant-table-wrapper table {
+    border-collapse: collapse;
   }
 
+  .ant-table-cell-row-hover {
+    /* background: auto !important; */
+    /* box-shadow: 10px 10px #000; */
+  }
+
+  .ant-table-row:has(.ant-table-cell-row-hover) {
+    box-shadow: ${(props) =>
+      props.noneBorder ? "none" : "  rgb(159, 162, 165) 0px 2px 2px 0px"};
+    position: relative;
+    z-index: 1;
+  }
+  .ant-table-tbody tr {
+    cursor: pointer;
+  }
+  .ant-table-tbody tr:nth-child(even) {
+    background: #fff !important;
+  }
+  .ant-table-tbody tr:nth-child(odd) {
+    background: ${palette("primary", 16)} !important;
+  }
+  .ant-table-tbody .ant-table-measure-row {
+    td {
+      border: none !important;
+    }
+  }
+  .ant-table-thead .ant-table-selection {
+    display: flex;
+    label {
+      display: flex;
+      justify-content: right;
+      margin-right: 3px;
+    }
+  }
+  .ant-table-cell-row-hover .ant-icon__table {
+    visibility: visible !important;
+  }
+  .ant-table-tbody > tr:nth-child(2) td {
+    border-top: none !important;
+  }
   .ant-table-thead > tr > th {
     color: ${palette("secondary", 2)};
     font-size: 13px;
@@ -32,7 +97,8 @@ const DataTable = styled(Table)`
 
     &.ant-table-column-sort {
       background: ${palette("secondary", 1)};
-      margin: 0 0 0 4px;
+      margin: ${(props) =>
+        props["data-rtl"] === "rtl" ? "0 4px 0 0" : "0 0 0 4px"};
     }
   }
 
@@ -43,15 +109,21 @@ const DataTable = styled(Table)`
 
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
-    padding: 15px 8px;
+    padding: 8px 5px;
+    text-align: ${(props) => (props["data-rtl"] === "rtl" ? "right" : "left")};
 
     p {
       margin-bottom: 0;
     }
   }
 
+  .ant-table-container {
+    background: #f2f6fc;
+  }
+
   .ant-table-tbody > tr > td {
     font-size: 12px;
+
     color: ${palette("text", 3)};
     border-bottom: 1px solid ${palette("border", 0)};
 
@@ -59,11 +131,18 @@ const DataTable = styled(Table)`
       color: ${palette("primary", 0)};
       ${transition()};
 
-      &:hover {
+      /* &:hover {
         color: ${palette("primary", 4)};
-      }
+      } */
     }
   }
+
+  // .ant-table-thead > tr.ant-table-row-hover > td,
+  // .ant-table-tbody > tr.ant-table-row-hover > td,
+  // .ant-table-thead > tr:hover > td,
+  // .ant-table-tbody > tr:hover > td {
+  //   background-color: #efefea;
+  // }
 
   .ant-table-bordered .ant-table-thead > tr > th {
     border-bottom: 1px solid ${palette("border", 0)};
@@ -71,11 +150,12 @@ const DataTable = styled(Table)`
 
   .ant-table-bordered .ant-table-thead > tr > th,
   .ant-table-bordered .ant-table-tbody > tr > td {
-    border-right: 1px solid ${palette("border", 0)};
+    /* border-right: 1px solid ${palette("border", 0)}; */
   }
 
   .ant-table-pagination {
-    float: right;
+    float: left;
+    /* float: ${(props) => (props["data-rtl"] === "rtl" ? "left" : "right")}; */
   }
 
   .ant-pagination-prev,
@@ -97,25 +177,29 @@ const DataTable = styled(Table)`
   .ant-pagination-next,
   .ant-pagination-jump-prev,
   .ant-pagination-jump-next {
-    transform: rotate(0);
+    transform: ${(props) =>
+      props["data-rtl"] === "rtl" ? "rotate(180deg)" : "rotate(0)"};
   }
 
   .ant-pagination-prev,
   .ant-pagination-jump-prev,
   .ant-pagination-jump-next {
-    margin: 0 8px 0 0;
+    margin: ${(props) =>
+      props["data-rtl"] === "rtl" ? "0 0 0 8px" : "0 8px 0 0"};
   }
 
   .ant-pagination-item {
-    margin: 0 8px 0 0;
+    margin: ${(props) =>
+      props["data-rtl"] === "rtl" ? "0 0 0 8px" : "0 8px 0 0"};
 
     &:hover {
       border-color: ${palette("primary", 14)};
+
       ${transition()};
     }
 
     &:hover a {
-      color: ${palette("primary", 14)};
+      color: ${palette("primary", 0)};
     }
   }
 
@@ -131,8 +215,7 @@ const DataTable = styled(Table)`
       color: #ffffff;
     }
   }
-
-  .ant-table-expanded-row {
+  */ .ant-table-expanded-row {
     background: ${palette("grayscale", 6)};
 
     p {
@@ -142,19 +225,20 @@ const DataTable = styled(Table)`
 
   .ant-spin-nested-loading > div > .ant-spin {
     max-height: none;
-
     .ant-spin-dot i {
       color: ${palette("primary", 0)};
     }
   }
 
   .ant-table-header {
+    border-radius: 0 !important;
     background-color: transparent;
   }
 
   .ant-table-title {
     background: ${palette("secondary", 1)};
     color: ${palette("secondary", 2)};
+
     font-size: 13px;
     font-weight: 500;
     padding: 16px 30px;
@@ -191,6 +275,7 @@ const DataTable = styled(Table)`
       padding: 20px;
       display: flex;
       background: #ffffff;
+
       border: 1px solid ${palette("border", 0)};
       ${boxShadow("0 1px 6px rgba(0,0,0,0.2)")};
 
@@ -207,7 +292,9 @@ const DataTable = styled(Table)`
         outline: 0 !important;
         overflow: hidden;
         background-color: #ffffff;
+
         ${borderRadius("3px 0 0 3px")};
+
         ${transition()};
         ${boxShadow("none")};
 
@@ -246,7 +333,8 @@ const DataTable = styled(Table)`
         padding: 0 15px;
         margin-left: -1px;
         cursor: pointer;
-        border-radius: 0 3px 3px 0;
+        border-radius: ${(props) =>
+          props["data-rtl"] === "rtl" ? "3px 0 0 3px" : "0 3px 3px 0"};
         ${transition()};
 
         &:hover {
@@ -264,7 +352,8 @@ const DataTable = styled(Table)`
         align-items: center;
 
         i {
-          margin: 0 10px 0 0;
+          margin: ${(props) =>
+            props["data-rtl"] === "rtl" ? "0 0 0 10px" : "0 10px 0 0"};
           order: -1;
         }
       }
@@ -275,6 +364,7 @@ const DataTable = styled(Table)`
     .ant-table-thead > tr {
       th {
         border: 1px solid ${palette("border", 0)};
+
         border-left: 0;
 
         &[rowspan] {
@@ -303,6 +393,7 @@ const DataTable = styled(Table)`
 
     .ant-table-tbody {
       .ant-table-row {
+        background: ${palette("secondary", 12)};
         td {
           border-right: 1px solid ${palette("border", 0)};
 
@@ -321,6 +412,69 @@ const DataTable = styled(Table)`
       }
     }
   }
+
+  &.isoEditableTable {
+    .isoEditData {
+      .isoEditDataWrapper {
+        display: flex;
+        align-items: center;
+
+        input {
+          font-size: 12px;
+          font-weight: 400;
+          color: ${palette("text", 3)};
+          line-height: inherit;
+          padding: 7px 10px;
+          margin: ${(props) =>
+            props["data-rtl"] === "rtl" ? "0 0 0 10px" : "0 10px 0 0"};
+          border: 1px solid ${palette("border", 0)};
+          outline: 0 !important;
+          overflow: hidden;
+          background-color: #ffffff;
+          ${borderRadius("3px")};
+          ${boxShadow()};
+          ${transition()};
+
+          &:focus,
+          &:hover {
+            border-color: ${palette("border", 0)};
+            ${boxShadow()};
+          }
+
+          &::-webkit-input-placeholder {
+            color: ${palette("grayscale", 0)};
+          }
+
+          &:-moz-placeholder {
+            color: ${palette("grayscale", 0)};
+          }
+
+          &::-moz-placeholder {
+            color: ${palette("grayscale", 0)};
+          }
+          &:-ms-input-placeholder {
+            color: ${palette("grayscale", 0)};
+          }
+        }
+
+        .isoEditIcon {
+          cursor: pointer;
+        }
+      }
+
+      .isoDataWrapper {
+        display: flex;
+        align-items: center;
+
+        .isoEditIcon {
+          margin: ${(props) =>
+            props["data-rtl"] === "rtl" ? "0 auto 0 0" : "0 0 0 auto"};
+          cursor: pointer;
+          flex-shrink: 0;
+        }
+      }
+    }
+  }
 `;
 
 const WDCustomizedTableWrapper = styled.div`
@@ -328,7 +482,8 @@ const WDCustomizedTableWrapper = styled.div`
     margin-bottom: 40px;
 
     .ant-form-item {
-      margin: 0 16px 0 0;
+      margin: ${(props) =>
+        props["data-rtl"] === "rtl" ? "0 0 0 16px" : "0 16px 0 0"};
     }
 
     .ant-form-item-label {
@@ -336,7 +491,8 @@ const WDCustomizedTableWrapper = styled.div`
         color: ${palette("secondary", 2)};
 
         &:after {
-          margin: 0 8px 0 2px;
+          margin: ${(props) =>
+            props["data-rtl"] === "rtl" ? "0 2px 0 8px" : "0 8px 0 2px"};
         }
       }
     }

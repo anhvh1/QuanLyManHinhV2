@@ -217,7 +217,9 @@ const SignIn = (props) => {
   const IsAdmin = dataUnzip?.NguoiDung?.IsAdmin;
   const from = IsAdmin
     ? { pathname: "/dashboard/danh-muc-co-quan" }
-    : { pathname: "/dashboard/khach-hang" };
+    : { pathname: "/dashboard/" };
+
+  // : { pathname: "/dashboard/khach-hang" };
 
   const { isPreview } = props;
   if (isLoggedIn && !isPreview) {
@@ -243,7 +245,7 @@ const SignIn = (props) => {
         <div className="header">
           <div className="header-title">
             <img src={ImageLogo} className="header-logo" />
-            <p style={{color:"#000000"}}>{Title}</p>
+            <p style={{ color: "#000000" }}>{Title}</p>
           </div>
         </div>
         <div className="main">
@@ -305,7 +307,7 @@ const SignIn = (props) => {
                         onClick={togglePasswordVisibility}
                         style={{
                           position: "absolute",
-                          right: "30px", 
+                          right: "30px",
                           top: "34.5%",
                           transform: "translateY(-50%)",
                         }}

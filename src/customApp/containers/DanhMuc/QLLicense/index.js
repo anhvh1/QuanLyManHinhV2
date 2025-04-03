@@ -1,58 +1,58 @@
-import {Modal, Table, Tooltip, message} from 'antd';
-import actions from '../../../redux/DanhMuc/QLLicense/actions';
-import React, {useState, useEffect} from 'react';
-import {connect, useDispatch} from 'react-redux';
-import LayoutWrapper from '../../../../components/utility/layoutWrapper';
-import PageHeader from '../../../../components/utility/pageHeader';
-import PageAction from '../../../../components/utility/pageAction';
-import Box from '../../../../components/utility/box';
-import BoxFilter from '../../../../components/utility/boxFilter';
-import BoxTable from '../../../../components/utility/boxTable';
-import {TreeSelect} from '../../../../components/uielements/exportComponent';
-import actionsCoQuan from '../../../redux/DanhMuc/DMCoQuan/actions';
+import { Modal, Table, Tooltip, message } from "antd";
+import actions from "../../../redux/DanhMuc/QLLicense/actions";
+import React, { useState, useEffect } from "react";
+import { connect, useDispatch } from "react-redux";
+import LayoutWrapper from "../../../../components/utility/layoutWrapper";
+import PageHeader from "../../../../components/utility/pageHeader";
+import PageAction from "../../../../components/utility/pageAction";
+import Box from "../../../../components/utility/box";
+import BoxFilter from "../../../../components/utility/boxFilter";
+import BoxTable from "../../../../components/utility/boxTable";
+import { TreeSelect } from "../../../../components/uielements/exportComponent";
+import actionsCoQuan from "../../../redux/DanhMuc/DMCoQuan/actions";
 import {
   Button,
   InputSearch,
   Select,
-} from '../../../../components/uielements/exportComponent';
-import Checkbox from '../../../../components/uielements/checkbox';
-import Switches from '../../../../components/uielements/switch';
+} from "../../../../components/uielements/exportComponent";
+import Checkbox from "../../../../components/uielements/checkbox";
+import Switches from "../../../../components/uielements/switch";
 import {
   changeUrlFilter,
   exportExcel,
   getDefaultPageSize,
   getFilterData,
   getRoleByKey,
-} from '../../../../helpers/utility';
+} from "../../../../helpers/utility";
 import {
   _debounce,
   getInfoFromToken,
   getLocalKey,
-} from '../../../../helpers/utility';
-import {useKey} from '../../../CustomHook/useKey';
-import queryString from 'query-string';
-import api from './config';
-import ModalAddEdit from './modalAddEdit';
-import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
-import {useSelector} from 'react-redux';
-import dayjs from 'dayjs';
-import moment from 'moment';
+} from "../../../../helpers/utility";
+import { useKey } from "../../../CustomHook/useKey";
+import queryString from "query-string";
+import api from "./config";
+import ModalAddEdit from "./modalAddEdit";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import dayjs from "dayjs";
+import moment from "moment";
 
-import PageWrap from '../../../../components/utility/PageWrap';
+import PageWrap from "../../../../components/utility/PageWrap";
 const QLLicense = (props) => {
   const [filterData, setFilterData] = useState(
-    queryString.parse(props.location.search),
+    queryString.parse(props.location.search)
   );
   const [dataModalAddEdit, setDataModalAddEdit] = useState({});
   const [visibleModalAddEdit, setVisibleModalAddEdit] = useState(false);
-  const [action, setAction] = useState('');
-  const {DanhSachCoQuan} = useSelector((state) => state.DMCoQuan);
+  const [action, setAction] = useState("");
+  const { DanhSachCoQuan } = useSelector((state) => state.DMCoQuan);
   const [modalKey, inceaseModalKey] = useKey();
   const [selectedRowsKey, setSelectedRowsKey] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const dispatch = useDispatch();
 
-  document.title = 'Quản lý License';
+  document.title = "Quản lý License";
 
   useEffect(() => {
     changeUrlFilter(filterData);
@@ -67,7 +67,7 @@ const QLLicense = (props) => {
 
   const onTableChange = (pagination, filters, sorter) => {
     let oldFilterData = filterData;
-    let onOrder = {pagination, filters, sorter};
+    let onOrder = { pagination, filters, sorter };
     let newFilterData = getFilterData(oldFilterData, null, onOrder);
 
     setFilterData(newFilterData);
@@ -76,7 +76,7 @@ const QLLicense = (props) => {
 
   const onFilter = (value, property) => {
     let oldFilterData = filterData;
-    let onFilter = {value, property};
+    let onFilter = { value, property };
     let newfilterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data
     setFilterData(newfilterData);
@@ -84,7 +84,7 @@ const QLLicense = (props) => {
   };
 
   const showModalAdd = () => {
-    setAction('add');
+    setAction("add");
     setDataModalAddEdit({});
     inceaseModalKey();
     setVisibleModalAddEdit(true);
@@ -92,10 +92,10 @@ const QLLicense = (props) => {
 
   const deleteModalAddEdit = (LicenseID) => {
     Modal.confirm({
-      title: 'Xóa Dữ Liệu',
-      content: 'Bạn có muốn xóa license này không?',
-      cancelText: 'Không',
-      okText: 'Có',
+      title: "Xóa Dữ Liệu",
+      content: "Bạn có muốn xóa license này không?",
+      cancelText: "Không",
+      okText: "Có",
       onOk: () => {
         setConfirmLoading(true);
         api
@@ -135,9 +135,9 @@ const QLLicense = (props) => {
   };
 
   const showModalEdit = (licenseID) => {
-    setAction('edit');
+    setAction("edit");
     api
-      .chiTietLicence({licenseID})
+      .chiTietLicence({ licenseID })
       .then((res) => {
         if (res.data.Status > 0) {
           setDataModalAddEdit(res.data.Data);
@@ -162,7 +162,7 @@ const QLLicense = (props) => {
 
   const submitModalAddEdit = (data) => {
     setConfirmLoading(true);
-    if (action === 'add') {
+    if (action === "add") {
       api
         .themLicence(data)
         .then((res) => {
@@ -184,7 +184,7 @@ const QLLicense = (props) => {
           message.error(error.toString());
         });
     }
-    if (action === 'edit') {
+    if (action === "edit") {
       api
         .suaLicence(data)
         .then((res) => {
@@ -210,16 +210,16 @@ const QLLicense = (props) => {
 
   const renderThaoTac = (record) => {
     return (
-      <div className={'action-btn'}>
+      <div className={"action-btn"}>
         {/* {role?.edit ? ( */}
-        <Tooltip title={'Sửa'}>
+        <Tooltip title={"Sửa"}>
           <EditOutlined onClick={() => showModalEdit(record.LicenseID)} />
         </Tooltip>
         {/* ) : ( */}
         {/* '' */}
         {/* )} */}
         {/* {role?.delete ? ( */}
-        <Tooltip title={'Xóa'}>
+        <Tooltip title={"Xóa"}>
           <DeleteOutlined
             onClick={() => deleteModalAddEdit(record.LicenseID)}
           />
@@ -230,11 +230,7 @@ const QLLicense = (props) => {
       </div>
     );
   };
-  const {
-    DanhSachLicense,
-    TotalRow,
-    role,
-  } = props;
+  const { DanhSachLicense, TotalRow, role } = props;
   const PageNumber = filterData.PageNumber
     ? parseInt(filterData.PageNumber)
     : 1;
@@ -244,66 +240,66 @@ const QLLicense = (props) => {
 
   const columns = [
     {
-      title: 'STT',
-      width: '5%',
-      align: 'center',
+      title: "STT",
+      width: "5%",
+      align: "center",
       render: (text, record, index) => (
         <span>{(PageNumber - 1) * PageSize + (index + 1)}</span>
       ),
     },
     {
-      title: 'Tên khách hàng',
-      dataIndex: 'TenCoQuan',
-      align: 'center',
-      width: '10%',
+      title: "Tên khách hàng",
+      dataIndex: "TenCoQuan",
+      align: "center",
+      width: "10%",
     },
     {
-      title: 'Tên màn hình',
-      dataIndex: 'TenManHinh',
-      align: 'center',
-      width: '10%',
+      title: "Tên màn hình",
+      dataIndex: "TenManHinh",
+      align: "center",
+      width: "10%",
     },
     {
-      title: 'LicenseInfo',
-      dataIndex: 'LicenseInfo',
-      align: 'center',
-      width: '30%',
+      title: "LicenseInfo",
+      dataIndex: "LicenseInfo",
+      align: "center",
+      width: "30%",
     },
     {
-      title: 'Giờ bắt đầu',
-      dataIndex: 'NgayDangKy',
-      align: 'center',
-      width: '10%',
+      title: "Giờ bắt đầu",
+      dataIndex: "NgayDangKy",
+      align: "center",
+      width: "10%",
     },
 
     {
-      title: 'Giờ kết thúc',
-      dataIndex: 'NgayHetHan',
-      align: 'center',
-      width: '10%',
+      title: "Giờ kết thúc",
+      dataIndex: "NgayHetHan",
+      align: "center",
+      width: "10%",
     },
     {
-      title: 'Trạng thái',
-      dataIndex: 'TrangThai',
-      align: 'center',
-      width: '10%',
-      render: (text) => (text ? 'Hoạt động' : 'Không hoạt động'),
+      title: "Trạng thái",
+      dataIndex: "TrangThai",
+      align: "center",
+      width: "10%",
+      render: (text) => (text ? "Hoạt động" : "Không hoạt động"),
     },
     {
-      title: 'Thao tác',
-      width: '15%',
-      align: 'center',
+      title: "Thao tác",
+      width: "15%",
+      align: "center",
       render: (text, record) => renderThaoTac(record),
     },
   ];
-  const access_token1 = getLocalKey('access_token');
+  const access_token1 = getLocalKey("access_token");
   const dataUnzip1 = getInfoFromToken(access_token1);
   const ListNguoiDung = dataUnzip1?.NguoiDung?.NguoiDungID;
   const hideSelect = ListNguoiDung !== 18;
   return (
     <LayoutWrapper>
       <PageWrap>
-        <PageHeader>Quản lý License</PageHeader>
+        {/* <PageHeader>Quản lý License</PageHeader> */}
         <PageAction>
           {/* {role ? (
             role.add ? ( */}
@@ -321,26 +317,26 @@ const QLLicense = (props) => {
       </PageWrap>
       <Box>
         <BoxFilter hienthi={true}>
-        {!hideSelect && (
-          <TreeSelect
-            showSearch
-            treeData={DanhSachCoQuan}
-            onChange={(value) => onFilter(value, 'CoQuanID')}
-            style={{width: 400}}
-            dropdownStyle={{maxHeight: 400, overflow: 'auto'}}
-            placeholder="Chọn cơ quan"
-            allowClear
-            treeDefaultExpandAll
-            // onChange={value => this.onSearch(value, "CoQuanID")}
-            notFoundContent={'Không có dữ liệu'}
-            treeNodeFilterProp={'title'}
-          />
-        )}
+          {!hideSelect && (
+            <TreeSelect
+              showSearch
+              treeData={DanhSachCoQuan}
+              onChange={(value) => onFilter(value, "CoQuanID")}
+              style={{ width: 400 }}
+              dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+              placeholder="Chọn cơ quan"
+              allowClear
+              treeDefaultExpandAll
+              // onChange={value => this.onSearch(value, "CoQuanID")}
+              notFoundContent={"Không có dữ liệu"}
+              treeNodeFilterProp={"title"}
+            />
+          )}
           <InputSearch
             defaultValue={filterData.Keyword}
-            placeholder={'Nhập tên khách hàng hoặc tên màn hình'}
-            style={{width: 300}}
-            onSearch={(value) => onFilter(value, 'Keyword')}
+            placeholder={"Nhập tên khách hàng hoặc tên màn hình"}
+            style={{ width: 300 }}
+            onSearch={(value) => onFilter(value, "Keyword")}
             allowClear
           />
         </BoxFilter>
@@ -375,7 +371,7 @@ const QLLicense = (props) => {
 function mapStateToProps(state) {
   return {
     ...state.QLLicense,
-    role: getRoleByKey(state.Auth.role, 'danh-muc-license'),
+    role: getRoleByKey(state.Auth.role, "danh-muc-license"),
   };
 }
 

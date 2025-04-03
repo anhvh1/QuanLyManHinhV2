@@ -1,15 +1,19 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import Popover from '../../components/uielements/popover';
-import IntlMessages from '../../components/utility/intlMessages';
-import defaultAvatar from '../../image/defaultAvatar.jpeg';
-import authAction from '../../redux/auth/actions';
-import TopbarDropdownWrapper from './topbarDropdown.style';
-import {Link} from 'react-router-dom';
-import {store} from '../../redux/store';
-import {ModalChangePassword} from './modalChangePassword';
-
-const {logout} = authAction;
+import React, { Component } from "react";
+import { connect } from "react-redux";
+import Popover from "../../components/uielements/popover";
+import IntlMessages from "../../components/utility/intlMessages";
+import defaultAvatar from "../../image/defaultAvatar.jpeg";
+import authAction from "../../redux/auth/actions";
+import TopbarDropdownWrapper from "./topbarDropdown.style";
+import { Link } from "react-router-dom";
+import { store } from "../../redux/store";
+import { ModalChangePassword } from "./modalChangePassword";
+import {
+  _debounce,
+  getInfoFromToken,
+  getLocalKey,
+} from "../../helpers/utility";
+const { logout } = authAction;
 
 class TopbarUser extends Component {
   constructor(props) {
@@ -24,28 +28,28 @@ class TopbarUser extends Component {
   }
 
   hide() {
-    this.setState({visible: false});
+    this.setState({ visible: false });
   }
 
   handleVisibleChange() {
-    this.setState({visible: !this.state.visible});
+    this.setState({ visible: !this.state.visible });
   }
 
   renderUser = () => {
     const userAuth = store.getState().Auth.user;
-    let Ten = userAuth ? userAuth.TenNguoiDung : '';
+    let Ten = userAuth ? userAuth.TenNguoiDung : "";
     let Avatar = userAuth ? userAuth.AnhHoSo : null;
     if (!Ten) {
       //neu redux store chua san sang, lay data tu local store
-      const userJson = localStorage.getItem('user');
+      const userJson = localStorage.getItem("user");
       if (userJson) {
         const user = JSON.parse(userJson);
-        Ten = user.TenNguoiDung ? user.TenNguoiDung : '';
+        Ten = user.TenNguoiDung ? user.TenNguoiDung : "";
         Avatar = user.AnhHoSo ? user.AnhHoSo : null;
       }
     }
     if (Ten.length > 15) {
-      Ten = Ten.substr(0, 10) + '...';
+      Ten = Ten.substr(0, 10) + "...";
     }
     return {
       name: Ten,
@@ -62,18 +66,18 @@ class TopbarUser extends Component {
     });
   };
   hideModalChangePassword = () => {
-    this.setState({visibleModalChangePassword: false});
+    this.setState({ visibleModalChangePassword: false });
   };
 
   render() {
-    let currRouter = 'dashboard';
+    let currRouter = "dashboard";
     const pathname = window.location.pathname;
 
     if (!pathname.includes(currRouter)) {
-      currRouter = 'staff';
+      currRouter = "staff";
     }
 
-    const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem("user"));
     const CanBoID = user && user.CanBoID;
     const VaiTro = user && user.VaiTro;
     const content = (
@@ -98,7 +102,10 @@ class TopbarUser extends Component {
       </TopbarDropdownWrapper>
     );
     const renderUser = this.renderUser();
-
+    const access_token1 = getLocalKey("access_token");
+    const dataUnzip1 = getInfoFromToken(access_token1);
+    const TenNguoiDung = dataUnzip1?.NguoiDung?.TenNguoiDung;
+    console.log(renderUser);
     return (
       <Popover
         content={content}
@@ -108,22 +115,28 @@ class TopbarUser extends Component {
         arrowPointAtCenter={true}
         placement="bottomLeft"
       >
-        <div style={{display: 'flex'}}>
-          <div className="isoImgWrapper" style={{display: 'inline-flex'}}>
+        <div style={{ display: "flex" }}>
+          <div
+            className="isoImgWrapper"
+            style={{ display: "flex", alignItems: "anchor-center" }}
+          >
+            <p style={{ color: "#333", marginRight: "14px" }}>{TenNguoiDung}</p>
             <img
               alt="user"
               src={renderUser.avatar}
-              style={{borderRadius: '50%', width: 40, height: 40 ,marginRight:"14px"}}
+              style={{
+                borderRadius: "50%",
+                width: 40,
+                height: 40,
+              }}
             />
-            <span className="userActivity online" />
           </div>
-          <div style={{padding: '10px 0 0 5px'}}>
-            <span style={{color: '#fff'}}>{renderUser.name}</span>
-          </div>
+          {/* <div style={{padding: '10px 0 0 5px'}}> */}
+          {/* </div> */}
         </div>
       </Popover>
     );
   }
 }
 
-export default connect(null, {logout})(TopbarUser);
+export default connect(null, { logout })(TopbarUser);

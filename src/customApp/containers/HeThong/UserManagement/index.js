@@ -8,18 +8,18 @@ import {
   Typography,
   Switch,
   Input,
-} from 'antd';
-import PageHeader from '../../../../components/utility/pageHeader';
-import PageAction from '../../../../components/utility/pageAction';
+} from "antd";
+import PageHeader from "../../../../components/utility/pageHeader";
+import PageAction from "../../../../components/utility/pageAction";
 import {
   Button,
   InputSearch,
   Select,
   Option,
-} from '../../../../components/uielements/exportComponent';
+} from "../../../../components/uielements/exportComponent";
 // import Menu from "../../../../components/uielements/menu";
-import actions from '../../../redux/HeThong/QLNguoiDung/actions';
-import actionsCoQuan from '../../../redux/DanhMuc/DMCoQuan/actions';
+import actions from "../../../redux/HeThong/QLNguoiDung/actions";
+import actionsCoQuan from "../../../redux/DanhMuc/DMCoQuan/actions";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -29,48 +29,48 @@ import {
   UserAddOutlined,
   UpOutlined,
   RollbackOutlined,
-} from '@ant-design/icons';
-import Box from '../../../../components/utility/box';
-import BoxFilter from '../../../../components/utility/boxFilter';
-import BoxTable from '../../../../components/utility/boxTable';
-import LayoutWrapper from '../../../../components/utility/layoutWrapper';
-import {TreeSelect} from '../../../../components/uielements/exportComponent';
-import React, {useEffect, useState} from 'react';
+} from "@ant-design/icons";
+import Box from "../../../../components/utility/box";
+import BoxFilter from "../../../../components/utility/boxFilter";
+import BoxTable from "../../../../components/utility/boxTable";
+import LayoutWrapper from "../../../../components/utility/layoutWrapper";
+import { TreeSelect } from "../../../../components/uielements/exportComponent";
+import React, { useEffect, useState } from "react";
 import {
   changeUrlFilter,
   getConfigLocal,
   getDefaultPageSize,
   getFilterData,
   getRoleByKey,
-} from '../../../../helpers/utility';
-import queryString from 'query-string';
+} from "../../../../helpers/utility";
+import queryString from "query-string";
 // import queryString from "query-string";
-import ModalAddEditUser from './ModalAddEditUser';
-import {useKey} from '../../../CustomHook/useKey';
-import Wrapper from './device.styled';
-import {Link} from 'react-router-dom';
-import {connect, useDispatch, useSelector} from 'react-redux';
+import ModalAddEditUser from "./ModalAddEditUser";
+import { useKey } from "../../../CustomHook/useKey";
+import Wrapper from "./device.styled";
+import { Link } from "react-router-dom";
+import { connect, useDispatch, useSelector } from "react-redux";
 // import apiChucVu from '../../DanhMuc/DMChucVu/config';
-import api from './config';
-import moment from 'moment';
-const {Sider} = Layout;
-const {Search} = Input;
+import api from "./config";
+import moment from "moment";
+const { Sider } = Layout;
+const { Search } = Input;
 
 const UserManagement = (props) => {
-  document.title='Quản lý người dùng';
+  document.title = "Quản lý người dùng";
   const [filterData, setFilterData] = useState(
-    queryString.parse(props.location.search),
+    queryString.parse(props.location.search)
   );
   const [visibleModalUser, setVisibleModalUser] = useState(false);
   const [keyModalUser, increseKeyModalUser] = useKey();
   const [dataModalUser, setDataModalUser] = useState({});
   const [loading, setLoading] = useState(false);
-  const [action, setAction] = useState('');
-  const {DanhSachCoQuan} = useSelector((state) => state.DMCoQuan);
+  const [action, setAction] = useState("");
+  const { DanhSachCoQuan } = useSelector((state) => state.DMCoQuan);
   const dispatch = useDispatch();
-  const {role} = props;
-  const {ListNguoiDung, TotalRow, tableLoading} = useSelector(
-    (state) => state.QLNguoiDung,
+  const { role } = props;
+  const { ListNguoiDung, TotalRow, tableLoading } = useSelector(
+    (state) => state.QLNguoiDung
   );
 
   useEffect(() => {
@@ -85,13 +85,13 @@ const UserManagement = (props) => {
 
   const handleDeleteIUser = (ID) => {
     Modal.confirm({
-      title: 'Xóa Dữ Liệu',
-      content: 'Bạn có muốn xóa dữ liệu của người dùng này không?',
-      cancelText: 'Không',
-      okText: 'Có',
+      title: "Xóa Dữ Liệu",
+      content: "Bạn có muốn xóa dữ liệu của người dùng này không?",
+      cancelText: "Không",
+      okText: "Có",
       onOk: () => {
         api
-          .DeleteUser({ListID: [ID]})
+          .DeleteUser({ ListID: [ID] })
           .then((res) => {
             if (res.data.Status > 0) {
               dispatch(actions.getList(filterData));
@@ -112,9 +112,9 @@ const UserManagement = (props) => {
   };
 
   const showModalEditUser = (CanBoID) => {
-    setAction('edit');
+    setAction("edit");
     api
-      .DetailsUser({CanBoID})
+      .DetailsUser({ CanBoID })
       .then((res) => {
         if (res.data.Status > 0) {
           setDataModalUser(res.data.Data);
@@ -132,21 +132,21 @@ const UserManagement = (props) => {
   };
 
   const showModalAddUser = () => {
-    setAction('add');
+    setAction("add");
     setDataModalUser({});
     increseKeyModalUser();
     setVisibleModalUser(true);
   };
 
   const hideModalAddEditUser = () => {
-    setAction('');
+    setAction("");
     setDataModalUser({});
     setVisibleModalUser(false);
   };
 
   const onTableChange = (pagination, filters, sorter) => {
     let oldFilterData = filterData;
-    let onOrder = {pagination, filters, sorter};
+    let onOrder = { pagination, filters, sorter };
     let newFilterData = getFilterData(oldFilterData, null, onOrder);
     setFilterData(newFilterData);
     // setSelectedRowsKey([])
@@ -154,7 +154,7 @@ const UserManagement = (props) => {
 
   const submitModalUser = (value) => {
     setLoading(true);
-    if (action === 'add') {
+    if (action === "add") {
       delete value.CanBoID;
       // const formSave = new FormData();
       // const HeThongCanBoStr = JSON.stringify(value);
@@ -165,7 +165,7 @@ const UserManagement = (props) => {
           setLoading(false);
           if (response.data.Status > 0) {
             message.destroy();
-            message.success('Thêm cán bộ thành công');
+            message.success("Thêm cán bộ thành công");
             //
             hideModalAddEditUser();
             //
@@ -180,14 +180,14 @@ const UserManagement = (props) => {
           message.destroy();
           message.error(error.toString());
         });
-    } else if (action === 'edit') {
+    } else if (action === "edit") {
       api
         .EditUser(value)
         .then((response) => {
           setLoading(false);
           if (response.data.Status > 0) {
             message.destroy();
-            message.success('Cập nhật cán bộ thành công');
+            message.success("Cập nhật cán bộ thành công");
             //
             hideModalAddEditUser();
             //
@@ -207,20 +207,20 @@ const UserManagement = (props) => {
 
   const onSearch = (value, property) => {
     let oldFilterData = filterData;
-    let onFilter = {value, property};
+    let onFilter = { value, property };
     let newFilterData = getFilterData(oldFilterData, onFilter, null);
     setFilterData(newFilterData);
   };
 
   const handleRoolbackPassword = (NguoiDungID) => {
     Modal.confirm({
-      title: 'Đặt lại mật khẩu',
-      content: 'Bạn có muốn đặt lại mật khẩu cho người dùng này không?',
-      cancelText: 'Không',
-      okText: 'Có',
+      title: "Đặt lại mật khẩu",
+      content: "Bạn có muốn đặt lại mật khẩu cho người dùng này không?",
+      cancelText: "Không",
+      okText: "Có",
       onOk: () => {
         api
-          .ResetPassword({NguoiDungID})
+          .ResetPassword({ NguoiDungID })
           .then((res) => {
             if (res.data.Status > 0) {
               dispatch(actions.getList(filterData));
@@ -244,18 +244,18 @@ const UserManagement = (props) => {
     return (
       <div className="action-btn">
         {role && role.edit ? (
-          <Tooltip title={'Sửa'}>
+          <Tooltip title={"Sửa"}>
             <EditOutlined onClick={() => showModalEditUser(record.CanBoID)} />
           </Tooltip>
         ) : (
-          ''
+          ""
         )}
         {role && role.delete ? (
-          <Tooltip title={'Xóa'}>
+          <Tooltip title={"Xóa"}>
             <DeleteOutlined onClick={() => handleDeleteIUser(record.CanBoID)} />
           </Tooltip>
         ) : null}
-        <Tooltip title={'Đặt lại mật khẩu'}>
+        <Tooltip title={"Đặt lại mật khẩu"}>
           <RollbackOutlined
             onClick={() => handleRoolbackPassword(record.NguoiDungID)}
           />
@@ -266,54 +266,54 @@ const UserManagement = (props) => {
 
   const columns = [
     {
-      title: 'STT',
-      align: 'center',
+      title: "STT",
+      align: "center",
       width: 5,
       render: (text, record, index) => (
         <span>{(PageNumber - 1) * PageSize + (index + 1)}</span>
       ),
     },
     {
-      title: 'Họ và tên',
-      dataIndex: 'TenCanBo',
+      title: "Họ và tên",
+      dataIndex: "TenCanBo",
       width: 14,
     },
     {
-      title: 'Tên tài khoản',
-      dataIndex: 'TenNguoiDung',
+      title: "Tên tài khoản",
+      dataIndex: "TenNguoiDung",
       width: 14,
     },
     {
-      title: 'Ngày sinh',
-      dataIndex: 'NgaySinh',
-      align: 'center',
+      title: "Ngày sinh",
+      dataIndex: "NgaySinh",
+      align: "center",
       width: 14,
       render: (text, record, index) =>
-        text ? moment(text).format('DD/MM/YYYY') : '',
+        text ? moment(text).format("DD/MM/YYYY") : "",
     },
     {
-      title: 'Giới tính',
-      dataIndex: 'GioiTinh',
+      title: "Giới tính",
+      dataIndex: "GioiTinh",
       width: 5,
       render: (text, record, index) =>
         record.GioiTinh === 1
-          ? 'Nam'
+          ? "Nam"
           : record.GioiTinh === 2
-          ? 'Khác'
+          ? "Khác"
           : record.GioiTinh === 0
-          ? 'Nữ'
-          : '',
+          ? "Nữ"
+          : "",
     },
     {
-      title: 'Địa chỉ',
-      dataIndex: 'DiaChi',
-      align: 'center',
+      title: "Địa chỉ",
+      dataIndex: "DiaChi",
+      align: "center",
       width: 14,
     },
     {
-      title: 'Cơ quan',
-      dataIndex: 'TenCoQuan',
-      align: 'center',
+      title: "Cơ quan",
+      dataIndex: "TenCoQuan",
+      align: "center",
       width: 14,
     },
     // {
@@ -338,8 +338,8 @@ const UserManagement = (props) => {
     //     width: 15
     // },
     {
-      title: 'Thao tác',
-      align: 'center',
+      title: "Thao tác",
+      align: "center",
       width: 13,
       render: (text, record) => renderThaoTac(record),
     },
@@ -359,10 +359,10 @@ const UserManagement = (props) => {
       <LayoutWrapper>
         {/* <PageAction>
           </PageAction> */}
-        <PageHeader>Quản lý người dùng</PageHeader>
+        {/* <PageHeader>Quản lý người dùng</PageHeader> */}
         <PageAction>
           {role.add ? (
-            <Button  type="primary" onClick={showModalAddUser}>
+            <Button type="primary" onClick={showModalAddUser}>
               <PlusOutlined />
               Thêm
             </Button>
@@ -373,22 +373,22 @@ const UserManagement = (props) => {
             <TreeSelect
               showSearch
               treeData={DanhSachCoQuan}
-              onChange={(value) => onSearch(value, 'CoQuanID')}
-              style={{width: 400}}
-              dropdownStyle={{maxHeight: 400, overflow: 'auto'}}
+              onChange={(value) => onSearch(value, "CoQuanID")}
+              style={{ width: 400 }}
+              dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
               placeholder="Chọn cơ quan"
               allowClear
               treeDefaultExpandAll
               // onChange={value => this.onSearch(value, "CoQuanID")}
-              notFoundContent={'Không có dữ liệu'}
-              treeNodeFilterProp={'title'}
+              notFoundContent={"Không có dữ liệu"}
+              treeNodeFilterProp={"title"}
             />
             <InputSearch
               placeholder={
-                'Nhập tên cán bộ, người dùng hoặc cơ quan cần tìm kiếm'
+                "Nhập tên cán bộ, người dùng hoặc cơ quan cần tìm kiếm"
               }
-              onSearch={(value) => onSearch(value, 'keyword')}
-              style={{width: 350}}
+              onSearch={(value) => onSearch(value, "keyword")}
+              style={{ width: 350 }}
               defaultValue={filterData.Keyword}
               allowClear
             ></InputSearch>
@@ -427,6 +427,6 @@ const UserManagement = (props) => {
 export default connect(
   (state) => ({
     auth: state.Auth.user,
-  }),
+  })
   //   {...actions}
 )(UserManagement);

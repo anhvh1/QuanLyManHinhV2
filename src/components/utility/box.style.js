@@ -1,12 +1,12 @@
-import styled from 'styled-components';
-import { palette } from 'styled-theme';
+import styled from "styled-components";
+import { palette } from "styled-theme";
 
 const BoxWrapper = styled.div`
   width: 100%;
   height: 100%;
   padding: 20px;
   background-color: #ffffff;
-  border: 1px solid ${palette('border', 0)};
+  border: 1px solid ${palette("border", 0)};
   margin: 0 0 30px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
 
@@ -16,7 +16,7 @@ const BoxWrapper = styled.div`
 
   @media only screen and (max-width: 767px) {
     padding: 20px;
-    ${'' /* margin: 0 10px 30px; */};
+    ${"" /* margin: 0 10px 30px; */};
   }
 
   &.half {

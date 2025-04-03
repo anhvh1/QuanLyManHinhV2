@@ -7,7 +7,9 @@ const AntSelect = (ComponentName) => styled(ComponentName)`
     box-sizing: border-box;
     display: inline-block;
     position: relative;
+
     color: ${palette("text", 1)};
+
     font-size: 13px;
     height: 35px;
 
