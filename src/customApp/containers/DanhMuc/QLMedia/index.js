@@ -651,9 +651,6 @@ const DMChiTieu = (props) => {
           if (response.data.Status > 0) {
             setStatus(response.data.Status);
             message.success(response.data.Message);
-            //hide modal
-            // hideModalAddEdit();
-            //reset page
             props.getInitData(filterData); //get list
           } else {
             message.destroy();
@@ -767,20 +764,12 @@ const DMChiTieu = (props) => {
   const renderThaoTac = (record) => {
     return (
       <div className={"action-btn"}>
-        {/* {role?.edit ? ( */}
         <Tooltip title={"Sửa"}>
           <EditOutlined onClick={() => showModalEditEdit(record.ID)} />
         </Tooltip>
-        {/* ) : ( */}
-        {/* '' */}
-        {/* )} */}
-        {/* {role?.delete ? ( */}
         <Tooltip title={"Xóa"}>
           <DeleteOutlined onClick={() => deleteModalAddEdit(record.ID)} />
         </Tooltip>
-        {/* ) : (
-          ''
-        )} */}
       </div>
     );
   };
@@ -882,7 +871,6 @@ const DMChiTieu = (props) => {
                   background: "#fff",
                 }}
               >
-                {/* Preview Section */}
                 <div
                   style={{
                     position: "relative",
@@ -924,8 +912,6 @@ const DMChiTieu = (props) => {
                       />
                     )}
                   </div>
-
-                  {/* File Type Indicator */}
                   <div
                     style={{
                       position: "absolute",
@@ -941,8 +927,6 @@ const DMChiTieu = (props) => {
                     {item.Loai === 1 ? "Hình ảnh" : "Video"}
                   </div>
                 </div>
-
-                {/* File Info Section */}
                 <div style={{ padding: "16px" }}>
                   <h3
                     style={{
@@ -982,8 +966,6 @@ const DMChiTieu = (props) => {
                       {item.TrangThai ? "Đang sử dụng" : "Không sử dụng"}
                     </div>
                   </div>
-
-                  {/* Tags Section */}
                   {item.ListTag && item.ListTag.length > 0 && (
                     <div
                       style={{
@@ -1017,68 +999,6 @@ const DMChiTieu = (props) => {
                       gap: "10px",
                     }}
                   >
-                    {/* <Tooltip title="Xem trước">
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          width: "28px",
-                          height: "28px",
-                          borderRadius: "4px",
-                          cursor: "pointer",
-                          transition: "all 0.3s ease",
-                          color: "rgba(0, 0, 0, 0.65)",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = "#52c41a";
-                          e.currentTarget.style.color = "#fff";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = "transparent";
-                          e.currentTarget.style.color = "rgba(0, 0, 0, 0.65)";
-                        }}
-                        onClick={() => {
-                          Modal.info({
-                            icon: null,
-                            width: 800,
-                            content: (
-                              <div style={{ textAlign: "center" }}>
-                                {item.Loai === 2 ? (
-                                  <video
-                                    src={item.UrlFile}
-                                    style={{
-                                      maxWidth: "100%",
-                                      maxHeight: "70vh",
-                                    }}
-                                    controls
-                                    autoPlay
-                                  />
-                                ) : (
-                                  <img
-                                    src={item.UrlFile}
-                                    alt={item.TenFile}
-                                    style={{
-                                      maxWidth: "100%",
-                                      maxHeight: "70vh",
-                                    }}
-                                  />
-                                )}
-                              </div>
-                            ),
-                            okText: "Đóng",
-                            okButtonProps: {
-                              style: {
-                                background: "#1677ff",
-                                border: "#1677ff",
-                              },
-                            },
-                          });
-                        }}
-                      >
-                        <EyeOutlined />
-                      </div>
-                    </Tooltip> */}
                     <Tooltip color="#1890ff" title="Sửa">
                       <div
                         style={{
