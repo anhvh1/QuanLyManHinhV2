@@ -6,9 +6,9 @@ const BoxWrapper = styled.div`
   height: 100%;
   padding: 20px;
   background-color: #ffffff;
-  border: 1px solid ${palette("border", 0)};
+  /* border: 1px solid ${palette("border", 0)}; */
   margin: 0 0 30px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); */
 
   &:last-child {
     margin-bottom: 0;

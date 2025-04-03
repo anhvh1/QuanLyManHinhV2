@@ -232,11 +232,16 @@ const QLThuVien = (props) => {
   const PageSize = filterData.PageSize
     ? parseInt(filterData.PageSize)
     : getDefaultPageSize();
-  
+
   return (
     <LayoutWrapper>
       <PageWrap>
-        {/* <PageHeader>Quản Lý Danh Sách Phát</PageHeader> */}
+        <PageAction>
+          <Button type="primary" onClick={showModalAdd}>
+            <PlusOutlined />
+            Thêm mới
+          </Button>
+        </PageAction>
       </PageWrap>
       <Box>
         <BoxFilter>
@@ -247,12 +252,6 @@ const QLThuVien = (props) => {
             onSearch={(value) => onFilter(value, "Keyword")}
             allowClear
           />
-          <PageAction>
-            <Button type="primary" onClick={showModalAdd}>
-              <PlusOutlined />
-              Thêm mới
-            </Button>
-          </PageAction>
         </BoxFilter>
         {/* Replace BoxTable with card-based layout */}
         <div
