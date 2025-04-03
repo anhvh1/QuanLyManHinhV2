@@ -656,27 +656,29 @@ export default (props) => {
                 }}
                 allowClear
               />
-              <Button
-                type={filterParams.Loai === "" ? "primary" : "default"}
-                onClick={() => handleSelectChange("")}
-                style={{ marginRight: "10px" }}
-              >
-                Tất cả
-              </Button>
-              <Button
-                type={filterParams.Loai === "1" ? "primary" : "default"}
-                onClick={() => handleSelectChange("1")}
-                style={{ marginRight: "10px" }}
-              >
-                Ảnh
-              </Button>
-              <Button
-                type={filterParams.Loai === "2" ? "primary" : "default"}
-                onClick={() => handleSelectChange("2")}
-                style={{ marginRight: "10px" }}
-              >
-                Video
-              </Button>
+              <div style={{ display: "flex"}}>
+                <Button
+                  type={filterParams.Loai === "" ? "primary" : "default"}
+                  onClick={() => handleSelectChange("")}
+                  style={{ marginRight: "10px" }}
+                >
+                  Tất cả
+                </Button>
+                <Button
+                  type={filterParams.Loai === "1" ? "primary" : "default"}
+                  onClick={() => handleSelectChange("1")}
+                  style={{ marginRight: "10px" }}
+                >
+                  Ảnh
+                </Button>
+                <Button
+                  type={filterParams.Loai === "2" ? "primary" : "default"}
+                  onClick={() => handleSelectChange("2")}
+                  style={{ marginRight: "10px" }}
+                >
+                  Video
+                </Button>
+              </div>
             </BoxFilter>
             <div
               style={{
