@@ -1,41 +1,29 @@
-import styled from 'styled-components';
-import {palette} from 'styled-theme';
-import {Modal} from 'antd';
+import styled from "styled-components";
+import { palette } from "styled-theme";
+import { Modal } from "antd";
 
 const ModalWrapper = styled(Modal)`
-  top: ${(props) => (props.top ? `${props.top}` : '50')}px;
-  max-width: 95%;
+  top: ${(props) => (props.top ? `${props.top}` : "50")}px;
 
   .ant-modal-title {
     font-size: 18px !important;
-    color: #000000CC !important;
-  }
-
-  .modal-footer__grey .ant-modal-footer {
-    background: #ededed !important;
+    color: white !important;
   }
 
   .ant-modal-close {
-    color: #000000 !important;
-    display: ${(props) => (props.noTitle ? 'none' : 'block')};
+    color: ${(props) => (props.noTitle ? "#999" : "#fff")} !important;
   }
 
   .ant-modal-header {
-    // background-color: ${palette('primary', 0)} !important;
-    /* border-color: ${palette('primary', 0)}; */
-    /* background-color: #2878d7 !important; */
-    background-color: #FFFFFF !important;
-    border-bottom: 1px solid #00000033
+    background-color: ${palette("modal", 0)} !important;
   }
 
   .ant-modal-header {
-    padding: 11px 19px;
     border-radius: 4px 4px 0 0;
   }
 
   .ant-modal-content {
     border-radius: 4px;
-    padding: 0;
   }
 
   .center {
@@ -46,24 +34,11 @@ const ModalWrapper = styled(Modal)`
     margin-bottom: 14px;
   }
 
-  /* .modal-footer__grey  */
-  .ant-modal-body > div:first-child {
-    min-height: ${(props) =>
-      props?.IsFullHeight ? `calc(100vh - 250px)` : 120};
-  }
   .ant-modal-body {
-    padding: ${(props) =>
-      props?.padding || props?.padding === 0 ? props.padding : '8px 24'}px;
-    max-height: calc(100vh - 192px);
-    /* max-height: 100vh;
-    min-height: 120px; */
+    padding: ${(props) => (props.padding ? `${props.padding}px` : "36px 18px")};
+    max-height: calc(100vh - 160px);
+    /* min-height: 500px; */
     overflow: auto;
-    margin-bottom: 10px;
-  }
-  .ant-modal-footer {
-    margin-top: 0;
-    // border-top: 1px solid #dddddd;
-    padding: 10px 20px 10px 20px;
   }
 `;
 

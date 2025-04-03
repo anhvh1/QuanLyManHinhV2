@@ -9,7 +9,7 @@ const AntInputNumber = ComponentName => styled(ComponentName)`
     height: 35px !important;
     border: 1px solid ${palette('border', 0)};
     width: 100%;
-    // max-width: 80px;
+    max-width: 80px;
 
     .ant-input-number-input {
       height: 33px;
@@ -44,17 +44,17 @@ const AntInputNumber = ComponentName => styled(ComponentName)`
       }
     }
 
-    // .ant-input-number-handler-up-inner {
-    //   &:before {
-    //     content: '\f365';
-    //   }
-    // }
-    //
-    // .ant-input-number-handler-down-inner {
-    //   &:before {
-    //     content: '\f35f';
-    //   }
-    // }
+    .ant-input-number-handler-up-inner {
+      &:before {
+        content: '\f365';
+      }
+    }
+
+    .ant-input-number-handler-down-inner {
+      &:before {
+        content: '\f35f';
+      }
+    }
   }
 `;
 

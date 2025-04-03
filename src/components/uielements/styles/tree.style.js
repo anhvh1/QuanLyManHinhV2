@@ -13,7 +13,6 @@ const AntTree = ComponentName => styled(ComponentName)`
       background-color: ${palette('primary', 3)};
     }
   }
-    
 `;
 
 export default AntTree;

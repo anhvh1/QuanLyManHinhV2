@@ -1,5 +1,5 @@
 import React from 'react';
-import { ComponentTitleWrapper } from './pageHeader.style';
+import { ComponentTitleWrapper } from './pageSubHeader.style';
 
 export default props =>
   <ComponentTitleWrapper className="isoComponentTitle">

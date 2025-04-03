@@ -638,59 +638,31 @@ const DMChiTieu = (props) => {
     setVisibleModalAddEditMedia(false);
   };
   const [Status, setStatus] = useState([]);
-  // ... existing code ...
+  const submitModalAddEdit = (data, FileData) => {
+    setConfirmLoadingMedia(true);
+    if (actionmedia === "add") {
+      const formSave = new FormData();
+      formSave.append("files", FileData);
+      formSave.append("quanlymediastr", JSON.stringify(data));
 
-const submitModalAddEdit = (data, FileData) => {
-  setConfirmLoadingMedia(true);
-  if (actionmedia === "add") {
-    const formSave = new FormData();
-    
-    if (Array.isArray(FileData)) {
-      FileData.forEach(file => {
-        formSave.append('files', file);
-      });
-    } else {
-      formSave.append('files', FileData);
-    }
-
-    if (Array.isArray(data)) {
-      data.forEach(fileInfo => {
-        formSave.append('filesInfo', JSON.stringify({
-          TenFile: fileInfo.TenFile,
-          Loai: fileInfo.Loai,
-          ThoiLuongTrinhChieu: fileInfo.ThoiLuongTrinhChieu,
-          KichThuoc: fileInfo.KichThuoc,
-          TrangThai: fileInfo.TrangThai,
-          Tag: fileInfo.Tag,
-          ThuMucID: fileInfo.ThuMucID
-        }));
-      });
-    } else {
-      formSave.append('filesInfo', JSON.stringify(data));
-    }
-
-    formDataCaller(apiUrl.themmedia, formSave)
-      .then((response) => {
-        setConfirmLoadingMedia(false);
-        if (response.data.Status > 0) {
-          setStatus(response.data.Status);
-          message.success(response.data.Message);
-          props.getInitData(filterData); //get list
-          hideModalAddEdit(); // Close modal after successful upload
-        } else {
+      formDataCaller(apiUrl.themmedia, formSave)
+        .then((response) => {
+          setConfirmLoadingMedia(false);
+          if (response.data.Status > 0) {
+            setStatus(response.data.Status);
+            message.success(response.data.Message);
+            props.getInitData(filterData); //get list
+          } else {
+            message.destroy();
+            message.error(response.data.Message);
+          }
+        })
+        .catch((error) => {
           message.destroy();
-          message.error(response.data.Message);
-        }
-      })
-      .catch((error) => {
-        setConfirmLoadingMedia(false); // Reset loading state on error
-        message.destroy();
-        message.error(error.toString());
-      });
-  }
-};
-
-// ... existing code ...
+          message.error(error.toString());
+        });
+    }
+  };
   //paging info
   const PageNumber = filterData.PageNumber
     ? parseInt(filterData.PageNumber)

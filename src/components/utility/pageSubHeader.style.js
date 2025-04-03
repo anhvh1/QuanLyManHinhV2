@@ -2,23 +2,24 @@ import styled from 'styled-components';
 import { palette } from 'styled-theme';
 import WithDirection from '../../settings/withDirection';
 
-const WDComponentTitleWrapper = styled.h1`
-  font-size: 17px;
-  font-weight: 500;
+const WDComponentTitleWrapper = styled.div`
   color: ${palette('secondary', 2)};
-  margin-bottom: 10px;
+  margin-bottom: 15px;
+  margin-left: 30px;
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
-  text-transform: uppercase;
-
-  &:before {
-    content: '';
-    width: 5px;
-    height: 40px;
-    background-color: ${palette('secondary', 3)};
-    display: flex;
-    margin: 0 15px 0 0;
+  
+  .ant-select-search, .ant-select, .ant-picker, label {
+    margin: 0 5px;
+    
+    &:first-child {
+      margin-left: 0;
+    }
+    
+    &:last-child {
+      margin-right: 0;
+    }
   }
 `;
 

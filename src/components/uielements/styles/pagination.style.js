@@ -5,18 +5,17 @@ import { transition } from '../../../settings/style-util';
 const Pagination = ComponentName => styled(ComponentName)`
   &.ant-pagination {
     .ant-pagination-item {
-      margin: ${props =>
-        props['data-rtl'] === 'rtl' ? '3px 0 3px 8px' : '3px 8px 3px 0'};
+      margin: 3px 8px 3px 0;
       &.ant-pagination-item-active {
-        background-color: ${palette('primary', 0)};
-        border-color: ${palette('primary', 0)};
+        background-color: ${palette('primary', 14)};
+        border-color: ${palette('primary', 14)};
 
         a {
           color: #ffffff;
         }
 
         &:hover {
-          background-color: ${palette('primary', 4)};
+          background-color: ${palette('primary', 14)};
           a {
             color: #ffffff;
           }
@@ -24,50 +23,51 @@ const Pagination = ComponentName => styled(ComponentName)`
       }
 
       &:hover {
-        border-color: ${palette('primary', 0)};
+        border-color: ${palette('primary', 14)};
         ${transition()};
       }
 
       &:hover a {
-        color: ${palette('primary', 0)};
+        color: ${palette('primary', 14)};
       }
+    }
+    
+    .ant-pagination-prev:hover .ant-pagination-item-link, {
+        color: ${palette('primary', 14)};
+        border-color: ${palette('primary', 14)};
     }
 
     .ant-pagination-total-text {
-      margin: ${props =>
-        props['data-rtl'] === 'rtl' ? '3px 0 3px 8px' : '3px 8px 3px 0'};
+      margin: 3px 8px 3px 0;
     }
 
     .ant-pagination-prev,
     .ant-pagination-next,
     .ant-pagination-jump-prev,
     .ant-pagination-jump-next {
-      margin: ${props =>
-        props['data-rtl'] === 'rtl' ? '3px 0 3px 8px' : '3px 8px 3px 0'};
+      margin: 3px 8px 3px 0;
     }
 
     .ant-pagination-prev:hover,
-    .ant-pagination-next:hover {
-      border-color: ${palette('primary', 0)};
+    .ant-pagination-next:hover,
+    .ant-pagination-jump-next:hover,
+    .ant-pagination-jump-next-custom-icon:hover {
+      border-color: ${palette('primary', 14)};
 
       a {
-        color: ${palette('primary', 0)};
+        color: ${palette('primary', 14)};
       }
     }
 
     .ant-pagination-prev .ant-pagination-item-link,
     .ant-pagination-next .ant-pagination-item-link {
-      transform: ${props =>
-        props['data-rtl'] === 'rtl' ? 'rotate(180deg)' : 'rotate(0)'};
+      transform: rotate(0);
     }
 
     .ant-pagination-jump-prev,
     .ant-pagination-jump-next {
       &:after {
-        transform: ${props =>
-          props['data-rtl'] === 'rtl'
-            ? 'rotate(180deg) scale(0.66666667)'
-            : 'rotate(0) scale(0.66666667)'};
+        transform: rotate(0) scale(0.66666667);
       }
     }
 
@@ -78,14 +78,12 @@ const Pagination = ComponentName => styled(ComponentName)`
       }
 
       .ant-pagination-simple-pager {
-        margin: ${props =>
-          props['data-rtl'] === 'rtl' ? '3px 0 3px 8px' : '3px 8px 3px 0'};
+        margin: 3px 8px 3px 0;
       }
     }
 
     .ant-pagination-options {
-      margin: ${props =>
-        props['data-rtl'] === 'rtl' ? '3px 10px 3px 0' : '3px 0 3px 10px'};
+      margin: 3px 0 3px 10px;
 
       .ant-select .ant-select-selection.ant-select-selection--single {
         height: 28px;
@@ -96,8 +94,7 @@ const Pagination = ComponentName => styled(ComponentName)`
       }
 
       .ant-pagination-options-size-changer {
-        margin: ${props =>
-          props['data-rtl'] === 'rtl' ? '0 0 0 8px' : '0 8px 0 0'};
+        margin: 0 8px 0 0;
       }
     }
   }

@@ -1,48 +1,48 @@
-import {Modal, Table, Tooltip, message} from 'antd';
-import actions from '../../../redux/DanhMuc/DMKhachHang/actions';
-import React, {useState, useEffect} from 'react';
-import {connect, useDispatch, useSelector} from 'react-redux';
-import LayoutWrapper from '../../../../components/utility/layoutWrapper';
-import PageHeader from '../../../../components/utility/pageHeader';
-import PageAction from '../../../../components/utility/pageAction';
-import Box from '../../../../components/utility/box';
-import BoxFilter from '../../../../components/utility/boxFilter';
-import BoxTable from '../../../../components/utility/boxTable';
+import { Modal, Table, Tooltip, message } from "antd";
+import actions from "../../../redux/DanhMuc/DMKhachHang/actions";
+import React, { useState, useEffect } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import LayoutWrapper from "../../../../components/utility/layoutWrapper";
+import PageHeader from "../../../../components/utility/pageHeader";
+import PageAction from "../../../../components/utility/pageAction";
+import Box from "../../../../components/utility/box";
+import BoxFilter from "../../../../components/utility/boxFilter";
+import BoxTable from "../../../../components/utility/boxTable";
 import {
   Button,
   InputSearch,
   Select,
-} from '../../../../components/uielements/exportComponent';
-import {formDataCaller} from '../../../../api/formDataCaller';
+} from "../../../../components/uielements/exportComponent";
+import { formDataCaller } from "../../../../api/formDataCaller";
 
-import Checkbox from '../../../../components/uielements/checkbox';
-import Switches from '../../../../components/uielements/switch';
+import Checkbox from "../../../../components/uielements/checkbox";
+import Switches from "../../../../components/uielements/switch";
 import {
   changeUrlFilter,
   exportExcel,
   getDefaultPageSize,
   getFilterData,
   getRoleByKey,
-} from '../../../../helpers/utility';
-import {useKey} from '../../../CustomHook/useKey';
-import queryString from 'query-string';
-import api, {apiUrl} from './config';
-import moment from 'moment';
-import ModalAddEdit from './modalAddEdit';
-import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
-import PageWrap from '../../../../components/utility/PageWrap';
+} from "../../../../helpers/utility";
+import { useKey } from "../../../CustomHook/useKey";
+import queryString from "query-string";
+import api, { apiUrl } from "./config";
+import moment from "moment";
+import ModalAddEdit from "./modalAddEdit";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import PageWrap from "../../../../components/utility/PageWrap";
 const DMKhachHang = (props) => {
   const [filterData, setFilterData] = useState(
-    queryString.parse(props.location.search),
+    queryString.parse(props.location.search)
   );
   const [dataModalAddEdit, setDataModalAddEdit] = useState({});
   const [visibleModalAddEdit, setVisibleModalAddEdit] = useState(false);
-  const [action, setAction] = useState('');
+  const [action, setAction] = useState("");
   const [modalKey, inceaseModalKey] = useKey();
   const [selectedRowsKey, setSelectedRowsKey] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const dispatch = useDispatch();
-  document.title = 'Danh Mục Khách Hàng';
+  document.title = "Danh Mục Khách Hàng";
 
   useEffect(() => {
     changeUrlFilter(filterData);
@@ -56,7 +56,7 @@ const DMKhachHang = (props) => {
 
   const onTableChange = (pagination, filters, sorter) => {
     let oldFilterData = filterData;
-    let onOrder = {pagination, filters, sorter};
+    let onOrder = { pagination, filters, sorter };
     let newFilterData = getFilterData(oldFilterData, null, onOrder);
 
     setFilterData(newFilterData);
@@ -65,7 +65,7 @@ const DMKhachHang = (props) => {
 
   const onFilter = (value, property) => {
     let oldFilterData = filterData;
-    let onFilter = {value, property};
+    let onFilter = { value, property };
     let newfilterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data
     setFilterData(newfilterData);
@@ -73,7 +73,7 @@ const DMKhachHang = (props) => {
   };
 
   const showModalAdd = () => {
-    setAction('add');
+    setAction("add");
     setDataModalAddEdit({});
     inceaseModalKey();
     setVisibleModalAddEdit(true);
@@ -81,14 +81,14 @@ const DMKhachHang = (props) => {
 
   const deleteModalAddEdit = (CoQuanID) => {
     Modal.confirm({
-      title: 'Xóa Dữ Liệu',
-      content: 'Bạn có muốn xóa khách hàng này không?',
-      cancelText: 'Không',
-      okText: 'Có',
-           onOk: () => {
+      title: "Xóa Dữ Liệu",
+      content: "Bạn có muốn xóa khách hàng này không?",
+      cancelText: "Không",
+      okText: "Có",
+      onOk: () => {
         setConfirmLoading(true);
         api
-        .xoaCoQuan(CoQuanID)
+          .xoaCoQuan(CoQuanID)
           .then((res) => {
             if (res.data.Status > 0) {
               setConfirmLoading(false);
@@ -124,9 +124,9 @@ const DMKhachHang = (props) => {
   };
 
   const showModalEdit = (ID) => {
-    setAction('edit');
+    setAction("edit");
     api
-      .chiTietQLThuVien({ID})
+      .chiTietQLThuVien({ ID })
       .then((res) => {
         if (res.data.Status > 0) {
           setDataModalAddEdit(res.data.Data);
@@ -149,19 +149,19 @@ const DMKhachHang = (props) => {
     setVisibleModalAddEdit(false);
   };
 
-  const submitModalAddEdit = (data,FileData) => {
+  const submitModalAddEdit = (data, FileData) => {
     setConfirmLoading(true);
-    if (action === 'add') {
+    if (action === "add") {
       const formSave = new FormData();
-      formSave.append('files', FileData);
-      formSave.append('coQuanStr', JSON.stringify(data));
+      formSave.append("files", FileData);
+      formSave.append("coQuanStr", JSON.stringify(data));
 
       formDataCaller(apiUrl.themqlthuvien, formSave)
         .then((response) => {
           setConfirmLoading(false);
           if (response.data.Status > 0) {
             //message success
-            message.success('Thêm thành công');
+            message.success("Thêm thành công");
             //hide modal
             hideModalAddEdit();
             //reset page
@@ -177,18 +177,18 @@ const DMKhachHang = (props) => {
           message.error(error.toString());
         });
     }
-    if (action === 'edit') {
+    if (action === "edit") {
       const formSave = new FormData();
-      formSave.append('updateCoQuanDonVi', JSON.stringify(data));
+      formSave.append("updateCoQuanDonVi", JSON.stringify(data));
       // if (FileData.name) {
-        formSave.append('files', FileData);
+      formSave.append("files", FileData);
       // }
       formDataCaller(apiUrl.suaqlthuvien, formSave)
         .then((response) => {
           setConfirmLoading(false);
           if (response.data.Status > 0) {
             //message success
-            message.success('Cập nhật thành công');
+            message.success("Cập nhật thành công");
             //hide modal
             hideModalAddEdit();
             //reset page
@@ -208,27 +208,25 @@ const DMKhachHang = (props) => {
 
   const renderThaoTac = (record) => {
     return (
-      <div className={'action-btn'}>
+      <div className={"action-btn"}>
         {/* {role?.edit ? ( */}
-          <Tooltip title={'Sửa'}>
-            <EditOutlined onClick={() => showModalEdit(record.ID)} />
-          </Tooltip>
+        <Tooltip title={"Sửa"}>
+          <EditOutlined onClick={() => showModalEdit(record.ID)} />
+        </Tooltip>
         {/* ) : ( */}
-          {/* '' */}
+        {/* '' */}
         {/* )} */}
         {/* {role?.delete ? ( */}
-          <Tooltip title={'Xóa'}>
-            <DeleteOutlined
-              onClick={() => deleteModalAddEdit(record.ID)}
-            />
-          </Tooltip>
+        <Tooltip title={"Xóa"}>
+          <DeleteOutlined onClick={() => deleteModalAddEdit(record.ID)} />
+        </Tooltip>
         {/* ) : (
           ''
         )} */}
       </div>
     );
   };
-  const {DanhSachKhachHang,DanhSachDMThuVien, TotalRow, role} = props;
+  const { DanhSachKhachHang, DanhSachDMThuVien, TotalRow, role } = props;
   const PageNumber = filterData.PageNumber
     ? parseInt(filterData.PageNumber)
     : 1;
@@ -236,80 +234,80 @@ const DMKhachHang = (props) => {
     ? parseInt(filterData.PageSize)
     : getDefaultPageSize();
 
-    const columns = [
-      {
-        title: 'Số thứ tự',
-        width: '10%',
-        align: 'center',
-        render: (text, record, index) => (
-          <span>{(PageNumber - 1) * PageSize + (index + 1)}</span>
-        ),
+  const columns = [
+    {
+      title: "Số thứ tự",
+      width: "10%",
+      align: "center",
+      render: (text, record, index) => (
+        <span>{(PageNumber - 1) * PageSize + (index + 1)}</span>
+      ),
+    },
+    {
+      title: "Tên khách hàng",
+      dataIndex: "Ten",
+      align: "left",
+      width: "25%",
+    },
+    {
+      title: "Địa chỉ",
+      dataIndex: "DiaChi",
+      align: "left",
+      width: "20%",
+    },
+    {
+      title: "Số điện thoại",
+      dataIndex: "DienThoai",
+      align: "left",
+      width: "15%",
+    },
+    {
+      title: "Email",
+      dataIndex: "Email",
+      align: "left",
+      width: "15%",
+    },
+    {
+      title: "Mã cơ quan",
+      dataIndex: "MaCQ",
+      align: "left",
+      width: "15%",
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "IsStatus",
+      align: "center",
+      width: "10%",
+      render: (IsStatus) => {
+        if (IsStatus === true) {
+          return <span>Triển khai</span>;
+        } else if (IsStatus === false) {
+          return <span>Không triển khai</span>;
+        } else {
+          return <span>Trạng thái khác</span>; // Handle any other values if necessary
+        }
       },
-      {
-        title: 'Tên khách hàng',
-        dataIndex: 'Ten',
-        align: 'left',
-        width: '25%',
-      },
-      {
-        title: 'Địa chỉ',
-        dataIndex: 'DiaChi',
-        align: 'left',
-        width: '20%',
-      },
-      {
-        title: 'Số điện thoại',
-        dataIndex: 'DienThoai',
-        align: 'left',
-        width: '15%',
-      },
-      {
-        title: 'Email',
-        dataIndex: 'Email',
-        align: 'left',
-        width: '15%',
-      },
-      {
-        title: 'Mã cơ quan',
-        dataIndex: 'MaCQ',
-        align: 'left',
-        width: '15%',
-      },
-      {
-        title: 'Trạng thái',
-        dataIndex: 'IsStatus',
-        align: 'center',
-        width: '10%',
-        render: (IsStatus) => {
-          if (IsStatus === true) {
-            return <span>Triển khai</span>;
-          } else if (IsStatus === false) {
-            return <span>Không triển khai</span>;
-          } else {
-            return <span>Trạng thái khác</span>; // Handle any other values if necessary
-          }
-        },
-      },
-      {
-        title: 'Thao tác',
-        width: '10%',
-        align: 'center',
-        margin: '15px',
-        render: (text, record) => renderThaoTac(record),
-      },
-    ];
+    },
+    {
+      title: "Thao tác",
+      width: "10%",
+      align: "center",
+      margin: "15px",
+      render: (text, record) => renderThaoTac(record),
+    },
+  ];
   return (
     <LayoutWrapper>
       <PageWrap>
-        <PageHeader>Danh Mục Khách Hàng</PageHeader>
+        {/* <PageHeader>Danh Mục Khách Hàng</PageHeader> */}
         <PageAction>
           {/* {role ? (
             role.add ? ( */}
-              <Button type="primary" onClick={showModalAdd}>
-                <PlusOutlined />
-                Thêm mới
-              </Button>
-            {/* ) : (
+          <Button type="primary" onClick={showModalAdd}>
+            <PlusOutlined />
+            Thêm mới
+          </Button>
+          {/* ) : (
               ''
             )
           ) : (
@@ -321,9 +319,9 @@ const DMKhachHang = (props) => {
         <BoxFilter>
           <InputSearch
             defaultValue={filterData.Keyword}
-            placeholder={'Nhập tên khách hàng'}
-            style={{width: 300}}
-            onSearch={(value) => onFilter(value, 'Keyword')}
+            placeholder={"Nhập tên khách hàng"}
+            style={{ width: 300 }}
+            onSearch={(value) => onFilter(value, "Keyword")}
             allowClear
           />
         </BoxFilter>
@@ -359,7 +357,7 @@ const DMKhachHang = (props) => {
 function mapStateToProps(state) {
   return {
     ...state.DMKhachHang,
-    role: getRoleByKey(state.Auth.role, 'danh-muc-chuc-vu'),
+    role: getRoleByKey(state.Auth.role, "danh-muc-chuc-vu"),
   };
 }
 

@@ -1,24 +1,23 @@
-import Table from '../../components/uielements/table';
-import styled from 'styled-components';
-import {palette} from 'styled-theme';
-import {transition, boxShadow, borderRadius} from '../../settings/style-util';
-import WithDirection from '../../settings/withDirection';
+import Table from "../../components/uielements/table";
+import styled from "styled-components";
+import { palette } from "styled-theme";
+import { transition, boxShadow, borderRadius } from "../../settings/style-util";
+import WithDirection from "../../settings/withDirection";
 
 const DataTable = styled(Table)`
   overflow: hidden;
   overflow-x: auto;
-  background: ${palette('primary', 16)};
-
-  .ant-spin-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
+  background-color: #ffffff;
+  .ant-table-pagination.ant-pagination {
+    margin: 5px 0 !important;
   }
 
   .ant-table-body {
-    & > table:first-child {
-      border-collapse: collapse;
-      border-radius: 0 !important;
+    /* min-height: 520px; */
+    overflow-x: auto;
+
+    .ant-table-selection-column .ant-checkbox-wrapper {
+      line-height: initial;
     }
     overflow-x: auto;
     /* min-height: calc(100vh - 40vh); */
@@ -38,7 +37,7 @@ const DataTable = styled(Table)`
     }
     background: #f2f6fc;
     .ant-table-tbody {
-      /* background: ${palette('secondary', 12)}; */
+      /* background: ${palette("secondary", 12)}; */
     }
     /* .ant-table-wrapper .ant-table-tbody > tr.ant-table-row:hover > td {
       background: auto !important;
@@ -55,7 +54,7 @@ const DataTable = styled(Table)`
 
   .ant-table-row:has(.ant-table-cell-row-hover) {
     box-shadow: ${(props) =>
-      props.noneBorder ? 'none' : '  rgb(159, 162, 165) 0px 2px 2px 0px'};
+      props.noneBorder ? "none" : "  rgb(159, 162, 165) 0px 2px 2px 0px"};
     position: relative;
     z-index: 1;
   }
@@ -66,7 +65,7 @@ const DataTable = styled(Table)`
     background: #fff !important;
   }
   .ant-table-tbody tr:nth-child(odd) {
-    background: ${palette('primary', 16)} !important;
+    background: ${palette("primary", 16)} !important;
   }
   .ant-table-tbody .ant-table-measure-row {
     td {
@@ -88,20 +87,18 @@ const DataTable = styled(Table)`
     border-top: none !important;
   }
   .ant-table-thead > tr > th {
-    color: ${palette('text', 6)};
+    color: ${palette("secondary", 2)};
     font-size: 13px;
-    background-color: ${palette('primary', 16)};
-    border-bottom: none;
-   
-    border-inline-end: ${(props) =>
-      props.noneBorder ? 'none' : ' 1px solid #797979'} !important;
+    background-color: #f9f9f9;
+    border-bottom: 0;
     text-align: center;
-    border: ${(props) => (props.noneBorder ? 'none' : ' 1px solid #797979')};
+    border-top: none;
+    border-left: none;
 
     &.ant-table-column-sort {
-      background: ${palette('secondary', 1)};
+      background: ${palette("secondary", 1)};
       margin: ${(props) =>
-        props['data-rtl'] === 'rtl' ? '0 4px 0 0' : '0 0 0 4px'};
+        props["data-rtl"] === "rtl" ? "0 4px 0 0" : "0 0 0 4px"};
     }
   }
 
@@ -113,7 +110,7 @@ const DataTable = styled(Table)`
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
     padding: 8px 5px;
-    text-align: ${(props) => (props['data-rtl'] === 'rtl' ? 'right' : 'left')};
+    text-align: ${(props) => (props["data-rtl"] === "rtl" ? "right" : "left")};
 
     p {
       margin-bottom: 0;
@@ -126,17 +123,16 @@ const DataTable = styled(Table)`
 
   .ant-table-tbody > tr > td {
     font-size: 12px;
-    /* color: ${palette('text', 3)}; */
-    border: ${(props) =>
-      props.noneBorder ? '' : '1px solid #797979'} !important;
-    /* border-bottom: 1px solid ${palette('border', 0)}; */
+
+    color: ${palette("text", 3)};
+    border-bottom: 1px solid ${palette("border", 0)};
 
     a {
-      color: ${palette('primary', 0)};
+      color: ${palette("primary", 0)};
       ${transition()};
 
       /* &:hover {
-        color: ${palette('primary', 4)};
+        color: ${palette("primary", 4)};
       } */
     }
   }
@@ -149,28 +145,28 @@ const DataTable = styled(Table)`
   // }
 
   .ant-table-bordered .ant-table-thead > tr > th {
-    /* border-bottom: 1px solid ${palette('border', 0)}; */
+    border-bottom: 1px solid ${palette("border", 0)};
   }
 
   .ant-table-bordered .ant-table-thead > tr > th,
   .ant-table-bordered .ant-table-tbody > tr > td {
-    /* border-right: 1px solid ${palette('border', 0)}; */
+    /* border-right: 1px solid ${palette("border", 0)}; */
   }
 
   .ant-table-pagination {
     float: left;
-    /* float: ${(props) => (props['data-rtl'] === 'rtl' ? 'left' : 'right')}; */
+    /* float: ${(props) => (props["data-rtl"] === "rtl" ? "left" : "right")}; */
   }
 
   .ant-pagination-prev,
   .ant-pagination-next {
-    // border: 1px solid ${palette('border', 0)};
+    border: 1px solid ${palette("border", 0)};
   }
 
   .ant-pagination-disabled,
   .ant-pagination-prev.ant-pagination-disabled,
   .ant-pagination-next.ant-pagination-disabled {
-    // border: 1px solid ${palette('border', 0)};
+    border: 1px solid ${palette("border", 0)};
 
     a {
       border: 0;
@@ -182,33 +178,34 @@ const DataTable = styled(Table)`
   .ant-pagination-jump-prev,
   .ant-pagination-jump-next {
     transform: ${(props) =>
-      props['data-rtl'] === 'rtl' ? 'rotate(180deg)' : 'rotate(0)'};
+      props["data-rtl"] === "rtl" ? "rotate(180deg)" : "rotate(0)"};
   }
 
   .ant-pagination-prev,
   .ant-pagination-jump-prev,
   .ant-pagination-jump-next {
     margin: ${(props) =>
-      props['data-rtl'] === 'rtl' ? '0 0 0 8px' : '0 8px 0 0'};
+      props["data-rtl"] === "rtl" ? "0 0 0 8px" : "0 8px 0 0"};
   }
 
   .ant-pagination-item {
     margin: ${(props) =>
-      props['data-rtl'] === 'rtl' ? '0 0 0 8px' : '0 8px 0 0'};
+      props["data-rtl"] === "rtl" ? "0 0 0 8px" : "0 8px 0 0"};
 
     &:hover {
-      border-color: ${palette('primary', 0)};
+      border-color: ${palette("primary", 14)};
+
       ${transition()};
     }
 
     &:hover a {
-      color: ${palette('primary', 0)};
+      color: ${palette("primary", 0)};
     }
   }
 
-  /* .ant-pagination-item-active {
-    background-color: ${palette('primary', 0)};
-    border-color: ${palette('primary', 0)};
+  .ant-pagination-item-active {
+    background-color: ${palette("primary", 14)};
+    border-color: ${palette("primary", 14)};
 
     a {
       color: #ffffff;
@@ -217,20 +214,19 @@ const DataTable = styled(Table)`
     &:hover a {
       color: #ffffff;
     }
-  } */
-
-  .ant-table-expanded-row {
-    background: ${palette('grayscale', 6)};
+  }
+  */ .ant-table-expanded-row {
+    background: ${palette("grayscale", 6)};
 
     p {
-      color: ${palette('text', 3)};
+      color: ${palette("text", 3)};
     }
   }
 
   .ant-spin-nested-loading > div > .ant-spin {
     max-height: none;
     .ant-spin-dot i {
-      color: ${palette('primary', 0)};
+      color: ${palette("primary", 0)};
     }
   }
 
@@ -240,8 +236,9 @@ const DataTable = styled(Table)`
   }
 
   .ant-table-title {
-    background: ${palette('secondary', 1)};
-    color: ${palette('secondary', 2)};
+    background: ${palette("secondary", 1)};
+    color: ${palette("secondary", 2)};
+
     font-size: 13px;
     font-weight: 500;
     padding: 16px 30px;
@@ -249,8 +246,8 @@ const DataTable = styled(Table)`
   }
 
   .ant-table-footer {
-    background: ${palette('secondary', 1)};
-    color: ${palette('secondary', 2)};
+    background: ${palette("secondary", 1)};
+    color: ${palette("secondary", 2)};
     font-size: 12px;
     font-weight: 400;
 
@@ -265,7 +262,7 @@ const DataTable = styled(Table)`
   .ant-table-column-sorter-down.on .anticon-caret-up,
   .ant-table-column-sorter-up.on .anticon-caret-down,
   .ant-table-column-sorter-down.on .anticon-caret-down {
-    color: ${palette('primary', 0)};
+    color: ${palette("primary", 0)};
   }
   .ant-table-column-sorter {
     vertical-align: text-bottom;
@@ -278,45 +275,48 @@ const DataTable = styled(Table)`
       padding: 20px;
       display: flex;
       background: #ffffff;
-      border: 1px solid ${palette('border', 0)};
-      ${boxShadow('0 1px 6px rgba(0,0,0,0.2)')};
+
+      border: 1px solid ${palette("border", 0)};
+      ${boxShadow("0 1px 6px rgba(0,0,0,0.2)")};
 
       input {
         font-size: 14px;
         font-weight: 400;
-        color: ${palette('text', 3)};
+        color: ${palette("text", 3)};
         line-height: inherit;
         height: 36px;
         width: 100%;
         padding: 0 15px;
         margin: 0;
-        border: 1px solid ${palette('secondary', 7)};
+        border: 1px solid ${palette("secondary", 7)};
         outline: 0 !important;
         overflow: hidden;
         background-color: #ffffff;
-        ${borderRadius('3px 0 0 3px')};
+
+        ${borderRadius("3px 0 0 3px")};
+
         ${transition()};
-        ${boxShadow('none')};
+        ${boxShadow("none")};
 
         &:focus,
         &:hover {
-          border-color: ${palette('secondary', 7)};
-          ${boxShadow('none')};
+          border-color: ${palette("secondary", 7)};
+          ${boxShadow("none")};
         }
 
         &::-webkit-input-placeholder {
-          color: ${palette('grayscale', 0)};
+          color: ${palette("grayscale", 0)};
         }
 
         &:-moz-placeholder {
-          color: ${palette('grayscale', 0)};
+          color: ${palette("grayscale", 0)};
         }
 
         &::-moz-placeholder {
-          color: ${palette('grayscale', 0)};
+          color: ${palette("grayscale", 0)};
         }
         &:-ms-input-placeholder {
-          color: ${palette('grayscale', 0)};
+          color: ${palette("grayscale", 0)};
         }
       }
 
@@ -326,7 +326,7 @@ const DataTable = styled(Table)`
         padding: 0;
         text-transform: uppercase;
         color: #ffffff;
-        background-color: ${palette('primary', 0)};
+        background-color: ${palette("primary", 0)};
         border: 0;
         outline: 0;
         height: 36px;
@@ -334,11 +334,11 @@ const DataTable = styled(Table)`
         margin-left: -1px;
         cursor: pointer;
         border-radius: ${(props) =>
-          props['data-rtl'] === 'rtl' ? '3px 0 0 3px' : '0 3px 3px 0'};
+          props["data-rtl"] === "rtl" ? "3px 0 0 3px" : "0 3px 3px 0"};
         ${transition()};
 
         &:hover {
-          background-color: ${palette('primary', 1)};
+          background-color: ${palette("primary", 1)};
         }
       }
     }
@@ -353,7 +353,7 @@ const DataTable = styled(Table)`
 
         i {
           margin: ${(props) =>
-            props['data-rtl'] === 'rtl' ? '0 0 0 10px' : '0 10px 0 0'};
+            props["data-rtl"] === "rtl" ? "0 0 0 10px" : "0 10px 0 0"};
           order: -1;
         }
       }
@@ -363,7 +363,8 @@ const DataTable = styled(Table)`
   &.isoGroupTable {
     .ant-table-thead > tr {
       th {
-        border: 1px solid ${palette('border', 0)};
+        border: 1px solid ${palette("border", 0)};
+
         border-left: 0;
 
         &[rowspan] {
@@ -378,9 +379,7 @@ const DataTable = styled(Table)`
       &:first-child {
         th {
           &:first-child {
-            /* border-left: ${(props) =>
-              props['data-rtl'] === 'rtl' ? '0' : '1px'}
-              solid ${palette('border', 0)}; */
+            border-left: 1px solid ${palette("border", 0)};
           }
         }
       }
@@ -394,20 +393,16 @@ const DataTable = styled(Table)`
 
     .ant-table-tbody {
       .ant-table-row {
-        background: ${palette('secondary', 12)};
+        background: ${palette("secondary", 12)};
         td {
-          /* border-right: 1px solid ${palette('border', 0)}; */
+          border-right: 1px solid ${palette("border", 0)};
 
           &:first-child {
-            /* border-left: ${(props) =>
-              props['data-rtl'] === 'rtl' ? '0' : '1px'}
-              solid ${palette('border', 0)}; */
+            border-left: 1px solid ${palette("border", 0)};
           }
 
           &:last-child {
-            /* border-left: ${(props) =>
-              props['data-rtl'] === 'rtl' ? '1px' : '0'}
-              solid ${palette('border', 0)}; */
+            border-left: 0 solid ${palette("border", 0)};
           }
 
           &.isoImageCell {
@@ -427,38 +422,38 @@ const DataTable = styled(Table)`
         input {
           font-size: 12px;
           font-weight: 400;
-          color: ${palette('text', 3)};
+          color: ${palette("text", 3)};
           line-height: inherit;
           padding: 7px 10px;
           margin: ${(props) =>
-            props['data-rtl'] === 'rtl' ? '0 0 0 10px' : '0 10px 0 0'};
-          border: 1px solid ${palette('border', 0)};
+            props["data-rtl"] === "rtl" ? "0 0 0 10px" : "0 10px 0 0"};
+          border: 1px solid ${palette("border", 0)};
           outline: 0 !important;
           overflow: hidden;
           background-color: #ffffff;
-          ${borderRadius('3px')};
+          ${borderRadius("3px")};
           ${boxShadow()};
           ${transition()};
 
           &:focus,
           &:hover {
-            border-color: ${palette('border', 0)};
+            border-color: ${palette("border", 0)};
             ${boxShadow()};
           }
 
           &::-webkit-input-placeholder {
-            color: ${palette('grayscale', 0)};
+            color: ${palette("grayscale", 0)};
           }
 
           &:-moz-placeholder {
-            color: ${palette('grayscale', 0)};
+            color: ${palette("grayscale", 0)};
           }
 
           &::-moz-placeholder {
-            color: ${palette('grayscale', 0)};
+            color: ${palette("grayscale", 0)};
           }
           &:-ms-input-placeholder {
-            color: ${palette('grayscale', 0)};
+            color: ${palette("grayscale", 0)};
           }
         }
 
@@ -473,7 +468,7 @@ const DataTable = styled(Table)`
 
         .isoEditIcon {
           margin: ${(props) =>
-            props['data-rtl'] === 'rtl' ? '0 auto 0 0' : '0 0 0 auto'};
+            props["data-rtl"] === "rtl" ? "0 auto 0 0" : "0 0 0 auto"};
           cursor: pointer;
           flex-shrink: 0;
         }
@@ -488,23 +483,23 @@ const WDCustomizedTableWrapper = styled.div`
 
     .ant-form-item {
       margin: ${(props) =>
-        props['data-rtl'] === 'rtl' ? '0 0 0 16px' : '0 16px 0 0'};
+        props["data-rtl"] === "rtl" ? "0 0 0 16px" : "0 16px 0 0"};
     }
 
     .ant-form-item-label {
       label {
-        color: ${palette('secondary', 2)};
+        color: ${palette("secondary", 2)};
 
         &:after {
           margin: ${(props) =>
-            props['data-rtl'] === 'rtl' ? '0 2px 0 8px' : '0 8px 0 2px'};
+            props["data-rtl"] === "rtl" ? "0 2px 0 8px" : "0 8px 0 2px"};
         }
       }
     }
 
     .ant-switch-checked {
-      border-color: ${palette('primary', 0)};
-      background-color: ${palette('primary', 0)};
+      border-color: ${palette("primary", 0)};
+      background-color: ${palette("primary", 0)};
     }
   }
 `;
@@ -516,5 +511,5 @@ const EmptyTable = styled(Table)`
 `;
 
 const CustomizedTableWrapper = WithDirection(WDCustomizedTableWrapper);
-export {CustomizedTableWrapper, EmptyTable};
+export { CustomizedTableWrapper, EmptyTable };
 export default WithDirection(DataTable);

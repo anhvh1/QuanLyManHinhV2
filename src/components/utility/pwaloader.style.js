@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { palette } from 'styled-theme';
 
-export const PwaLoader = styled.div`
+const PwaLoader = styled.div`
 .pwaLoaderWrapper,
 .pwaComponentLoaderWrapper{
   width: 100%;
@@ -208,4 +208,4 @@ export const PwaLoader = styled.div`
 
 `;
 
-//export PwaLoader;
+export PwaLoader;

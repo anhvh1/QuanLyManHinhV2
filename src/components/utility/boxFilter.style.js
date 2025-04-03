@@ -1,32 +1,29 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import WithDirection from '../../settings/withDirection';
+import WithDirection from "../../settings/withDirection";
 
 const WDComponentDivFilter = styled.div`
-  padding-bottom: ${(props) => (props.isIframe ? '' : '10px')};
-  margin-top: 5px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: start;
-  align-items: center;
-  gap: 10px;
-  display: ${(props) => (props?.isCenter === true ? 'flex' : '')};
-  justify-content: ${(props) => (props?.isCenter === true ? 'center' : '')};
-  gap: ${(props) => (props?.isCenter === true ? '5px' : '')};
+  padding-bottom: 20px;
   .ant-select-search,
   .ant-select,
-  .ant-calendar-picker {
-    margin-right: 10px;
+  .ant-picker,
+  label,
+  button {
+    margin: 0 5px 5px 0;
 
-    &.ant-calendar-picker {
-      margin-left: 5px;
-    }
-
-    &:last-child {
+    @media only screen and (max-width: 400px) {
       margin-right: 0;
     }
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  .ant-btn {
+    height: 32px;
   }
 `;
 
 const ComponentDivFilter = WithDirection(WDComponentDivFilter);
-export {ComponentDivFilter};
+export { ComponentDivFilter };
