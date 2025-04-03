@@ -286,7 +286,7 @@ const QuanLyManHinh = (props) => {
   return (
     <LayoutWrapper>
       <PageWrap>
-        <PageHeader>QUẢN LÝ MÀN HÌNH</PageHeader>
+        {/* <PageHeader>QUẢN LÝ MÀN HÌNH</PageHeader> */}
         <PageAction>
           {/* {role ? (
             role.add ? ( */}

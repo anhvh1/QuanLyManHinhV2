@@ -10,21 +10,21 @@ import {
   BarElement,
   RadialLinearScale,
   ArcElement,
-} from 'chart.js';
-import {Modal, Table, Tooltip, message, Row, Col, Spin} from 'antd';
-import React, {useState, useEffect, useRef} from 'react';
-import {connect, useDispatch, useSelector} from 'react-redux';
-import actions from '../../redux/DashBoard/action';
-import LayoutWrapper from '../../../components/utility/layoutWrapper';
-import PageHeader from '../../../components/utility/pageHeader';
-import PageAction from '../../../components/utility/pageAction';
-import Box from '../../../components/utility/box';
-import BoxFilter from '../../../components/utility/boxFilter';
-import BoxTable from '../../../components/utility/boxTable';
-import Checkbox from '../../../components/uielements/checkbox';
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {Bar} from 'react-chartjs-2';
-import {PolarArea} from 'react-chartjs-2';
+} from "chart.js";
+import { Modal, Table, Tooltip, message, Row, Col, Spin } from "antd";
+import React, { useState, useEffect, useRef } from "react";
+import { connect, useDispatch, useSelector } from "react-redux";
+import actions from "../../redux/DashBoard/action";
+import LayoutWrapper from "../../../components/utility/layoutWrapper";
+import PageHeader from "../../../components/utility/pageHeader";
+import PageAction from "../../../components/utility/pageAction";
+import Box from "../../../components/utility/box";
+import BoxFilter from "../../../components/utility/boxFilter";
+import BoxTable from "../../../components/utility/boxTable";
+import Checkbox from "../../../components/uielements/checkbox";
+import ChartDataLabels from "chartjs-plugin-datalabels";
+import { Bar } from "react-chartjs-2";
+import { PolarArea } from "react-chartjs-2";
 
 import {
   Button,
@@ -32,41 +32,41 @@ import {
   InputSearch,
   Option,
   Select,
-} from '../../../components/uielements/exportComponent';
+} from "../../../components/uielements/exportComponent";
 import {
   changeUrlFilter,
   getFilterData,
   getRoleByKey,
-} from '../../../helpers/utility';
-import {useKey} from '../../CustomHook/useKey';
-import queryString from 'query-string';
-import api from './config';
-import {CheckboxGroup} from '../../../components/uielements/checkbox';
-import {getTotalMonthsOfYear} from '../../../helpers/utility';
-import moment from 'moment';
-import Wrapper from './styled';
-import {Redirect} from 'react-router';
-import actionsAuth from '../../../redux/auth/actions';
-import ModalFilterData from './ModalFilterData';
+} from "../../../helpers/utility";
+import { useKey } from "../../CustomHook/useKey";
+import queryString from "query-string";
+import api from "./config";
+import { CheckboxGroup } from "../../../components/uielements/checkbox";
+import { getTotalMonthsOfYear } from "../../../helpers/utility";
+import moment from "moment";
+import Wrapper from "./styled";
+import { Redirect } from "react-router";
+import actionsAuth from "../../../redux/auth/actions";
+import ModalFilterData from "./ModalFilterData";
 // import {Swiper, SwiperSlide} from 'swiper/react';
 // import {Navigation, Pagination} from 'swiper';
-import {push} from 'react-router-redux';
+import { push } from "react-router-redux";
 // import 'swiper/css';
 // import 'swiper/css/pagination';
 // import 'swiper/css/navigation';
-import FilterImage from '../../../../src/image/filter-white.png';
-import Reception from '../../../../src/image/reception_white.png';
-import Process from '../../../../src/image/process_white.png';
-import CheckList from '../../../../src/image/to-do-list-wihte.png';
-import Skills from '../../../../src/image/skills-white.png';
+import FilterImage from "../../../../src/image/filter-white.png";
+import Reception from "../../../../src/image/reception_white.png";
+import Process from "../../../../src/image/process_white.png";
+import CheckList from "../../../../src/image/to-do-list-wihte.png";
+import Skills from "../../../../src/image/skills-white.png";
 // import api from './config';
-import {getConfigLocal} from '../../../helpers/utility';
-import {handleTextLong} from '../../../helpers/utility';
-import WarningRed from '../../../../src/image/warning-red.png';
-import WarningBlue from '../../../../src/image/warning-blue.png';
-import {Link} from 'react-router-dom';
-import LineChart from './LineChart';
-import dayjs from 'dayjs';
+import { getConfigLocal } from "../../../helpers/utility";
+import { handleTextLong } from "../../../helpers/utility";
+import WarningRed from "../../../../src/image/warning-red.png";
+import WarningBlue from "../../../../src/image/warning-blue.png";
+import { Link } from "react-router-dom";
+import LineChart from "./LineChart";
+import dayjs from "dayjs";
 ChartJS.register(
   RadialLinearScale,
   ArcElement,
@@ -77,23 +77,23 @@ ChartJS.register(
   BarElement,
   Legend,
   TooltipChart,
-  ChartDataLabels,
+  ChartDataLabels
 );
 
-const ListCapID = getConfigLocal('ListCapID', []);
+const ListCapID = getConfigLocal("ListCapID", []);
 
 const stripTrailingSlash = (str) => {
-  if (str.substr(-1) === '/') {
+  if (str.substr(-1) === "/") {
     return str.substr(0, str.length - 1);
   }
   return str;
 };
 
-const {logout} = actionsAuth;
+const { logout } = actionsAuth;
 const DashBoard = (props) => {
-  document.title = 'Dashboard';
+  document.title = "Dashboard";
   const [filterData, setFilterData] = useState(
-    queryString.parse(props.location.search),
+    queryString.parse(props.location.search)
   );
   const {
     DuLieuChart,
@@ -107,7 +107,7 @@ const DashBoard = (props) => {
   const [keyModalFilter, setKeyModalFilter] = useState(0);
   const [isFirstActiveCap, setIsFirstActiveCap] = useState(true);
   const [DanhSachCacCap, setDanhSachCap] = useState([]);
-  const {DanhSachPhanLoaiVuViec} = props;
+  const { DanhSachPhanLoaiVuViec } = props;
   const [TinhDenNgay, setTinhDenNgay] = useState(null);
   const [PhanLoaiVuViec, setPhanLoaiVuViec] = useState(null);
   const [dataUpdate, setDataUpdate] = useState({});
@@ -151,56 +151,56 @@ const DashBoard = (props) => {
     let quyBC = data.Data;
     // var quyBC = $("#ddlQuy").val();
 
-    let tuNgay = '01/01/' + namBC;
-    let denNgay = '31/12/' + namBC;
+    let tuNgay = "01/01/" + namBC;
+    let denNgay = "31/12/" + namBC;
     if (data.Type === 1 || data.Type === 2) {
-      var dsThang30 = ',04,06,09,11';
-      if (thangBC == '00') {
-        tuNgay = '01/01/' + namBC;
-        denNgay = '31/12/' + namBC;
-      } else if (thangBC == '17') {
-        tuNgay = '01/01/' + namBC;
-        denNgay = '30/06/' + namBC;
-      } else if (thangBC == '18') {
-        tuNgay = '01/07/' + namBC;
-        denNgay = '31/12/' + namBC;
-      } else if (thangBC == '19') {
-        tuNgay = '01/01/' + namBC;
-        denNgay = '30/09/' + namBC;
-      } else if (thangBC == '20') {
-        tuNgay = '01/01/' + namBC;
-        denNgay = '31/12/' + namBC;
-      } else if (thangBC == '02') {
+      var dsThang30 = ",04,06,09,11";
+      if (thangBC == "00") {
+        tuNgay = "01/01/" + namBC;
+        denNgay = "31/12/" + namBC;
+      } else if (thangBC == "17") {
+        tuNgay = "01/01/" + namBC;
+        denNgay = "30/06/" + namBC;
+      } else if (thangBC == "18") {
+        tuNgay = "01/07/" + namBC;
+        denNgay = "31/12/" + namBC;
+      } else if (thangBC == "19") {
+        tuNgay = "01/01/" + namBC;
+        denNgay = "30/09/" + namBC;
+      } else if (thangBC == "20") {
+        tuNgay = "01/01/" + namBC;
+        denNgay = "31/12/" + namBC;
+      } else if (thangBC == "02") {
         if (namBC % 4 == 0) {
-          tuNgay = '01/02/' + namBC;
-          denNgay = '29/02/' + namBC;
+          tuNgay = "01/02/" + namBC;
+          denNgay = "29/02/" + namBC;
         } else {
-          tuNgay = '01/02/' + namBC;
-          denNgay = '28/02/' + namBC;
+          tuNgay = "01/02/" + namBC;
+          denNgay = "28/02/" + namBC;
         }
       } else if (dsThang30.includes(thangBC)) {
-        tuNgay = '01/' + thangBC + '/' + namBC;
-        denNgay = '30/' + thangBC + '/' + namBC;
+        tuNgay = "01/" + thangBC + "/" + namBC;
+        denNgay = "30/" + thangBC + "/" + namBC;
       } else {
-        tuNgay = '01/' + thangBC + '/' + namBC;
-        denNgay = '31/' + thangBC + '/' + namBC;
+        tuNgay = "01/" + thangBC + "/" + namBC;
+        denNgay = "31/" + thangBC + "/" + namBC;
       }
     }
 
     if (data.Type === 3) {
       if (quyBC == 1) {
-        tuNgay = '01/01/' + namBC;
-        denNgay = '31/03/' + namBC;
+        tuNgay = "01/01/" + namBC;
+        denNgay = "31/03/" + namBC;
       } else if (quyBC == 2) {
-        tuNgay = '01/04/' + namBC;
-        denNgay = '30/06/' + namBC;
+        tuNgay = "01/04/" + namBC;
+        denNgay = "30/06/" + namBC;
       } else if (quyBC == 3) {
-        tuNgay = '01/07/' + namBC;
-        denNgay = '30/09/' + namBC;
+        tuNgay = "01/07/" + namBC;
+        denNgay = "30/09/" + namBC;
       }
       if (quyBC == 4) {
-        tuNgay = '01/10/' + namBC;
-        denNgay = '31/12/' + namBC;
+        tuNgay = "01/10/" + namBC;
+        denNgay = "31/12/" + namBC;
       }
     }
     const dataRequest = {
@@ -213,17 +213,17 @@ const DashBoard = (props) => {
   };
 
   useEffect(() => {
-    setFilterData({...filterData, Cap: 12});
+    setFilterData({ ...filterData, Cap: 12 });
     // initFilter
     const dataRequest = formatDataRequest(data);
     dispatch(actions.getData(dataRequest));
     dispatch(actions.getSoLieuCanhBao());
     const checkHeightContent = () => {
-      const topFilter = document.getElementById('wrapper-top');
+      const topFilter = document.getElementById("wrapper-top");
     };
-    window.addEventListener('resize', checkHeightContent);
+    window.addEventListener("resize", checkHeightContent);
     return () => {
-      window.removeEventListener('resize', checkHeightContent);
+      window.removeEventListener("resize", checkHeightContent);
     };
   }, []);
 
@@ -231,32 +231,32 @@ const DashBoard = (props) => {
     const newDanhSachCacCap = [...DanhSachCacCap];
     const DanhSachCacCapDefault = [
       {
-        Title: 'Toàn tỉnh',
+        Title: "Toàn tỉnh",
         ID: 12,
         STT: 1,
       },
       {
-        Title: 'UBND Cấp Tỉnh',
+        Title: "UBND Cấp Tỉnh",
         ID: 4,
         STT: 2,
       },
       {
-        Title: 'Sở, ngành',
+        Title: "Sở, ngành",
         ID: 1,
         STT: 3,
       },
       {
-        Title: 'Cấp huyện',
+        Title: "Cấp huyện",
         ID: 2,
         STT: 4,
       },
       {
-        Title: 'Cấp phòng ban',
+        Title: "Cấp phòng ban",
         ID: 11,
         STT: 5,
       },
       {
-        Title: 'Cấp xã',
+        Title: "Cấp xã",
         ID: 3,
         STT: 6,
       },
@@ -265,7 +265,7 @@ const DashBoard = (props) => {
     if (DataChart && DataChart?.ListCapID) {
       DataChart?.ListCapID.forEach((item, index) => {
         const obj = DanhSachCacCapDefault.find(
-          (itemCap) => itemCap.ID === item,
+          (itemCap) => itemCap.ID === item
         );
         if (obj && !newDanhSachCacCap.find((item) => item.ID === obj.ID)) {
           newDanhSachCacCap.push(obj);
@@ -323,39 +323,39 @@ const DashBoard = (props) => {
 
   const listColor = [
     {
-      backgroundColor: '#36A2EB',
-      borderColor: '#36A2EB',
+      backgroundColor: "#36A2EB",
+      borderColor: "#36A2EB",
     },
     {
-      backgroundColor: '#FFCD56',
-      borderColor: '#FFCD56',
+      backgroundColor: "#FFCD56",
+      borderColor: "#FFCD56",
     },
     {
-      backgroundColor: '#4BC0C0',
-      borderColor: '#36A2EB',
+      backgroundColor: "#4BC0C0",
+      borderColor: "#36A2EB",
     },
     {
-      backgroundColor: '#FF6384',
-      borderColor: '#FF6384',
+      backgroundColor: "#FF6384",
+      borderColor: "#FF6384",
     },
     {
-      backgroundColor: '#C9CBCF',
-      borderColor: '#C9CBCF',
+      backgroundColor: "#C9CBCF",
+      borderColor: "#C9CBCF",
     },
   ];
 
   const ListBackgroundPoleChart = [
     {
-      backgroundColor: '#FFCD56',
-      borderColor: '#FFCD56',
+      backgroundColor: "#FFCD56",
+      borderColor: "#FFCD56",
     },
     {
-      backgroundColor: '#FF6384',
-      borderColor: '#FF6384',
+      backgroundColor: "#FF6384",
+      borderColor: "#FF6384",
     },
     {
-      backgroundColor: '#4BC0C0',
-      borderColor: '#4BC0C0',
+      backgroundColor: "#4BC0C0",
+      borderColor: "#4BC0C0",
     },
   ];
 
@@ -415,7 +415,7 @@ const DashBoard = (props) => {
     const dataOrigin = [];
     if (DataChart?.SoLieuBieuDoCot) {
       const dataChart = [...DataChart?.SoLieuBieuDoCot].filter(
-        (item) => item.CapID === Number(filterData.Cap),
+        (item) => item.CapID === Number(filterData.Cap)
       );
       dataChart.forEach((item, index) => {
         dataOrigin[index] = {};
@@ -440,7 +440,7 @@ const DashBoard = (props) => {
     dataOrigin.forEach((item, indexParent) => {
       item.DataArr.forEach((itemChild, indexChild) => {
         const objConstant = newData.find(
-          (itemArr) => itemArr.label === itemChild.label,
+          (itemArr) => itemArr.label === itemChild.label
         );
         if (newData.find((itemArr) => itemArr.label === itemChild.label)) {
           let index = newData.indexOf(objConstant);
@@ -452,7 +452,7 @@ const DashBoard = (props) => {
             data: [itemChild.Data],
             backgroundColor: listColor[indexChild].backgroundColor,
             borderColor: listColor[indexChild].borderColor,
-            pointBorderColor: 'aqua',
+            pointBorderColor: "aqua",
             fill: true,
           });
         }
@@ -494,13 +494,13 @@ const DashBoard = (props) => {
         },
         datalabels: {
           display: true,
-          color: '#000', // Màu chữ
+          color: "#000", // Màu chữ
           font: {
             size: 14, // Kích thước chữ
-            weight: 'bold', // Độ đậm của chữ
+            weight: "bold", // Độ đậm của chữ
           },
-          textAlign: 'center',
-          anchor: 'end',
+          textAlign: "center",
+          anchor: "end",
           padding: {
             bottom: 50,
           },
@@ -543,13 +543,13 @@ const DashBoard = (props) => {
         },
         datalabels: {
           display: true,
-          color: '#000', // Màu chữ
+          color: "#000", // Màu chữ
           font: {
             size: 14, // Kích thước chữ
-            weight: 'bold', // Độ đậm của chữ
+            weight: "bold", // Độ đậm của chữ
           },
           // textAlign: 'center',
-          anchor: 'end',
+          anchor: "end",
           padding: {
             bottom: 50,
           },
@@ -567,7 +567,7 @@ const DashBoard = (props) => {
 
   const onFilter = (value, property) => {
     let oldFilterData = filterData;
-    let onFilter = {value, property};
+    let onFilter = { value, property };
     let newfilterData = getFilterData(oldFilterData, onFilter, null);
     setFilterData(newfilterData);
   };
@@ -585,7 +585,7 @@ const DashBoard = (props) => {
       Data.forEach((item, index) => {
         dataItem.data.push(item.Value);
         dataItem.backgroundColor.push(
-          ListBackgroundPoleChart[index].backgroundColor,
+          ListBackgroundPoleChart[index].backgroundColor
         );
         dataItem.borderColor.push(ListBackgroundPoleChart[index].borderColor);
       });
@@ -650,9 +650,9 @@ const DashBoard = (props) => {
           borderColor: null,
           borderRadius: 4,
           borderWidth: 1,
-          color: '#000',
-          anchor: 'center',
-          align: 'center',
+          color: "#000",
+          anchor: "center",
+          align: "center",
           // offset: 10,
           // padding: {
           //   left: 10,
@@ -668,10 +668,10 @@ const DashBoard = (props) => {
             let value = context.dataset.data[context.dataIndex];
             return value > 0 ? 10 : -10;
           },
-          textAlign: 'center',
+          textAlign: "center",
           padding: 0,
           formatter: function (value, context) {
-            context.textAlign = 'center';
+            context.textAlign = "center";
             // ${context.chart.data.labels[context.dataIndex]}\n${value}%
             return `${value}%`;
           },
@@ -695,7 +695,7 @@ const DashBoard = (props) => {
 
   const getDanhSachCoQuanByCapID = (PhamViID) => {
     api
-      .GetCoQuanByPhamViID({PhamViID})
+      .GetCoQuanByPhamViID({ PhamViID })
       .then((res) => {
         if (res.data.Status > 0) {
           setDanhSachCoQuan(res.data.Data);
@@ -734,19 +734,19 @@ const DashBoard = (props) => {
   };
 
   const handleChangeData = (key, value, Type, resetData = false) => {
-    const newData = {...data};
+    const newData = { ...data };
     newData[key] = value;
     if (Type) {
-      newData['Type'] = Type;
+      newData["Type"] = Type;
     }
     if (resetData) {
-      newData['Data'] = null;
-      newData['Nam'] = null;
+      newData["Data"] = null;
+      newData["Nam"] = null;
     }
-    if (key === 'CapID' && data?.CoQuanID) {
+    if (key === "CapID" && data?.CoQuanID) {
       newData.CoQuanID = null;
     }
-    if (key === 'LoaiThoiGianID' && value) {
+    if (key === "LoaiThoiGianID" && value) {
       const currentMonth = moment().month() + 1;
       const currentYear = moment().year();
       // const localTimeStart = timeStart.local();
@@ -768,7 +768,7 @@ const DashBoard = (props) => {
         ...newData,
         Nam: currentYear,
       });
-    } else if (key === 'Nam' && !value) {
+    } else if (key === "Nam" && !value) {
       setData({
         ...newData,
         Data: null,
@@ -781,17 +781,17 @@ const DashBoard = (props) => {
   };
 
   const handleCaculateYearFromYear = (fromYear) => {
-    const startYear = moment(fromYear, 'YYYY');
+    const startYear = moment(fromYear, "YYYY");
     const endYear = moment(); // Lấy ngày hiện tại
     const ListYears = [];
     let year = moment(startYear);
 
     while (year.isSameOrBefore(endYear)) {
       ListYears.push({
-        Title: year.format('YYYY'),
-        Value: year.format('YYYY'),
+        Title: year.format("YYYY"),
+        Value: year.format("YYYY"),
       });
-      year.add(1, 'year');
+      year.add(1, "year");
     }
     ListYears.sort(function (a, b) {
       return b.Value - a.Value;
@@ -805,7 +805,7 @@ const DashBoard = (props) => {
     dispatch(actions.getSoLieuCanhBao(dataUpdate));
   };
 
-  const namTrienKhai = getConfigLocal('namTrienKhai', '2018');
+  const namTrienKhai = getConfigLocal("namTrienKhai", "2018");
   const ListYears = handleCaculateYearFromYear(namTrienKhai.toString());
 
   const ListMonths = [];
@@ -819,59 +819,59 @@ const DashBoard = (props) => {
 
   const ListQuarter = [
     {
-      Title: 'Quý 1',
+      Title: "Quý 1",
       Value: 1,
     },
     {
-      Title: 'Quý 2',
+      Title: "Quý 2",
       Value: 2,
     },
     {
-      Title: 'Quý 3',
+      Title: "Quý 3",
       Value: 3,
     },
     {
-      Title: 'Quý 4',
+      Title: "Quý 4",
       Value: 4,
     },
   ];
 
   const ListFilterYeas = [
     {
-      Title: '6 tháng đầu năm',
+      Title: "6 tháng đầu năm",
       Value: 17,
     },
     {
-      Title: '9 tháng đầu năm',
+      Title: "9 tháng đầu năm",
       Value: 19,
     },
     {
-      Title: '6 tháng cuối',
+      Title: "6 tháng cuối",
       Value: 18,
     },
     {
-      Title: 'Cả năm',
+      Title: "Cả năm",
       Value: 20,
     },
   ];
 
   const indexCap = DanhSachCacCap.indexOf(
-    DanhSachCacCap.find((item) => item.ID === data.CapID),
+    DanhSachCacCap.find((item) => item.ID === data.CapID)
   );
   const indexMonths = ListMonths.indexOf(
-    ListMonths.find((item) => Number(item.Value) === Number(data.Data)),
+    ListMonths.find((item) => Number(item.Value) === Number(data.Data))
   );
 
   const indexQuaters = ListQuarter.indexOf(
-    ListQuarter.find((item) => item.Value === data.Data),
+    ListQuarter.find((item) => item.Value === data.Data)
   );
 
   const indexYears = ListFilterYeas.indexOf(
-    ListFilterYeas.find((item) => item.Value === data.Data),
+    ListFilterYeas.find((item) => item.Value === data.Data)
   );
 
   const indexCoQuan = DanhSachCoQuan.indexOf(
-    DanhSachCoQuan.find((item) => item.CoQuanID === data.CoQuanID),
+    DanhSachCoQuan.find((item) => item.CoQuanID === data.CoQuanID)
   );
 
   const isDashBoard = true;
@@ -881,7 +881,7 @@ const DashBoard = (props) => {
   return (
     <Wrapper>
       <LayoutWrapper>
-        <PageHeader>{DataChart?.ListCapID ? 'Dashboard' : ''}</PageHeader>
+        {/* <PageHeader>{DataChart?.ListCapID ? 'Dashboard' : ''}</PageHeader> */}
         <Box>
           <div className="wrapper-box">
             {loadingChart ? (
@@ -1037,7 +1037,7 @@ const DashBoard = (props) => {
                         onChange={(value) =>
                           setDataUpdate((prevData) => ({
                             ...prevData,
-                            DenNgay: dayjs(value).format('MM/DD/YYYY'),
+                            DenNgay: dayjs(value).format("MM/DD/YYYY"),
                           }))
                         }
                       />
@@ -1045,7 +1045,7 @@ const DashBoard = (props) => {
                     <div className="dashboard-filter__items">
                       <p>Phân loại vụ việc: </p>
                       <Select
-                        style={{width: '200px'}}
+                        style={{ width: "200px" }}
                         onChange={(value) =>
                           setDataUpdate((prevData) => ({
                             ...prevData,
@@ -1071,8 +1071,8 @@ const DashBoard = (props) => {
                   <div
                     className={`dashboard-wrapper__card ${
                       SoLieuCanhBao && SoLieuCanhBao.length > 3
-                        ? 'dashboard-wrapper__more'
-                        : ''
+                        ? "dashboard-wrapper__more"
+                        : ""
                     }`}
                   >
                     {loadingCanhBao ? (
@@ -1230,7 +1230,7 @@ const DashBoard = (props) => {
 
 function mapStateToProps(state) {
   return {
-    role: getRoleByKey(state.Auth.role, 'quan-ly-nam-hoc'),
+    role: getRoleByKey(state.Auth.role, "quan-ly-nam-hoc"),
   };
 }
 

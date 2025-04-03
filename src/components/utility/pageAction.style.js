@@ -18,7 +18,7 @@ const WDComponentDivAction = styled.div`
 
   button {
     margin-right: 0px;
-    margin-left: 10px;
+    /* margin-left: 10px; */
     @media only screen and (max-width: 1336px) {
       margin-left: 0px;
       margin-right: 10px;

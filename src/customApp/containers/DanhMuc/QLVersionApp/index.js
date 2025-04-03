@@ -310,7 +310,7 @@ const QLVersionApp = (props) => {
   return (
     <LayoutWrapper>
       <PageWrap>
-        <PageHeader>Quản lý Version App</PageHeader>
+        {/* <PageHeader>Quản lý Version App</PageHeader> */}
         <PageAction>
           <Button type="primary" onClick={showModalAdd}>
             <PlusOutlined />

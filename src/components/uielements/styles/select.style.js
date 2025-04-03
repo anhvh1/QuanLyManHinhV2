@@ -4,6 +4,7 @@ import { transition } from "../../../settings/style-util";
 
 const AntSelect = (ComponentName) => styled(ComponentName)`
   &.ant-select {
+    height: 40px;
     box-sizing: border-box;
     display: inline-block;
     position: relative;

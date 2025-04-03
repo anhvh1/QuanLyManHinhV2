@@ -1,42 +1,42 @@
-import {Modal, Table, Tooltip, message} from 'antd';
-import actions from '../../../redux/HeThong/QLThamSoHeThong/actions';
-import React, {useState, useEffect} from 'react';
-import {connect} from 'react-redux';
-import LayoutWrapper from '../../../../components/utility/layoutWrapper';
-import PageHeader from '../../../../components/utility/pageHeader';
-import PageAction from '../../../../components/utility/pageAction';
-import Box from '../../../../components/utility/box';
-import BoxFilter from '../../../../components/utility/boxFilter';
-import BoxTable from '../../../../components/utility/boxTable';
+import { Modal, Table, Tooltip, message } from "antd";
+import actions from "../../../redux/HeThong/QLThamSoHeThong/actions";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import LayoutWrapper from "../../../../components/utility/layoutWrapper";
+import PageHeader from "../../../../components/utility/pageHeader";
+import PageAction from "../../../../components/utility/pageAction";
+import Box from "../../../../components/utility/box";
+import BoxFilter from "../../../../components/utility/boxFilter";
+import BoxTable from "../../../../components/utility/boxTable";
 import {
   Button,
   InputSearch,
   Select,
-} from '../../../../components/uielements/exportComponent';
-import Checkbox from '../../../../components/uielements/checkbox';
+} from "../../../../components/uielements/exportComponent";
+import Checkbox from "../../../../components/uielements/checkbox";
 import {
   changeUrlFilter,
   exportExcel,
   getDefaultPageSize,
   getFilterData,
   getRoleByKey,
-} from '../../../../helpers/utility';
-import {useKey} from '../../../CustomHook/useKey';
-import queryString from 'query-string';
-import api from './config';
-import moment from 'moment';
-import ModalAddEdit from './modalAddEdit';
-import {DeleteOutlined, EditOutlined, PlusOutlined} from '@ant-design/icons';
-import {useSelector} from 'react-redux';
-import PageWrap from '../../../../components/utility/PageWrap';
+} from "../../../../helpers/utility";
+import { useKey } from "../../../CustomHook/useKey";
+import queryString from "query-string";
+import api from "./config";
+import moment from "moment";
+import ModalAddEdit from "./modalAddEdit";
+import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
+import { useSelector } from "react-redux";
+import PageWrap from "../../../../components/utility/PageWrap";
 const QLThamSoHeThong = (props) => {
-  document.title = 'Quản Lý Tham Số Hệ Thống';
+  document.title = "Quản Lý Tham Số Hệ Thống";
   const [filterData, setFilterData] = useState(
-    queryString.parse(props.location.search),
+    queryString.parse(props.location.search)
   );
   const [dataModalAddEdit, setDataModalAddEdit] = useState({});
   const [visibleModalAddEdit, setVisibleModalAddEdit] = useState(false);
-  const [action, setAction] = useState('');
+  const [action, setAction] = useState("");
   const [modalKey, inceaseModalKey] = useKey();
   const [selectedRowsKey, setSelectedRowsKey] = useState([]);
   const [confirmLoading, setConfirmLoading] = useState(false);
@@ -52,7 +52,7 @@ const QLThamSoHeThong = (props) => {
 
   const onTableChange = (pagination, filters, sorter) => {
     let oldFilterData = filterData;
-    let onOrder = {pagination, filters, sorter};
+    let onOrder = { pagination, filters, sorter };
     let newFilterData = getFilterData(oldFilterData, null, onOrder);
 
     setFilterData(newFilterData);
@@ -61,7 +61,7 @@ const QLThamSoHeThong = (props) => {
 
   const onFilter = (value, property) => {
     let oldFilterData = filterData;
-    let onFilter = {value, property};
+    let onFilter = { value, property };
     let newfilterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data
     setFilterData(newfilterData);
@@ -69,7 +69,7 @@ const QLThamSoHeThong = (props) => {
   };
 
   const showModalAdd = () => {
-    setAction('add');
+    setAction("add");
     setDataModalAddEdit({});
     inceaseModalKey();
     setVisibleModalAddEdit(true);
@@ -77,10 +77,10 @@ const QLThamSoHeThong = (props) => {
 
   const deleteModalAddEdit = (SystemConfigID) => {
     Modal.confirm({
-      title: 'Xóa Dữ Liệu',
-      content: 'Bạn có muốn xóa tham số hệ thống này không?',
-      cancelText: 'Không',
-      okText: 'Có',
+      title: "Xóa Dữ Liệu",
+      content: "Bạn có muốn xóa tham số hệ thống này không?",
+      cancelText: "Không",
+      okText: "Có",
       onOk: () => {
         setConfirmLoading(true);
         api
@@ -121,9 +121,9 @@ const QLThamSoHeThong = (props) => {
 
   const showModalEdit = (id) => {
     const SystemConfigID = id;
-    setAction('edit');
+    setAction("edit");
     api
-      .ChiTietThamSoHeThong({SystemConfigID})
+      .ChiTietThamSoHeThong({ SystemConfigID })
       .then((res) => {
         if (res.data.Status > 0) {
           setDataModalAddEdit(res.data.Data);
@@ -148,7 +148,7 @@ const QLThamSoHeThong = (props) => {
 
   const submitModalAddEdit = (data) => {
     setConfirmLoading(true);
-    if (action === 'add') {
+    if (action === "add") {
       api
         .ThemMoiThamSoHeThong(data)
         .then((res) => {
@@ -170,7 +170,7 @@ const QLThamSoHeThong = (props) => {
           message.error(error.toString());
         });
     }
-    if (action === 'edit') {
+    if (action === "edit") {
       api
         .CapNhatThamSoHeThong(data)
         .then((res) => {
@@ -196,24 +196,24 @@ const QLThamSoHeThong = (props) => {
 
   const renderThaoTac = (record) => {
     return (
-      <div className={'action-btn'}>
+      <div className={"action-btn"}>
         {role.edit ? (
-          <Tooltip title={'Sửa'}>
+          <Tooltip title={"Sửa"}>
             <EditOutlined
               onClick={() => showModalEdit(record.SystemConfigID)}
             />
           </Tooltip>
         ) : (
-          ''
+          ""
         )}
         {role.delete ? (
-          <Tooltip title={'Xóa'}>
+          <Tooltip title={"Xóa"}>
             <DeleteOutlined
               onClick={() => deleteModalAddEdit(record.SystemConfigID)}
             />
           </Tooltip>
         ) : (
-          ''
+          ""
         )}
       </div>
     );
@@ -223,7 +223,7 @@ const QLThamSoHeThong = (props) => {
     return <Checkbox checked={record.TrangThai} />;
   };
 
-  const {DanhSachThamSoHeThong, TotalRow, role} = props;
+  const { DanhSachThamSoHeThong, TotalRow, role } = props;
   const PageNumber = filterData.PageNumber
     ? parseInt(filterData.PageNumber)
     : 1;
@@ -233,42 +233,42 @@ const QLThamSoHeThong = (props) => {
 
   const columns = [
     {
-      title: 'STT',
-      width: '5%',
-      align: 'center',
+      title: "STT",
+      width: "5%",
+      align: "center",
       render: (text, record, index) => (
         <span>{(PageNumber - 1) * PageSize + (index + 1)}</span>
       ),
     },
     {
-      title: 'Tham số',
-      dataIndex: 'ConfigKey',
-      align: 'left',
-      width: '15%',
+      title: "Tham số",
+      dataIndex: "ConfigKey",
+      align: "left",
+      width: "15%",
     },
     {
-      title: 'Giá trị',
-      dataIndex: 'ConfigValue',
-      align: 'left',
-      width: '25%',
+      title: "Giá trị",
+      dataIndex: "ConfigValue",
+      align: "left",
+      width: "25%",
     },
 
     {
-      title: 'Ghi chú',
-      dataIndex: 'Description',
-      align: 'left',
-      width: '35%',
+      title: "Ghi chú",
+      dataIndex: "Description",
+      align: "left",
+      width: "35%",
     },
     {
-      title: 'Trạng thái sử dụng',
-      align: 'center',
-      width: '10%',
+      title: "Trạng thái sử dụng",
+      align: "center",
+      width: "10%",
       render: (text, record) => renderCheckBox(record),
     },
     {
-      title: 'Thao tác',
-      width: '10%',
-      align: 'center',
+      title: "Thao tác",
+      width: "10%",
+      align: "center",
       render: (text, record) => renderThaoTac(record),
     },
   ];
@@ -276,7 +276,7 @@ const QLThamSoHeThong = (props) => {
   return (
     <LayoutWrapper>
       <PageWrap>
-        <PageHeader>Quản Lý Tham Số Hệ Thống</PageHeader>
+        {/* <PageHeader>Quản Lý Tham Số Hệ Thống</PageHeader> */}
         <PageAction>
           {role ? (
             role.add ? (
@@ -285,36 +285,36 @@ const QLThamSoHeThong = (props) => {
                 Thêm Mới
               </Button>
             ) : (
-              ''
+              ""
             )
           ) : (
-            ''
+            ""
           )}
         </PageAction>
       </PageWrap>
       <Box>
         <BoxFilter>
           <Select
-            style={{width: '200px'}}
+            style={{ width: "200px" }}
             defaultValue={
               filterData.Status
-                ? filterData.Status === 'true'
-                  ? 'Đang sử dụng'
-                  : 'Không sử dụng'
+                ? filterData.Status === "true"
+                  ? "Đang sử dụng"
+                  : "Không sử dụng"
                 : undefined
             }
-            placeholder={'Chọn trạng thái'}
+            placeholder={"Chọn trạng thái"}
             allowClear
-            onChange={(value) => onFilter(value, 'Status')}
+            onChange={(value) => onFilter(value, "Status")}
           >
             <Option value={true}>Đang sử dụng</Option>
             <Option value={false}>Không sử dụng</Option>
           </Select>
           <InputSearch
             defaultValue={filterData.Keyword}
-            placeholder={'Tìm kiếm theo tham số'}
-            style={{width: 300}}
-            onSearch={(value) => onFilter(value, 'Keyword')}
+            placeholder={"Tìm kiếm theo tham số"}
+            style={{ width: 300 }}
+            onSearch={(value) => onFilter(value, "Keyword")}
             allowClear
           />
         </BoxFilter>
@@ -350,7 +350,7 @@ const QLThamSoHeThong = (props) => {
 function mapStateToProps(state) {
   return {
     ...state.QuanLyThamSoHeThong,
-    role: getRoleByKey(state.Auth.role, 'tham-so-he-thong'),
+    role: getRoleByKey(state.Auth.role, "tham-so-he-thong"),
   };
 }
 

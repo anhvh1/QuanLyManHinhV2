@@ -825,7 +825,7 @@ const DMChiTieu = (props) => {
   return (
     <LayoutWrapper>
       <PageWrap>
-        <PageHeader>Quản Lý Media</PageHeader>
+        {/* <PageHeader>Quản Lý Media</PageHeader> */}
         <PageAction>
           <Button type="primary" onClick={showModalAddMedia}>
             <PlusOutlined />

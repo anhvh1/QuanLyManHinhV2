@@ -1,34 +1,34 @@
-import React, {useEffect, useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import queryString from 'query-string';
-import actions from '../../../redux/HeThong/QLPhanQuyen/actions';
-import api from './config';
-import lodash from 'lodash';
-import LayoutWrapper from '../../../../components/utility/layoutWrapper';
-import PageHeader from '../../../../components/utility/pageHeader';
-import PageAction from '../../../../components/utility/pageAction';
-import Box from '../../../../components/utility/box';
-import BoxFilter from '../../../../components/utility/boxFilter';
-import BoxTable, {EmptyTable} from '../../../../components/utility/boxTable';
-import {BoxTableDiv} from './boxTableDiv.style';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import queryString from "query-string";
+import actions from "../../../redux/HeThong/QLPhanQuyen/actions";
+import api from "./config";
+import lodash from "lodash";
+import LayoutWrapper from "../../../../components/utility/layoutWrapper";
+import PageHeader from "../../../../components/utility/pageHeader";
+import PageAction from "../../../../components/utility/pageAction";
+import Box from "../../../../components/utility/box";
+import BoxFilter from "../../../../components/utility/boxFilter";
+import BoxTable, { EmptyTable } from "../../../../components/utility/boxTable";
+import { BoxTableDiv } from "./boxTableDiv.style";
 
-import {ModalAddEditGroup} from './modalAddEditGroup';
-import {ModalAddUser} from './modalAddUser';
-import {ModalAddPermission} from './modalAddPermission';
-import {BoxConfig} from './boxConfig.style.js';
-import {Modal, message, Row, Col, Checkbox, Tooltip} from 'antd';
+import { ModalAddEditGroup } from "./modalAddEditGroup";
+import { ModalAddUser } from "./modalAddUser";
+import { ModalAddPermission } from "./modalAddPermission";
+import { BoxConfig } from "./boxConfig.style.js";
+import { Modal, message, Row, Col, Checkbox, Tooltip } from "antd";
 import {
   Select,
   Option,
   Button,
   InputSearch,
-} from '../../../../components/uielements/exportComponent';
+} from "../../../../components/uielements/exportComponent";
 import {
   changeUrlFilter,
   getDefaultPageSize,
   getFilterData,
   getRoleByKey,
-} from '../../../../helpers/utility';
+} from "../../../../helpers/utility";
 import {
   UsergroupAddOutlined,
   SettingOutlined,
@@ -36,20 +36,20 @@ import {
   DeleteOutlined,
   SaveOutlined,
   FileAddOutlined,
-} from '@ant-design/icons';
-import {useKey} from '../../../CustomHook/useKey';
-import {useVisible} from '../../../CustomHook/useVisible';
-import PageWrap from '../../../../components/utility/PageWrap.js';
+} from "@ant-design/icons";
+import { useKey } from "../../../CustomHook/useKey";
+import { useVisible } from "../../../CustomHook/useVisible";
+import PageWrap from "../../../../components/utility/PageWrap.js";
 // import ListSideBar from '../../../sidebar'
 
 const QLPhanQuyen = (props) => {
-  document.title = 'Phân quyền';
+  document.title = "Phân quyền";
   const dispatch = useDispatch();
 
   const [filterData, setFilterData] = useState(
-    queryString.parse(props.location.search),
+    queryString.parse(props.location.search)
   );
-  const {role} = props;
+  const { role } = props;
   const [loading, setLoading] = useState(false);
   const [modalKey, setModalKey] = useKey();
   const [
@@ -78,13 +78,13 @@ const QLPhanQuyen = (props) => {
     showModalAddPermission,
     hideModalAddPermission,
   ] = useVisible();
-  const [action, setAction] = useState('add');
+  const [action, setAction] = useState("add");
   const [NhomNguoiDungSelect, setNhomNguoiDungSelect] = useState(0);
   //
-  const {ListSideBar} = useSelector((state) => state.ListSideBar);
+  const { ListSideBar } = useSelector((state) => state.ListSideBar);
   const DanhSachMenu = ListSideBar;
-  const {DanhSachNhom, TotalRow, DanhSachCanBo, TableLoading} = useSelector(
-    (state) => state.QLPhanQuyen,
+  const { DanhSachNhom, TotalRow, DanhSachCanBo, TableLoading } = useSelector(
+    (state) => state.QLPhanQuyen
   );
 
   useEffect(() => {
@@ -97,33 +97,33 @@ const QLPhanQuyen = (props) => {
   }, [filterData]);
 
   const onSearch = (value, property) => {
-    let onFilter = {value, property};
+    let onFilter = { value, property };
     let newFilterData = getFilterData(filterData, onFilter, null);
     setFilterData(newFilterData);
   };
 
   const onTableChange = (pagination, filters, sorter) => {
-    let onOrder = {pagination, filters, sorter};
+    let onOrder = { pagination, filters, sorter };
     let newFilterData = getFilterData(filterData, null, onOrder);
     setFilterData(newFilterData);
   };
 
   const deleteGroup = (NhomNguoiDungID) => {
     Modal.confirm({
-      title: 'Xóa dữ liệu',
-      content: 'Bạn có muốn xóa nhóm người dùng này không?',
-      cancelText: 'Không',
-      okText: 'Có',
+      title: "Xóa dữ liệu",
+      content: "Bạn có muốn xóa nhóm người dùng này không?",
+      cancelText: "Không",
+      okText: "Có",
       onOk: () => {
         api
-          .xoaNhom({NhomNguoiDungID})
+          .xoaNhom({ NhomNguoiDungID })
           .then((response) => {
             if (response.data.Status > 0) {
               //message success
-              message.success('Xóa thành công');
+              message.success("Xóa thành công");
               //reset page
               dispatch(actions.getList(filterData));
-              resetConfig('close');
+              resetConfig("close");
             } else {
               message.destroy();
               message.error(response.data.Message);
@@ -140,18 +140,18 @@ const QLPhanQuyen = (props) => {
   const openModalAddEditGroup = () => {
     showModalAddEditGroup();
     setDataEdit({});
-    setAction('add');
+    setAction("add");
     setModalKey();
   };
 
   const showModalEditGroup = (NhomNguoiDungID) => {
     api
-      .chiTietNhom({NhomNguoiDungID})
+      .chiTietNhom({ NhomNguoiDungID })
       .then((response) => {
         if (response.data.Status > 0) {
           setDataEdit(response.data.Data);
           showModalAddEditGroup();
-          setAction('edit');
+          setAction("edit");
           setModalKey();
         } else {
           message.destroy();
@@ -167,7 +167,7 @@ const QLPhanQuyen = (props) => {
   const submitModalAddEditGroup = (value) => {
     delete value.applyType;
     setLoading(true);
-    if (action === 'add') {
+    if (action === "add") {
       delete value.NhomNguoiDungID;
       api
         .themNhom(value)
@@ -175,7 +175,7 @@ const QLPhanQuyen = (props) => {
           setLoading(false);
           if (response.data.Status > 0) {
             //message success
-            message.success('Thêm thành công');
+            message.success("Thêm thành công");
             //hide modal
             hideModalAddEditGroup();
             //reset page
@@ -189,14 +189,14 @@ const QLPhanQuyen = (props) => {
           message.destroy();
           message.error(error.toString());
         });
-    } else if (action === 'edit') {
+    } else if (action === "edit") {
       api
         .suaNhom(value)
         .then((response) => {
           setLoading(false);
           if (response.data.Status > 0) {
             //message success
-            message.success('Cập nhật thành công');
+            message.success("Cập nhật thành công");
             //hide modal
             hideModalAddEditGroup();
             //reset page
@@ -216,19 +216,19 @@ const QLPhanQuyen = (props) => {
 
   const deleteUser = (param) => {
     Modal.confirm({
-      title: 'Xóa dữ liệu',
-      content: 'Bạn có muốn xóa người dùng này ra khỏi nhóm?',
-      cancelText: 'Không',
-      okText: 'Có',
+      title: "Xóa dữ liệu",
+      content: "Bạn có muốn xóa người dùng này ra khỏi nhóm?",
+      cancelText: "Không",
+      okText: "Có",
       onOk: () => {
         api
           .xoaNguoiDung(param)
           .then((response) => {
             if (response.data.Status > 0) {
               //message success
-              message.success('Xóa thành công');
+              message.success("Xóa thành công");
               //reset configData
-              resetConfig('open');
+              resetConfig("open");
             } else {
               message.destroy();
               message.error(response.data.Message);
@@ -245,7 +245,7 @@ const QLPhanQuyen = (props) => {
   const openModalAddUser = () => {
     if (NhomNguoiDungSelect) {
       api
-        .danhSachNguoiDung({NhomNguoiDungID: NhomNguoiDungSelect})
+        .danhSachNguoiDung({ NhomNguoiDungID: NhomNguoiDungSelect })
         .then((response) => {
           if (response.data.Status > 0) {
             showModalAddUser();
@@ -268,7 +268,7 @@ const QLPhanQuyen = (props) => {
 
   const closeModalAddUser = () => {
     hideModalAddUser();
-    setDataModalAddUser({NhomNguoiDungID: 0, DanhSachNguoiDung: []});
+    setDataModalAddUser({ NhomNguoiDungID: 0, DanhSachNguoiDung: [] });
   };
 
   const submitModalAddUser = (data) => {
@@ -276,16 +276,16 @@ const QLPhanQuyen = (props) => {
     delete data.NguoiDungID;
     setLoading(true);
     api
-      .themNhieuNguoiDung({...data, DanhSachNguoiDungID})
+      .themNhieuNguoiDung({ ...data, DanhSachNguoiDungID })
       .then((response) => {
         setLoading(false);
         if (response.data.Status > 0) {
           //message success
-          message.success('Thêm thành công');
+          message.success("Thêm thành công");
           //hide modal
           closeModalAddUser();
           //reset configData
-          resetConfig('open');
+          resetConfig("open");
         } else {
           message.destroy();
           message.error(response.data.Message);
@@ -300,7 +300,7 @@ const QLPhanQuyen = (props) => {
 
   const onChangePermission = (checkedValues, PhanQuyenID) => {
     //(lodash.isEqual(obj1, obj2));
-    const Data = {...configData};
+    const Data = { ...configData };
     //get newPermission
     let newPermission = {
       PhanQuyenID: parseInt(PhanQuyenID),
@@ -345,19 +345,19 @@ const QLPhanQuyen = (props) => {
     const paramArray = permissionsChanged;
     if (paramArray && paramArray.length) {
       Modal.confirm({
-        title: 'Lưu thay đổi',
-        content: 'Bạn có muốn cập nhật thay đổi không?',
-        cancelText: 'Không',
-        okText: 'Có',
+        title: "Lưu thay đổi",
+        content: "Bạn có muốn cập nhật thay đổi không?",
+        cancelText: "Không",
+        okText: "Có",
         onOk: () => {
           api
             .suaChucNang(paramArray)
             .then((response) => {
               if (response.data.Status > 0) {
                 //message success
-                message.success('Cập nhật thành công');
+                message.success("Cập nhật thành công");
                 setPermissionsChanged([]);
-                resetConfig('open');
+                resetConfig("open");
               } else {
                 message.destroy();
                 message.error(response.data.Message);
@@ -370,7 +370,7 @@ const QLPhanQuyen = (props) => {
         },
         onCancel: () => {
           setPermissionsChanged([]);
-          resetConfig('open');
+          resetConfig("open");
         },
       });
     }
@@ -378,14 +378,14 @@ const QLPhanQuyen = (props) => {
 
   const renderBoxConfig = () => {
     if (configData && visibleConfigGroup) {
-      const Data = {...configData};
+      const Data = { ...configData };
       if (Data) {
         return (
           <div key={configKey}>
             <BoxConfig>
               <button
                 className="closeButton"
-                onClick={() => resetConfig('close')}
+                onClick={() => resetConfig("close")}
               >
                 ✖
               </button>
@@ -399,7 +399,7 @@ const QLPhanQuyen = (props) => {
                           <UsergroupAddOutlined /> Thêm người dùng
                         </Button>
                       ) : (
-                        ''
+                        ""
                       )}
                       <ModalAddUser
                         loading={loading}
@@ -414,9 +414,9 @@ const QLPhanQuyen = (props) => {
                     <div className="content_class">
                       {Data.DanhSachNguoiDung &&
                       Data.DanhSachNguoiDung.length ? (
-                        <div className={'ul'}>
+                        <div className={"ul"}>
                           {Data.DanhSachNguoiDung.map((item, key) => (
-                            <div key={key} className={'li'}>
+                            <div key={key} className={"li"}>
                               <button
                                 onClick={() =>
                                   deleteUser({
@@ -433,7 +433,7 @@ const QLPhanQuyen = (props) => {
                         </div>
                       ) : (
                         <EmptyTable
-                          style={{width: '100%', border: 'none'}}
+                          style={{ width: "100%", border: "none" }}
                           scroll={{}}
                         />
                       )}
@@ -453,14 +453,14 @@ const QLPhanQuyen = (props) => {
                           <SaveOutlined /> Lưu
                         </Button>
                       ) : (
-                        ''
+                        ""
                       )}
                       {role.edit ? (
                         <Button type="primary" onClick={openModalAddPermission}>
                           <FileAddOutlined /> Thêm chức năng
                         </Button>
                       ) : (
-                        ''
+                        ""
                       )}
                       <ModalAddPermission
                         loading={loading}
@@ -525,7 +525,7 @@ const QLPhanQuyen = (props) => {
             if (
               DanhSachChucNang.find(
                 (chucnang) =>
-                  chucnang.MaChucNang === menuChild.MaMenu && menuChild.HienThi,
+                  chucnang.MaChucNang === menuChild.MaMenu && menuChild.HienThi
               )
             ) {
               DanhSachNhomChucNang.push({
@@ -561,16 +561,16 @@ const QLPhanQuyen = (props) => {
           return DanhSachChucNang.map((item, index) => {
             if (groupValue.key === item.MaChucNang) {
               let options = [
-                {label: 'Xem', value: 'Xem', disabled: false},
-                {label: 'Thêm', value: 'Them', disabled: false},
-                {label: 'Sửa', value: 'Sua', disabled: false},
-                {label: 'Xóa', value: 'Xoa', disabled: false},
+                { label: "Xem", value: "Xem", disabled: false },
+                { label: "Thêm", value: "Them", disabled: false },
+                { label: "Sửa", value: "Sua", disabled: false },
+                { label: "Xóa", value: "Xoa", disabled: false },
               ];
               let defaultValue = [];
-              if (item.Xem) defaultValue.push('Xem');
-              if (item.Them) defaultValue.push('Them');
-              if (item.Sua) defaultValue.push('Sua');
-              if (item.Xoa) defaultValue.push('Xoa');
+              if (item.Xem) defaultValue.push("Xem");
+              if (item.Them) defaultValue.push("Them");
+              if (item.Sua) defaultValue.push("Sua");
+              if (item.Xoa) defaultValue.push("Xoa");
               return (
                 <div key={index} className="content_row">
                   <b className="tenchucnang">{item.TenChucNang}</b>
@@ -609,7 +609,7 @@ const QLPhanQuyen = (props) => {
                 if (
                   groupValue.children &&
                   groupValue.children.find(
-                    (gr) => gr.MaMenu === item.MaChucNang,
+                    (gr) => gr.MaMenu === item.MaChucNang
                   )
                 ) {
                   let options = [],
@@ -620,7 +620,7 @@ const QLPhanQuyen = (props) => {
                   const DanhSachChucNangCha = [...DanhSachChucNangNhom];
                   DanhSachChucNangCha.some((pItem) => {
                     if (pItem.ChucNangID === ChucNangID) {
-                      parentItem = {...pItem};
+                      parentItem = { ...pItem };
                       return true;
                     }
                     return false;
@@ -628,30 +628,30 @@ const QLPhanQuyen = (props) => {
                   if (parentItem) {
                     options = [
                       {
-                        label: 'Xem',
-                        value: 'Xem',
+                        label: "Xem",
+                        value: "Xem",
                         disabled: parentItem.Xem === 0,
                       },
                       {
-                        label: 'Thêm',
-                        value: 'Them',
+                        label: "Thêm",
+                        value: "Them",
                         disabled: parentItem.Them === 0,
                       },
                       {
-                        label: 'Sửa',
-                        value: 'Sua',
+                        label: "Sửa",
+                        value: "Sua",
                         disabled: parentItem.Sua === 0,
                       },
                       {
-                        label: 'Xóa',
-                        value: 'Xoa',
+                        label: "Xóa",
+                        value: "Xoa",
                         disabled: parentItem.Xoa === 0,
                       },
                     ];
-                    if (item.Xem) defaultValue.push('Xem');
-                    if (item.Them) defaultValue.push('Them');
-                    if (item.Sua) defaultValue.push('Sua');
-                    if (item.Xoa) defaultValue.push('Xoa');
+                    if (item.Xem) defaultValue.push("Xem");
+                    if (item.Them) defaultValue.push("Them");
+                    if (item.Sua) defaultValue.push("Sua");
+                    if (item.Xoa) defaultValue.push("Xoa");
                     return (
                       <div key={index} className="content_row">
                         <div className="tenchucnang">{item.TenChucNang}</div>
@@ -690,19 +690,19 @@ const QLPhanQuyen = (props) => {
 
   const deletePermission = (param) => {
     Modal.confirm({
-      title: 'Xóa dữ liệu',
-      content: 'Bạn có muốn xóa chức năng này ra khỏi nhóm?',
-      cancelText: 'Không',
-      okText: 'Có',
+      title: "Xóa dữ liệu",
+      content: "Bạn có muốn xóa chức năng này ra khỏi nhóm?",
+      cancelText: "Không",
+      okText: "Có",
       onOk: () => {
         api
           .xoaChucNang(param)
           .then((response) => {
             if (response.data.Status > 0) {
               //message success
-              message.success('Xóa thành công');
+              message.success("Xóa thành công");
               //reset configData
-              resetConfig('open');
+              resetConfig("open");
             } else {
               message.destroy();
               message.error(response.data.Message);
@@ -729,21 +729,21 @@ const QLPhanQuyen = (props) => {
       DanhSachChucNangNhom.map((item) => {
         //neu chuc nang nay chua dc sd -> disable = false
         if (ExistID.indexOf(item.ChucNangID.toString()) < 0) {
-          DanhSachChucNang.push({...item, disabled: false});
+          DanhSachChucNang.push({ ...item, disabled: false });
         } else {
-          DanhSachChucNang.push({...item, disabled: true});
+          DanhSachChucNang.push({ ...item, disabled: true });
         }
       });
       //set state open modal
       showModalAddPermission();
-      setDataModalAddPermission({NhomNguoiDungID, DanhSachChucNang});
+      setDataModalAddPermission({ NhomNguoiDungID, DanhSachChucNang });
       setModalKey();
     }
   };
 
   const closeModalAddPermission = () => {
     hideModalAddPermission();
-    setDataModalAddPermission({NhomNguoiDungID: 0, DanhSachChucNang: []});
+    setDataModalAddPermission({ NhomNguoiDungID: 0, DanhSachChucNang: [] });
   };
 
   const submitModalAddPermission = (data) => {
@@ -754,11 +754,11 @@ const QLPhanQuyen = (props) => {
         setLoading(false);
         if (response.data.Status > 0) {
           //message success
-          message.success('Thêm thành công');
+          message.success("Thêm thành công");
           //hide modal
           closeModalAddPermission();
           //reset configData
-          resetConfig('open');
+          resetConfig("open");
         } else {
           message.destroy();
           message.error(response.data.Message);
@@ -772,14 +772,14 @@ const QLPhanQuyen = (props) => {
   };
 
   const resetConfig = (status) => {
-    if (status === 'open') {
+    if (status === "open") {
       if (NhomNguoiDungSelect) {
         let NhomNguoiDungID = NhomNguoiDungSelect;
         api
-          .sieuChiTietNhom({NhomNguoiDungID})
+          .sieuChiTietNhom({ NhomNguoiDungID })
           .then((response) => {
             if (response.data.Status > 0) {
-              api.danhSachChucNang({NhomNguoiDungID}).then((response2) => {
+              api.danhSachChucNang({ NhomNguoiDungID }).then((response2) => {
                 showConfigGroup();
                 setConfigData(response.data.Data);
                 setPermissionsChanged([]);
@@ -808,10 +808,10 @@ const QLPhanQuyen = (props) => {
   const onSelectChange = (NhomNguoiDungID) => {
     if (NhomNguoiDungSelect !== NhomNguoiDungID) {
       api
-        .sieuChiTietNhom({NhomNguoiDungID})
+        .sieuChiTietNhom({ NhomNguoiDungID })
         .then((response) => {
           if (response.data.Status > 0) {
-            api.danhSachChucNang({NhomNguoiDungID}).then((response2) => {
+            api.danhSachChucNang({ NhomNguoiDungID }).then((response2) => {
               showConfigGroup();
               setConfigData(response.data.Data);
               setPermissionsChanged([]);
@@ -837,33 +837,33 @@ const QLPhanQuyen = (props) => {
 
   const renderThaoTac = (record) => {
     return (
-      <div className={'action-btn'}>
+      <div className={"action-btn"}>
         {role.edit ? (
-          <Tooltip title={'Cấu hình'}>
+          <Tooltip title={"Cấu hình"}>
             <SettingOutlined
               onClick={() => onSelectChange(record.NhomNguoiDungID)}
             />
           </Tooltip>
         ) : (
-          ''
+          ""
         )}
         {role.edit ? (
-          <Tooltip title={'Sửa'}>
+          <Tooltip title={"Sửa"}>
             <EditOutlined
               onClick={() => showModalEditGroup(record.NhomNguoiDungID)}
             />
           </Tooltip>
         ) : (
-          ''
+          ""
         )}
         {role.delete ? (
-          <Tooltip title={'Xóa'}>
+          <Tooltip title={"Xóa"}>
             <DeleteOutlined
               onClick={() => deleteGroup(record.NhomNguoiDungID)}
             />
           </Tooltip>
         ) : (
-          ''
+          ""
         )}
       </div>
     );
@@ -878,8 +878,8 @@ const QLPhanQuyen = (props) => {
 
   const columns = [
     {
-      title: 'STT',
-      align: 'center',
+      title: "STT",
+      align: "center",
       width: 5,
       render: (text, record, index) =>
         record.NhomNguoiDungID === NhomNguoiDungSelect ? (
@@ -889,22 +889,22 @@ const QLPhanQuyen = (props) => {
         ),
     },
     {
-      title: 'Tên nhóm người dùng',
-      dataIndex: 'TenNhom',
+      title: "Tên nhóm người dùng",
+      dataIndex: "TenNhom",
       width: 50,
       render: (text, record) =>
         record.NhomNguoiDungID === NhomNguoiDungSelect ? <b>{text}</b> : text,
     },
     {
-      title: 'Ghi chú',
-      dataIndex: 'GhiChu',
+      title: "Ghi chú",
+      dataIndex: "GhiChu",
       width: 30,
-      render: (text) => <span className={'text-area-content'}>{text}</span>,
+      render: (text) => <span className={"text-area-content"}>{text}</span>,
     },
     {
-      title: 'Thao tác',
+      title: "Thao tác",
       width: 15,
-      align: 'center',
+      align: "center",
       render: (text, record) => renderThaoTac(record),
     },
   ];
@@ -912,14 +912,14 @@ const QLPhanQuyen = (props) => {
   return (
     <LayoutWrapper>
       <PageWrap>
-        <PageHeader>QUẢN LÝ PHÂN QUYỀN NGƯỜI DÙNG</PageHeader>
+        {/* <PageHeader>QUẢN LÝ PHÂN QUYỀN NGƯỜI DÙNG</PageHeader> */}
         <PageAction>
           {role.add ? (
             <Button type="primary" onClick={openModalAddEditGroup}>
               <UsergroupAddOutlined /> Thêm
             </Button>
           ) : (
-            ''
+            ""
           )}
         </PageAction>
       </PageWrap>
@@ -928,10 +928,10 @@ const QLPhanQuyen = (props) => {
           <Select
             allowClear
             showSearch
-            onChange={(value) => onSearch(value, 'CanBoID')}
+            onChange={(value) => onSearch(value, "CanBoID")}
             value={filterData.CanBoID}
             placeholder="Chọn cán bộ"
-            style={{width: 200}}
+            style={{ width: 200 }}
           >
             {DanhSachCanBo?.map((value) => (
               <Option key={value.CanBoID} value={value.CanBoID.toString()}>
@@ -943,8 +943,8 @@ const QLPhanQuyen = (props) => {
             allowClear
             defaultValue={filterData.Keyword}
             placeholder="Tìm kiếm theo tên nhóm người dùng"
-            onSearch={(value) => onSearch(value, 'Keyword')}
-            style={{width: 300}}
+            onSearch={(value) => onSearch(value, "Keyword")}
+            style={{ width: 300 }}
           />
         </BoxFilter>
         <BoxTableDiv>

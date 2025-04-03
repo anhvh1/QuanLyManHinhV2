@@ -1,38 +1,38 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {connect} from 'react-redux';
-import queryString from 'query-string';
-import actions from '../../../redux/HeThong/NhatKyHeThong/actions';
-import moment from 'moment';
-import LayoutWrapper from '../../../../components/utility/layoutWrapper';
-import PageHeader from '../../../../components/utility/pageHeader';
-import Box from '../../../../components/utility/box';
-import BoxFilter from '../../../../components/utility/boxFilter';
-import BoxTable from '../../../../components/utility/boxTable';
+import React, { useEffect, useRef, useState } from "react";
+import { connect } from "react-redux";
+import queryString from "query-string";
+import actions from "../../../redux/HeThong/NhatKyHeThong/actions";
+import moment from "moment";
+import LayoutWrapper from "../../../../components/utility/layoutWrapper";
+import PageHeader from "../../../../components/utility/pageHeader";
+import Box from "../../../../components/utility/box";
+import BoxFilter from "../../../../components/utility/boxFilter";
+import BoxTable from "../../../../components/utility/boxTable";
 import {
   Button,
   InputSearch,
-} from '../../../../components/uielements/exportComponent';
+} from "../../../../components/uielements/exportComponent";
 import {
   changeUrlFilter,
   exportExcel,
   getDefaultPageSize,
   getFilterData,
-} from '../../../../helpers/utility';
-import BoxExcel from './printExcel';
-import {FileExcelOutlined} from '@ant-design/icons';
-import PageAction from '../../../../components/utility/pageAction';
-import ModalDetail from './modalDetail';
-import {useVisible} from '../../../CustomHook/useVisible';
-import {useKey} from '../../../CustomHook/useKey';
+} from "../../../../helpers/utility";
+import BoxExcel from "./printExcel";
+import { FileExcelOutlined } from "@ant-design/icons";
+import PageAction from "../../../../components/utility/pageAction";
+import ModalDetail from "./modalDetail";
+import { useVisible } from "../../../CustomHook/useVisible";
+import { useKey } from "../../../CustomHook/useKey";
 
 function NhatKyHeThong(props) {
-  document.title = 'Nhật ký hệ thống';
+  document.title = "Nhật ký hệ thống";
   const excelRef = useRef();
 
   const [filterData, setFilterData] = useState(
-    queryString.parse(props.location.search),
+    queryString.parse(props.location.search)
   );
-  const {NhatKyHeThong, TotalRow, TableLoading} = props;
+  const { NhatKyHeThong, TotalRow, TableLoading } = props;
   const [visibleDetail, openVisibleDetail, closeVisibleDetail] = useVisible();
   const [modalKey, inceaseModalKey] = useKey();
   const [dataDetail, setDataDetail] = useState({});
@@ -44,13 +44,13 @@ function NhatKyHeThong(props) {
 
   const onSearch = (value, property) => {
     let oldFilterData = filterData;
-    let onFilter = {value, property};
+    let onFilter = { value, property };
     let newFilterData = getFilterData(oldFilterData, onFilter, null);
     setFilterData(newFilterData);
   };
 
   const onTableChange = (pagination, filters, sorter) => {
-    let onOrder = {pagination, filters, sorter};
+    let onOrder = { pagination, filters, sorter };
     let newFilterData = getFilterData(filterData, null, onOrder);
     setFilterData(newFilterData);
   };
@@ -69,47 +69,47 @@ function NhatKyHeThong(props) {
   //format table
   const columns = [
     {
-      title: 'STT',
+      title: "STT",
       width: 5,
-      align: 'center',
+      align: "center",
       render: (text, record, index) => (
         <span>{(PageNumber - 1) * PageSize + (index + 1)}</span>
       ),
     },
     {
-      title: 'Tên cán bộ',
-      dataIndex: 'TenCanBo',
+      title: "Tên cán bộ",
+      dataIndex: "TenCanBo",
       width: 30,
     },
     {
-      title: 'Lịch sử thao tác',
-      dataIndex: 'LogInfo',
+      title: "Lịch sử thao tác",
+      dataIndex: "LogInfo",
       width: 50,
       render: (text, record) => (
         <a onClick={() => showDetail(record)}>{text}</a>
       ),
     },
     {
-      title: 'Thời gian',
-      align: 'center',
+      title: "Thời gian",
+      align: "center",
       width: 15,
       render: (text, record) =>
         record.LogTime
-          ? moment(record.LogTime).format('DD/MM/YYYY HH:mm:ss')
-          : '',
+          ? moment(record.LogTime).format("DD/MM/YYYY HH:mm:ss")
+          : "",
     },
   ];
 
   const printExcel = () => {
     const html = excelRef.current.innerHTML;
-    exportExcel(html, 'Nhật ký hệ thống');
+    exportExcel(html, "Nhật ký hệ thống");
   };
 
   return (
     <LayoutWrapper>
-      <PageHeader>Nhật ký hệ thống</PageHeader>
+      {/* <PageHeader>Nhật ký hệ thống</PageHeader> */}
       <PageAction>
-        <Button type={'primary'} onClick={printExcel}>
+        <Button type={"primary"} onClick={printExcel}>
           <FileExcelOutlined /> Xuất file
         </Button>
       </PageAction>
@@ -119,8 +119,8 @@ function NhatKyHeThong(props) {
             allowClear
             defaultValue={filterData.Keyword}
             placeholder="Nhập nội dung tìm kiếm"
-            onSearch={(value) => onSearch(value.trim(), 'Keyword')} // Sử dụng trim() để loại bỏ khoảng trắng ở đầu và cuối
-            style={{width: 300}}
+            onSearch={(value) => onSearch(value.trim(), "Keyword")} // Sử dụng trim() để loại bỏ khoảng trắng ở đầu và cuối
+            style={{ width: 300 }}
           />
         </BoxFilter>
         <BoxTable

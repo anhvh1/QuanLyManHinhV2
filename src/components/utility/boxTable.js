@@ -9,7 +9,7 @@ const DataTable = styled(Table)`
   overflow-x: auto;
   background-color: #ffffff;
   .ant-table-pagination.ant-pagination {
-    margin: 5px 0 !important;
+    margin: 15px 0 !important;
   }
 
   .ant-table-body {
