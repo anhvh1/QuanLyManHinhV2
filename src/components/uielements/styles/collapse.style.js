@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import {palette} from 'styled-theme';
-import {transition} from '../../../settings/style-util';
+import styled from "styled-components";
+import { palette } from "styled-theme";
+import { transition } from "../../../settings/style-util";
 
 const Collapse = (ComponentName) => styled(ComponentName)`
   width: 100%;
@@ -47,7 +47,7 @@ const Collapse = (ComponentName) => styled(ComponentName)`
     }
   }
   .red-panel > .ant-collapse-header:first-child > .ant-collapse-header-text {
-    color: ${palette('text', 5)};
+    color: ${palette("text", 5)};
     font-size: 17px;
     /* color: red; */
     width: 100%;
@@ -56,15 +56,15 @@ const Collapse = (ComponentName) => styled(ComponentName)`
     font-weight: 600;
     &::before {
       position: absolute;
-      content: '';
+      content: "";
       width: 30%;
-      background-color: ${palette('text', 5)};
+      background-color: ${palette("text", 5)};
       height: 2px;
       bottom: 0;
     }
   }
   .black-panel > .ant-collapse-header:first-child > .ant-collapse-header-text {
-    color: ${palette('text', 6)};
+    color: ${palette("text", 6)};
     font-size: 14px;
     /* color: red; */
     width: 100%;
@@ -91,7 +91,7 @@ const Collapse = (ComponentName) => styled(ComponentName)`
     .anticon {
       font-size: 18px !important;
     }
-    /* color: ${palette('text', 5)}; */
+    /* color: ${palette("text", 5)}; */
   }
   .customize-panel {
     margin-top: 15px;
@@ -105,7 +105,7 @@ const Collapse = (ComponentName) => styled(ComponentName)`
       .anticon {
         font-size: 18px !important;
       }
-      /* color: ${palette('text', 5)}; */
+      /* color: ${palette("text", 5)}; */
     }
   }
   .ant-collapse-extra {

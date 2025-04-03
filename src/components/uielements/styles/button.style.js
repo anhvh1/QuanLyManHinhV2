@@ -1,18 +1,12 @@
-import styled from 'styled-components';
-import {palette} from 'styled-theme';
-import {transition} from '../../../settings/style-util';
+import styled from "styled-components";
+import { palette } from "styled-theme";
+import { transition } from "../../../settings/style-util";
 
 const Buttons = (ComponentName) => styled(ComponentName)`
-  &.btn-center {
-    display: flex !important;
+  &.ant-btn {
+    display: flex;
     align-items: center;
     justify-content: center;
-  }
-  &.ant-btn {
-    /* display: flex;
-    align-items: center; */
-    gap: 5px;
-    display: inline-block;
     margin-bottom: 0;
     font-weight: 500;
     text-align: center;
@@ -23,89 +17,48 @@ const Buttons = (ComponentName) => styled(ComponentName)`
     border: 1px solid transparent;
     white-space: nowrap;
     line-height: 1.5;
-    padding: 0 8px;
-    font-size: 13px;
+    padding: 0 15px;
+    font-size: 14px;
     border-radius: 4px;
-    min-width: 100px;
-    height: 30px;
+    height: 36px;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
     position: relative;
-    color: ${palette('text', 1)};
-    border-color: ${palette('border', 0)};
+    color: ${palette("text", 1)};
+    border-color: ${palette("border", 0)};
     ${transition()};
 
-    .btn-icon__img {
-      width: 20px;
-      height: auto;
-    }
-
-    &.ant-btn::before {
-      content: '${(props) => (props.contentsub ? props.contentsub : '')}';
-      position: absolute;
-      top: ${(props) => props.top};
-      right: ${(props) => props.right};
-      left: ${(props) => props.left};
-      padding: 0 5px;
-      bottom: ${(props) => props.bottom};
-      font-size: ${(props) => (props.fontSizeSub ? props.fontSizeSub : '9px')};
-      background: ${(props) => props.backgroundSub};
-      color: ${(props) => (props.colorSub ? props.colorSub : '#000')};
-      writing-mode: ${(props) =>
-        props.mode === 'vertical' ? 'vertical-lr' : 'none'};
-      /* width: 5%; */
-      transform: ${(props) =>
-        props.mode === 'vertical' ? 'rotate(180deg)' : 'none'};
-      height: ${(props) => (props.mode === 'vertical' ? '100%' : 'none')};
-      display: flex;
-      justify-content: ${(props) =>
-        props.center || props.mode === 'vertical' ? 'center' : ''};
-      align-items: center;
-    }
-
     &:hover {
-      border-color: ${palette('primary', 0)};
-      color: ${palette('primary', 0)};
+      border-color: ${palette("primary", 0)};
+      color: ${palette("primary", 0)};
     }
 
     > .anticon + span,
     > span + .anticon {
       margin: ${(props) =>
-        props['data-rtl'] === 'rtl' ? '0 0.5em 0 0' : '0 0 0 0.5em'};
+        props["data-rtl"] === "rtl" ? "0 0.5em 0 0" : "0 0 0 0.5em"};
     }
 
     .anticon-right {
       transform: ${(props) =>
-        props['data-rtl'] === 'rtl' ? 'rotate(180deg)' : 'rotate(0)'};
+        props["data-rtl"] === "rtl" ? "rotate(180deg)" : "rotate(0)"};
     }
 
     .anticon-left {
       transform: ${(props) =>
-        props['data-rtl'] === 'rtl' ? 'rotate(180deg)' : 'rotate(0)'};
+        props["data-rtl"] === "rtl" ? "rotate(180deg)" : "rotate(0)"};
     }
 
     &.ant-btn-primary {
-      background-color: ${palette('primary', 0)};
-      border-color: ${palette('primary', 0)};
+      background-color: ${palette("primary", 14)};
+      border-color: ${palette("primary", 14)};
 
       &:hover {
-        background-color: ${palette('primary', 1)};
-        border-color: ${palette('primary', 1)};
+        background-color: ${palette("primary", 15)};
+        border-color: ${palette("primary", 15)};
         color: #fff;
-      }
-    }
-
-    &.ant-btn-second {
-      background: ${palette('primary', 19)} !important;
-      border-color: ${palette('primary', 19)} !important;
-      color: ${palette('primary', 17)} !important;
-      &:hover {
-        opacity: 0.8;
-        /* background-color: ${palette('primary', 17)};
-        border-color: ${palette('primary', 17)};
-        color: #fff; */
       }
     }
 
@@ -116,10 +69,10 @@ const Buttons = (ComponentName) => styled(ComponentName)`
 
       &.ant-btn-loading:not(.ant-btn-circle):not(.ant-btn-circle-outline) {
         padding: ${(props) =>
-          props['data-rtl'] === 'rtl' ? '0 24px 0 15px' : '0 15px 0 24px'};
+          props["data-rtl"] === "rtl" ? "0 24px 0 15px" : "0 15px 0 24px"};
         .anticon {
           margin: ${(props) =>
-            props['data-rtl'] === 'rtl' ? '0 -17px 0 0' : '0 0 0 -17px'};
+            props["data-rtl"] === "rtl" ? "0 -17px 0 0" : "0 0 0 -17px"};
         }
       }
     }
@@ -136,32 +89,32 @@ const Buttons = (ComponentName) => styled(ComponentName)`
 
     &.ant-btn-dashed {
       border-style: dashed;
-      border-color: ${palette('border', 1)};
+      border-color: ${palette("border", 1)};
 
       &:hover {
-        color: ${palette('primary', 0)};
-        border-color: ${palette('primary', 0)};
+        color: ${palette("primary", 0)};
+        border-color: ${palette("primary", 0)};
       }
     }
 
     &.ant-btn-danger {
-      background-color: ${palette('error', 0)};
-      border-color: ${palette('error', 0)};
+      background-color: ${palette("error", 0)};
+      border-color: ${palette("error", 0)};
       color: #ffffff;
 
       &:hover {
-        background-color: ${palette('error', 2)};
-        border-color: ${palette('error', 2)};
+        background-color: ${palette("error", 2)};
+        border-color: ${palette("error", 2)};
       }
 
       &.ant-btn-background-ghost {
-        color: ${palette('error', 0)};
+        color: ${palette("error", 0)};
         background-color: transparent;
-        border-color: ${palette('error', 0)};
+        border-color: ${palette("error", 0)};
 
         &:hover {
-          color: ${palette('error', 2)};
-          border-color: ${palette('error', 2)};
+          color: ${palette("error", 2)};
+          border-color: ${palette("error", 2)};
         }
       }
     }
@@ -199,16 +152,16 @@ const Buttons = (ComponentName) => styled(ComponentName)`
     &.ant-btn[disabled]:active,
     &.ant-btn.disabled.active,
     &.ant-btn[disabled].active {
-      color: ${palette('grayscale', 2)};
+      color: ${palette("grayscale", 2)};
       background-color: #f7f7f7;
-      border-color: ${palette('border', 0)};
+      border-color: ${palette("border", 0)};
       cursor: not-allowed;
     }
 
     &.ant-btn-loading:not(.ant-btn-circle):not(.ant-btn-circle-outline)
       .anticon {
       margin: ${(props) =>
-        props['data-rtl'] === 'rtl' ? '0 -14px 0 0' : '0 0 0 -14px'};
+        props["data-rtl"] === "rtl" ? "0 -14px 0 0" : "0 0 0 -14px"};
     }
 
     &.isoButton {
@@ -233,11 +186,11 @@ const Buttons = (ComponentName) => styled(ComponentName)`
       user-select: none;
       position: relative;
       color: #ffffff;
-      background-color: ${palette('primary', 0)};
+      background-color: ${palette("primary", 0)};
       ${transition()};
 
       &:hover {
-        background-color: ${palette('primary', 1)};
+        background-color: ${palette("primary", 2)};
       }
 
       &.isoBtnSm {
@@ -256,9 +209,9 @@ const Buttons = (ComponentName) => styled(ComponentName)`
 
   + .ant-btn-group {
     margin-left: ${(props) =>
-      props['data-rtl'] === 'rtl' ? '0' : '-1px'} !important;
+      props["data-rtl"] === "rtl" ? "0" : "-1px"} !important;
     margin-right: ${(props) =>
-      props['data-rtl'] === 'rtl' ? '-1px' : '0'} !important;
+      props["data-rtl"] === "rtl" ? "-1px" : "0"} !important;
   }
 `;
 
@@ -266,22 +219,22 @@ const RadioButtons = (ComponentName) => styled(ComponentName)`
   .ant-radio-button-wrapper {
     height: 35px;
     line-height: 33px;
-    color: ${palette('text', 1)};
-    border: 1px solid ${palette('border', 0)};
+    color: ${palette("text", 1)};
+    border: 1px solid ${palette("border", 0)};
     border-left: 0;
     background: #fff;
     padding: 0 20px;
 
     &:hover,
     &.ant-radio-button-wrapper-focused {
-      color: ${palette('primary', 0)};
+      color: ${palette("primary", 0)};
     }
 
     &.ant-radio-button-wrapper-checked {
       background: #fff;
-      border-color: ${palette('primary', 0)};
-      color: ${palette('primary', 0)};
-      box-shadow: -1px 0 0 0 ${palette('primary', 0)};
+      border-color: ${palette("primary", 0)};
+      color: ${palette("primary", 0)};
+      box-shadow: -1px 0 0 0 ${palette("primary", 0)};
     }
   }
 `;
@@ -300,7 +253,7 @@ const ButtonsGroup = (ComponentName) => styled(ComponentName)`
       cursor: pointer;
       background-image: none;
       border: 1px solid transparent;
-      border-color: ${palette('border', 1)};
+      border-color: ${palette("border", 1)};
       white-space: nowrap;
       line-height: 1.5;
       padding: 0 8px;
@@ -315,65 +268,65 @@ const ButtonsGroup = (ComponentName) => styled(ComponentName)`
       ${transition()};
 
       &:hover {
-        border-color: ${palette('primary', 0)};
+        border-color: ${palette("primary", 0)};
       }
 
       &.ant-btn-dashed {
         border-style: dashed;
 
         &:hover {
-          border-color: ${palette('primary', 0)};
+          border-color: ${palette("primary", 0)};
         }
       }
 
       &.ant-btn-primary {
-        border-color: ${palette('primary', 0)};
+        border-color: ${palette("primary", 0)};
 
         &:hover {
-          border-color: ${palette('primary', 1)};
+          border-color: ${palette("primary", 10)};
         }
       }
     }
 
     > .ant-btn:first-child:not(:last-child) {
       border-radius: ${(props) =>
-        props['data-rtl'] === 'rtl' ? '0 4px 4px 0' : '4px 0 0 4px'};
+        props["data-rtl"] === "rtl" ? "0 4px 4px 0" : "4px 0 0 4px"};
     }
 
     > .ant-btn:last-child:not(:first-child) {
       border-radius: ${(props) =>
-        props['data-rtl'] === 'rtl' ? '4px 0 0 4px' : '0 4px 4px 0'};
+        props["data-rtl"] === "rtl" ? "4px 0 0 4px" : "0 4px 4px 0"};
     }
 
     .ant-btn-primary:last-child:not(:first-child),
     .ant-btn-primary + .ant-btn-primary {
       border-left-color: ${(props) =>
-        props['data-rtl'] === 'rtl'
-          ? palette('primary', 0)
-          : palette('primary', 1)};
+        props["data-rtl"] === "rtl"
+          ? palette("primary", 0)
+          : palette("primary", 2)};
       border-right-color: ${(props) =>
-        props['data-rtl'] === 'rtl'
-          ? palette('primary', 1)
-          : palette('primary', 0)};
+        props["data-rtl"] === "rtl"
+          ? palette("primary", 2)
+          : palette("primary", 0)};
     }
 
     .ant-btn-primary:first-child:not(:last-child) {
       border-left-color: ${(props) =>
-        props['data-rtl'] === 'rtl'
-          ? palette('primary', 1)
-          : palette('primary', 0)};
+        props["data-rtl"] === "rtl"
+          ? palette("primary", 2)
+          : palette("primary", 0)};
       border-right-color: ${(props) =>
-        props['data-rtl'] === 'rtl'
-          ? palette('primary', 0)
-          : palette('primary', 1)};
+        props["data-rtl"] === "rtl"
+          ? palette("primary", 0)
+          : palette("primary", 2)};
     }
 
     .ant-btn + .ant-btn,
     + .ant-btn {
       margin-left: ${(props) =>
-        props['data-rtl'] === 'rtl' ? '0' : '-1px'} !important;
+        props["data-rtl"] === "rtl" ? "0" : "-1px"} !important;
       margin-right: ${(props) =>
-        props['data-rtl'] === 'rtl' ? '-1px' : '0'} !important;
+        props["data-rtl"] === "rtl" ? "-1px" : "0"} !important;
     }
 
     &.ant-btn-group-lg {
@@ -395,9 +348,9 @@ const ButtonsGroup = (ComponentName) => styled(ComponentName)`
 
   &.ant-btn-group + &.ant-btn-group {
     margin-left: ${(props) =>
-      props['data-rtl'] === 'rtl' ? '0' : '-1px'} !important;
+      props["data-rtl"] === "rtl" ? "0" : "-1px"} !important;
     margin-right: ${(props) =>
-      props['data-rtl'] === 'rtl' ? '-1px' : '0'} !important;
+      props["data-rtl"] === "rtl" ? "-1px" : "0"} !important;
   }
 `;
 
@@ -408,11 +361,11 @@ const GhostButtons = (ComponentName) => styled(ComponentName)`
     color: #fff;
 
     &.ant-btn-primary {
-      color: ${palette('primary', 0)};
+      color: ${palette("primary", 0)};
       background-color: transparent;
-      border-color: ${palette('primary', 0)};
+      border-color: ${palette("primary", 0)};
     }
   }
 `;
 
-export {Buttons, ButtonsGroup, RadioButtons, GhostButtons};
+export { Buttons, ButtonsGroup, RadioButtons, GhostButtons };

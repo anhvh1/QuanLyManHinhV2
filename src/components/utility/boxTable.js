@@ -7,80 +7,28 @@ import WithDirection from "../../settings/withDirection";
 const DataTable = styled(Table)`
   overflow: hidden;
   overflow-x: auto;
-  // background: ${palette("primary", 22)};
-  :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper .ant-table {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    color: #C5C2C2;
-    font-size: 14px;
-    line-height: 1.5714285714285714;
-    list-style: none;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-      "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
-      "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-    background: transparent;
-    border-radius: 8px 8px 0 0;
-  }
-    :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper .ant-table-thead >tr>th, :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper .ant-table-thead >tr>td {
-    position: relative;
-    color: #C5C2C2;
-    font-weight: 600;
-    text-align: start;
-    background: transparent;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background 0.2s ease;
-}
-  :where(.css-dev-only-do-not-override-cg4vza).ant-table-wrapper table {
-    width: 100%;
-    text-align: start;
-    border-radius: 8px 8px 0 0;
-    border-collapse: collapse;
-    border-spacing: none;
-  }
-  .ant-table-tbody .ant-table-row > .ant-table-cell-row-hover {
-    background: ${palette("primary", 22)};
-  }
-
-  .ant-table-tbody > tr > td {
-    border-top: 1px solid ${palette("color", 21)};
-    border-bottom: none;
-    border-left: none !important;
-    border-right: none !important;
-  }
-
-  .ant-table-tbody > tr:last-child > td {
-    border-bottom: 1px solid ${palette("color", 21)};
-  }
-
-  .ant-table-thead > tr > th {
-    border: none !important;
-  }
-
-  .ant-table-container {
-    // background: ${palette("primary", 22)};
-    border-inline-start: none !important;
-    border-top: none !important;
-  }
+  background-color: #ffffff;
   .ant-table-pagination.ant-pagination {
-    margin: 15px 0 !important;
+    margin: 5px 0 !important;
   }
 
   .ant-table-body {
     /* min-height: 520px; */
     overflow-x: auto;
-    background-color: transparent;
+
     .ant-table-selection-column .ant-checkbox-wrapper {
       line-height: initial;
     }
   }
 
   .ant-table-thead > tr > th {
-    color: #C5C2C2;
-    font-size: 14px;
-    background-color: ${palette("primary", 22)};
+    color: ${palette("secondary", 2)};
+    font-size: 13px;
+    background-color: #f9f9f9;
     border-bottom: 0;
     text-align: center;
+    border-top: none;
+    border-left: none;
 
     &.ant-table-column-sort {
       background: ${palette("secondary", 1)};
@@ -103,9 +51,9 @@ const DataTable = styled(Table)`
   }
 
   .ant-table-tbody > tr > td {
-    font-size: 14px;
-    color: #C5C2C2;
-    /* border-bottom: 1px solid ${palette("border", 0)}; */
+    font-size: 12px;
+    color: ${palette("text", 3)};
+    border-bottom: 1px solid ${palette("border", 0)};
 
     a {
       color: ${palette("primary", 0)};
@@ -118,12 +66,12 @@ const DataTable = styled(Table)`
   }
 
   .ant-table-bordered .ant-table-thead > tr > th {
-    /* border-bottom: 1px solid ${palette("border", 0)}; */
+    border-bottom: 1px solid ${palette("border", 0)};
   }
 
   .ant-table-bordered .ant-table-thead > tr > th,
   .ant-table-bordered .ant-table-tbody > tr > td {
-    /* border-right: 1px solid ${palette("border", 0)}; */
+    border-right: 1px solid ${palette("border", 0)};
   }
 
   .ant-table-pagination {
@@ -132,13 +80,13 @@ const DataTable = styled(Table)`
 
   .ant-pagination-prev,
   .ant-pagination-next {
-    /* border: 1px solid ${palette("border", 0)}; */
+    border: 1px solid ${palette("border", 0)};
   }
 
   .ant-pagination-disabled,
   .ant-pagination-prev.ant-pagination-disabled,
   .ant-pagination-next.ant-pagination-disabled {
-    /* border: 1px solid ${palette("border", 0)}; */
+    border: 1px solid ${palette("border", 0)};
 
     a {
       border: 0;
@@ -162,8 +110,8 @@ const DataTable = styled(Table)`
     margin: 0 8px 0 0;
 
     &:hover {
-      /* border-color: ${palette("primary", 14)};
-      ${transition()}; */
+      border-color: ${palette("primary", 14)};
+      ${transition()};
     }
 
     &:hover a {
@@ -172,11 +120,9 @@ const DataTable = styled(Table)`
   }
 
   .ant-pagination-item-active {
-    background-color: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.2);
-    &:hover {
-      border-color: rgba(255, 255, 255, 0.2);
-    }
+    background-color: ${palette("primary", 14)};
+    border-color: ${palette("primary", 14)};
+
     a {
       color: #ffffff;
     }
@@ -209,7 +155,7 @@ const DataTable = styled(Table)`
   .ant-table-title {
     background: ${palette("secondary", 1)};
     color: ${palette("secondary", 2)};
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
     padding: 16px 30px;
     ${borderRadius()};
@@ -244,8 +190,8 @@ const DataTable = styled(Table)`
     .isoTableSearchBox {
       padding: 20px;
       display: flex;
-
-      /* border: 1px solid ${palette("border", 0)}; */
+      background: #ffffff;
+      border: 1px solid ${palette("border", 0)};
       ${boxShadow("0 1px 6px rgba(0,0,0,0.2)")};
 
       input {
@@ -260,7 +206,7 @@ const DataTable = styled(Table)`
         border: 1px solid ${palette("secondary", 7)};
         outline: 0 !important;
         overflow: hidden;
-
+        background-color: #ffffff;
         ${borderRadius("3px 0 0 3px")};
         ${transition()};
         ${boxShadow("none")};
@@ -328,8 +274,8 @@ const DataTable = styled(Table)`
   &.isoGroupTable {
     .ant-table-thead > tr {
       th {
-        /* border: 1px solid ${palette("border", 0)};
-        border-left: 0; */
+        border: 1px solid ${palette("border", 0)};
+        border-left: 0;
 
         &[rowspan] {
           text-align: center;
@@ -343,14 +289,14 @@ const DataTable = styled(Table)`
       &:first-child {
         th {
           &:first-child {
-            /* border-left: 1px solid ${palette("border", 0)}; */
+            border-left: 1px solid ${palette("border", 0)};
           }
         }
       }
 
       &:last-child {
         th {
-          /* border-top: 0; */
+          border-top: 0;
         }
       }
     }
@@ -358,14 +304,14 @@ const DataTable = styled(Table)`
     .ant-table-tbody {
       .ant-table-row {
         td {
-          /* border-right: 1px solid ${palette("border", 0)}; */
+          border-right: 1px solid ${palette("border", 0)};
 
           &:first-child {
-            /* border-left: 1px solid ${palette("border", 0)}; */
+            border-left: 1px solid ${palette("border", 0)};
           }
 
           &:last-child {
-            /* border-left: 0 solid ${palette("border", 0)}; */
+            border-left: 0 solid ${palette("border", 0)};
           }
 
           &.isoImageCell {
@@ -375,26 +321,8 @@ const DataTable = styled(Table)`
       }
     }
   }
-  .ant-pagination {
-    color: ${palette("secondary", 12)};
-  }
-  .anticon svg {
-    color: ${palette("secondary", 12)};
-  }
-  .ant-pagination .ant-pagination-item a {
-    display: block;
-    padding: 0 6px;
-    color: ${palette("secondary", 12)};
-  }
-  .ant-select:not(.ant-select-customize-input) .ant-select-selector {
-    position: relative;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(119, 100, 228, 1);
-    border-radius: 2px;
-    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-    color: ${palette("secondary", 12)};
-  }
 `;
+
 const WDCustomizedTableWrapper = styled.div`
   .isoCustomizedTableControlBar {
     margin-bottom: 40px;
@@ -414,7 +342,7 @@ const WDCustomizedTableWrapper = styled.div`
     }
 
     .ant-switch-checked {
-      /* border-color: ${palette("primary", 0)}; */
+      border-color: ${palette("primary", 0)};
       background-color: ${palette("primary", 0)};
     }
   }
@@ -423,7 +351,6 @@ const WDCustomizedTableWrapper = styled.div`
 const EmptyTable = styled(Table)`
   .ant-table-placeholder {
     border: none !important;
-    background: transparent;
   }
 `;
 

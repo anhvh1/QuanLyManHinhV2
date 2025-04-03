@@ -624,6 +624,7 @@ html[dir="rtl"] .dz-hidden-input {
 
 .ant-input-group {
   height: 35px;
+  display: flex;
 }
 .ant-input-group input {
   height: 100%;

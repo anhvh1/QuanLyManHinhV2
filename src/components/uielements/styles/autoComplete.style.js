@@ -1,11 +1,22 @@
-import styled from 'styled-components';
-import { palette } from 'styled-theme';
+import styled from "styled-components";
+import { palette } from "styled-theme";
 
-const AntAutoComplete = ComponentName => styled(ComponentName)`
+const AntAutoComplete = (ComponentName) => styled(ComponentName)`
   width: 100%;
-
+  .ant-select-status-error {
+    .ant-select-selection-search-input {
+      border: 1px solid red !important;
+    }
+  }
   &.ant-select {
+    .ant-select-selector {
+      width: 100%;
+      .anticon-down {
+        color: #b1aeae;
+      }
+    }
     .ant-select-selection {
+      width: 100%;
       &.ant-select-selection--single {
         height: 35px;
 
@@ -17,10 +28,10 @@ const AntAutoComplete = ComponentName => styled(ComponentName)`
           .ant-select-search__field__placeholder {
             top: 8px;
             margin: 0 10px;
-            left: ${props => (props['data-rtl'] === 'rtl' ? 'inherit' : '0')};
-            right: ${props =>
-              props['data-rtl'] === 'rtl' ? '9px' : 'inherit'};
-            color: ${palette('grayscale', 1)};
+            left: ${(props) => (props["data-rtl"] === "rtl" ? "inherit" : "0")};
+            right: ${(props) =>
+              props["data-rtl"] === "rtl" ? "9px" : "inherit"};
+            color: ${palette("grayscale", 1)};
           }
 
           .ant-input {
@@ -28,21 +39,21 @@ const AntAutoComplete = ComponentName => styled(ComponentName)`
             width: 100%;
             height: 35px;
             font-size: 13px;
-            text-align: ${props =>
-              props['data-rtl'] === 'rtl' ? 'right' : 'left'};
+            text-align: ${(props) =>
+              props["data-rtl"] === "rtl" ? "right" : "left"};
             line-height: 1.5;
-            color: ${palette('text', 1)};
-            border: 1px solid ${palette('border', 0)};
+            color: ${palette("text", 1)};
+            border: 1px solid ${palette("border", 0)};
             transition: all 0.3s;
 
             &:focus {
-              border-color: ${palette('primary', 0)};
+              border-color: ${palette("primary", 0)};
               outline: 0;
-              box-shadow: 0 0 0 2px ${palette('primary', 3)};
+              box-shadow: 0 0 0 2px ${palette("primary", 3)};
             }
 
             &:hover {
-              border-color: ${palette('primary', 0)};
+              border-color: ${palette("primary", 0)};
             }
           }
         }
@@ -55,7 +66,7 @@ const AntAutoComplete = ComponentName => styled(ComponentName)`
   }
 `;
 
-const AntAutoCompleteOption = ComponentName => styled(ComponentName)`
+const AntAutoCompleteOption = (ComponentName) => styled(ComponentName)`
   color: #000000;
 `;
 

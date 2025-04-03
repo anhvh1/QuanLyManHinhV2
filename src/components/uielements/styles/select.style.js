@@ -4,23 +4,15 @@ import { transition } from "../../../settings/style-util";
 
 const AntSelect = (ComponentName) => styled(ComponentName)`
   &.ant-select {
-    .ant-select-selector {
-      position: relative;
-      background-color: #3a59e533;
-      border: 1px solid #3a59e533;
-      border-radius: 2px;
-      height: 40px;
-      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-      color: #c5c2c2;
-    }
     box-sizing: border-box;
     display: inline-block;
     position: relative;
-    color: #c5c2c2;
+    color: ${palette("text", 1)};
     font-size: 13px;
+    height: 35px;
 
     .ant-select-selection {
-      background-color: red;
+      background-color: #fff;
       border-radius: 4px;
       border: 1px solid ${palette("border", 0)};
       ${transition()};
@@ -81,65 +73,28 @@ const AntSelect = (ComponentName) => styled(ComponentName)`
 
     .ant-select-selection--multiple .ant-select-selection__choice {
       background-color: ${palette("grayscale", 4)};
-      color: #c5c2c2;
+      color: ${palette("text", 1)};
     }
 
     .ant-select-tree li a {
       font-size: 13px;
-      color: #c5c2c2;
+      color: ${palette("text", 1)};
     }
-  }
-  :where(.css-dev-only-do-not-override-cg4vza).ant-select-single {
-    font-size: 14px;
-    height: 40px;
-  }
-  .ant-select-selection-placeholder {
-    padding-right: 18px;
-    color: #c5c2c2;
-  }
-  :where(.css-dev-only-do-not-override-cg4vza).ant-select-outlined:not(
-      .ant-select-disabled
-    ):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover
-    .ant-select-selector {
-    border-color: transparent;
-  }
-  :where(.css-dev-only-do-not-override-cg4vza).ant-select .ant-select-arrow {
-    display: flex;
-    align-items: center;
-    color: #c5c2c2;
-    font-style: normal;
-    line-height: 1;
-    text-align: center;
-    text-transform: none;
-    vertical-align: -0.125em;
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    position: absolute;
-    top: 50%;
-    inset-inline-start: auto;
-    inset-inline-end: 11px;
-    height: 12px;
-    margin-top: -6px;
-    font-size: 12px;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-  .ant-select-clear {
-    color: rgb(197, 194, 194); /* Đổi màu của biểu tượng */
-    cursor: pointer; /* Tùy chỉnh kiểu con trỏ */
-    background: transparent;
-  }
 
-  .ant-select-clear:hover {
-    color: rgb(197, 194, 194); /* Màu sắc khi hover */
+    .ant-select-selector {
+      .ant-select-selection-overflow {
+        max-height: 200px;
+        overflow: auto;
+      }
+    }
   }
 `;
 
 const AntSelectOption = (ComponentName) => styled(ComponentName)`
-  color: #c5c2c2;
+  color: #000000;
+
   .ant-select-dropdown-menu-item {
-    color: #c5c2c2;
+    color: ${palette("text", 1)};
   }
 `;
 

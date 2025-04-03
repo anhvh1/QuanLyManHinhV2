@@ -109,7 +109,7 @@ export class App extends Component {
                             ? "11% 89%"
                             : "100%",
                           overflow: "auto",
-                          background: BackgroundLayout ? " white" : "#101349",
+                          background: "#fff",
                         }}
                       >
                         <div className="wrapper-content">

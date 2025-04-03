@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { palette } from "styled-theme";
+import CustomInputSearch from "../inputSearch";
 import {
   transition,
   borderRadius,
@@ -7,33 +8,20 @@ import {
 } from "../../../settings/style-util";
 
 const InputWrapper = (ComponentName) => styled(ComponentName)`
-  .primary {
-    background: red;
-  }
-  &.ant-input[data-type="submited"] {
-    background-color: ${palette("color", 23)};
-    color: ${palette("color", 22)};
-    min-height: 2.5rem;
-    border: none;
-    border: 1px solid ${palette("primary", 23)} !important;
-  }
   &.ant-input {
     padding: 4px 10px;
     width: 100%;
-    min-height: 35px;
+    height: 35px;
     cursor: text;
     text-align: ${(props) => (props["data-rtl"] === "rtl" ? "right" : "left")};
-    font-size: 0.8rem;
+    font-size: 13px;
     line-height: 1.5;
-    background-color: ${palette("primary", 17)};
     color: ${palette("text", 1)};
-    border-radius: 10px;
-
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid ${palette("border", 5)};
+    ${borderRadius("4px")};
     ${transition()};
-
-    &::-internal-autofill-selected {
-      background-color: ${palette("color", 23)};
-    }
 
     &:focus {
       border-color: ${palette("primary", 0)};
@@ -219,19 +207,18 @@ const InputGroupWrapper = (ComponentName) => styled(ComponentName)`
 `;
 
 const TextAreaWrapper = (ComponentName) => styled(ComponentName)`
-  &.ant-input,
-  &.ant-input-disabled {
-    padding: 10px;
+  &.ant-input {
+    padding: 4px 10px;
     width: 100%;
-    height: auto;
-    min-height: 90px;
+    height: 35px;
     cursor: text;
-    font-size: 0.8rem;
+    font-size: 13px;
     line-height: 1.5;
-    background-color: ${palette("color", 23)};
-    color: ${palette("color", 22)};
-    border: none;
-    ${borderRadius("10px")};
+    color: ${palette("text", 1)};
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    ${borderRadius("4px")};
     ${transition()};
 
     &:focus {
@@ -256,52 +243,18 @@ const TextAreaWrapper = (ComponentName) => styled(ComponentName)`
 `;
 
 const InputSearchWrapper = (ComponentName) => styled(ComponentName)`
-  .ant-input-affix-wrapper,
-  .ant-input-group-addon {
-    border: 1px solid #3a59e533 !important;
-    background: #3a59e533;
-    inset-inline-start: 0 !important;
-  }
-  .ant-input-wrapper .ant-input-group-addon:first-child {
-    border-right: none !important;
-  }
-  .ant-input-wrapper .ant-input-group-addon:last-child {
-    border-left: none !important;
-    button {
-      border: none;
-      background: transparent;
-    }
-  }
-  .ant-input-affix-wrapper {
-    border-left: 1px solid #3a59e533 !important;
-    border-right: none !important;
-  }
-  .ant-input-group-addon {
-    color: #c5c2c2;
-  }
-  .ant-input-affix-wrapper {
-    .ant-input-clear-icon {
-      margin: 0;
-      color: #c5c2c2;
-      font-size: 12px;
-      vertical-align: -1px;
-      cursor: pointer;
-      transition: color 0.3s;
-    }
-    .anticon {
-      font-size: 1rem !important;
-      color: #c5c2c2;
-    }
+  &.ant-input-affix-wrapper {
     .ant-input {
       padding: 4px 10px;
       width: 100%;
-      height: 30px;
+      height: 35px;
       cursor: text;
-      font-size: 0.8rem;
+      font-size: 13px;
       line-height: 1.5;
-      color: #c5c2c2;
-      background: transparent;
-
+      color: ${palette("text", 1)};
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid ${palette("border", 0)};
       ${borderRadius("4px")};
       ${transition()};
 
@@ -320,18 +273,18 @@ const InputSearchWrapper = (ComponentName) => styled(ComponentName)`
       }
 
       &::-webkit-input-placeholder {
-        color: #c5c2c2;
+        color: ${palette("grayscale", 0)};
       }
 
       &:-moz-placeholder {
-        color: #c5c2c2;
+        color: ${palette("grayscale", 0)};
       }
 
       &::-moz-placeholder {
-        color: #c5c2c2;
+        color: ${palette("grayscale", 0)};
       }
       &:-ms-input-placeholder {
-        color: #c5c2c2;
+        color: ${palette("grayscale", 0)};
       }
     }
 
@@ -346,18 +299,12 @@ const InputSearchWrapper = (ComponentName) => styled(ComponentName)`
     }
 
     .ant-input-search-icon {
-      color: #c5c2c2;
+      color: ${palette("grayscale", 0)};
 
       &:hover {
-        color: #c5c2c2;
+        color: ${palette("primary", 0)};
       }
     }
-  }
-  :where(.css-dev-only-do-not-override-cg4vza).ant-input-search
-    > .ant-input-group
-    > .ant-input-group-addon:last-child
-    .ant-input-search-button:not(.ant-btn-primary) {
-    color: #c5c2c2;
   }
 `;
 

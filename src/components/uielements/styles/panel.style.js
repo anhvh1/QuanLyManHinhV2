@@ -1,21 +1,21 @@
-import styled from 'styled-components';
-import {palette} from 'styled-theme';
-import {transition} from '../../../settings/style-util';
+import styled from "styled-components";
+import { palette } from "styled-theme";
+import { transition } from "../../../settings/style-util";
 
-const Collapse = ComponentName => styled(ComponentName)`
+const Collapse = (ComponentName) => styled(ComponentName)`
   .red-panel {
-    color: ${palette('text', 5)};
+    color: ${palette("text", 5)};
     &::before {
       position: absolute;
-      content: '';
+      content: "";
       width: 35%;
-      background-color: ${palette('text', 5)};;
+      background-color: ${palette("text", 5)};
       height: 2px;
       bottom: 0;
     }
   }
   .black-panel {
-    color: ${palette('text', 6)};
+    color: ${palette("text", 6)};
   }
 `;
 

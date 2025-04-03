@@ -5,19 +5,9 @@ import { siteConfig } from '../../settings';
 export default ({ collapsed }) => {
   return (
     <div className="isoLogoWrapper">
-      {collapsed ? (
-        <div>
-          <h3>
-            <Link to="/dashboard">
-              <i className={siteConfig.siteIcon} />
-            </Link>
-          </h3>
-        </div>
-      ) : (
-        <h3>
-          <Link to="/dashboard">{siteConfig.siteName}</Link>
-        </h3>
-      )}
+      <div>
+        <Link to={`${siteConfig.mainRouter}`}>TRANG TỔNG QUAN</Link>
+      </div>
     </div>
   );
 };

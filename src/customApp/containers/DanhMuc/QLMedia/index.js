@@ -826,14 +826,11 @@ const DMChiTieu = (props) => {
     <LayoutWrapper>
       <PageWrap>
         <PageHeader>Quản Lý Media</PageHeader>
-        <PageAction>{role?.add ? renderActionAdd() : ""}</PageAction>
         <PageAction>
-          {/* {role ? role.add ?  */}
           <Button type="primary" onClick={showModalAddMedia}>
             <PlusOutlined />
             Thêm mới
           </Button>
-          {/* //  : '' : ''} */}
         </PageAction>
       </PageWrap>
 
