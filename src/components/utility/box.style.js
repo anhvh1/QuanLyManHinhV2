@@ -4,11 +4,15 @@ import { palette } from "styled-theme";
 const BoxWrapper = styled.div`
   width: 100%;
   height: 100%;
-  padding: 20px;
-  background-color: #ffffff;
+  /* padding: 20px; */
+  /* background-color: #ffffff; */
+  flex: 1;
   /* border: 1px solid ${palette("border", 0)}; */
   margin: 0 0 30px;
+  overflow: hidden;
   /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25); */
+  display: flex;
+  flex-direction: column;
 
   &:last-child {
     margin-bottom: 0;

@@ -6,6 +6,8 @@ const LayoutContentWrapper = styled.div`
   display: flex;
   flex-flow: row wrap;
   overflow-y: hidden;
+  height: 100%;
+  flex-direction: column;
   /* height: 100%; */
   ${(props) => (props.scrollWidth ? `min-width: ${props.scrollWidth}px;` : "")}
   ${(props) => (props.fullHeight ? `height: 100%;` : "")}

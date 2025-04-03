@@ -461,15 +461,15 @@ html[dir="rtl"] .dz-hidden-input {
 }
 
 .ant-layout-footer {
-  font-size: 13px;
-  z-index: 99;
-  position: fixed;
-  bottom: 0;
-  left: auto;
-  right: 0;
-  text-align: center;
+  /* font-size: 13px; */
+  /* z-index: 99; */
+  /* position: fixed; */
+  /* bottom: 0; */
+  /* left: auto; */
+  /* right: 0; */
+  /* text-align: center;
   display: flex;
-  justify-content: center;
+  justify-content: center; */
   width: 100%;
 }
 
