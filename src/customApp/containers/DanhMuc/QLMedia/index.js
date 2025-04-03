@@ -121,7 +121,7 @@ const DMChiTieu = (props) => {
     //get filter data
     let oldFilterData = { ...filterData };
     let onFilter = { value, property };
-    let newFilterData = getFilterData(oldFilterData, null, onOrder);
+    let newFilterData = getFilterData(oldFilterData, onFilter, null);
     //get filter data
     setFilterData(newFilterData);
     changeUrlFilter(newFilterData);
@@ -638,12 +638,32 @@ const DMChiTieu = (props) => {
     setVisibleModalAddEditMedia(false);
   };
   const [Status, setStatus] = useState([]);
-  const submitModalAddEdit = (data, FileData) => {
+  const submitModalAddEdit = (data, filesData) => {
     setConfirmLoadingMedia(true);
     if (actionmedia === "add") {
       const formSave = new FormData();
-      formSave.append("files", FileData);
-      formSave.append("quanlymediastr", JSON.stringify(data));
+
+      // Append each file to formData
+      filesData.forEach((file) => {
+        formSave.append("files", file);
+      });
+
+      // Create filesInfo array with corresponding data for each file
+      const filesInfo = data.map((file) => ({
+        TenFile: file.TenFile,
+        Loai: file.Loai,
+        ThoiLuongTrinhChieu: file.ThoiLuongTrinhChieu,
+        KichThuoc: file.KichThuoc,
+        TrangThai: file.TrangThai,
+        Tag: file.Tag,
+        ThuMucID: file.ThuMucID,
+      }));
+      console.log("filesInfo", filesInfo);
+
+      // Append each fileInfo as a separate entry
+      filesInfo.forEach((fileInfo) => {
+        formSave.append("filesInfo", JSON.stringify(fileInfo));
+      });
 
       formDataCaller(apiUrl.themmedia, formSave)
         .then((response) => {
@@ -652,12 +672,14 @@ const DMChiTieu = (props) => {
             setStatus(response.data.Status);
             message.success(response.data.Message);
             props.getInitData(filterData); //get list
+            hideModalAddEdit(); // Close modal after successful upload
           } else {
             message.destroy();
             message.error(response.data.Message);
           }
         })
         .catch((error) => {
+          setConfirmLoadingMedia(false);
           message.destroy();
           message.error(error.toString());
         });

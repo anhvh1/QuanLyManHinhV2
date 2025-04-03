@@ -1,39 +1,39 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import {
   Form,
-  Space,
-  DatePicker,
-  Select,
-  Upload,
   Row,
   Col,
   TreeSelect,
   Spin,
   message,
-} from 'antd';
-import {Modal as ModalAnt} from 'antd';
+} from "antd";
+import { Modal as ModalAnt } from "antd";
 import {
   Button,
   Modal,
   Input,
-} from '../../../../components/uielements/exportComponent';
+} from "../../../../components/uielements/exportComponent";
 import {
   PlusOutlined,
   UploadOutlined,
   CheckCircleOutlined,
   StopOutlined,
-} from '@ant-design/icons';
-import {REQUIRED} from '../../../../settings/constants';
-import moment from 'moment';
-import dayjs from 'dayjs';
-import './style.css';
+} from "@ant-design/icons";
+import { REQUIRED } from "../../../../settings/constants";
+import "./style.css";
 
-const {Item, useForm} = Form;
+const { Item, useForm } = Form;
 
 export default (props) => {
   const [form] = useForm();
-  const {dataEdit, visible, actionmedia, DanhSachThuMuc, Statuss, setStatuss} =
-    props;
+  const {
+    dataEdit,
+    visible,
+    actionmedia,
+    DanhSachThuMuc,
+    Statuss,
+    setStatuss,
+  } = props;
   useEffect(() => {
     if (dataEdit && dataEdit.ID) {
       form.setFieldsValue({
@@ -50,7 +50,7 @@ export default (props) => {
       }
     },
     [Statuss],
-    setStatuss,
+    setStatuss
   );
   useEffect(
     () => {
@@ -60,11 +60,10 @@ export default (props) => {
         });
         setStatuss(null);
         setLoading(false);
-
       }
     },
     [Statuss],
-    setStatuss,
+    setStatuss
   );
   const [loading, setLoading] = useState(false);
   const onOk = async (e) => {
@@ -72,81 +71,54 @@ export default (props) => {
     e.preventDefault();
     form.validateFields().then(async (values) => {
       if (fileList.length < 1) {
-        message.warning('Chưa chọn file đính kèm');
+        message.warning("Chưa chọn file đính kèm");
+        setLoading(false);
         return;
       }
-      const maxSize = 300 * 1024 * 1024; // 300MB in bytes
-      for (let index = 0; index < fileList.length; index++) {
-        const fileItem = fileList[index];
-        if (fileItem.file.size > maxSize) {
-          message.warning(
-            `File ${fileItem.file.name} vượt quá kích thước 300MB`,
-          );
-          continue;
-        }
-        try {
-          const isImage = fileItem.file.type.startsWith('image/');
-          const durationInSeconds = isImage
-            ? 60
-            : await getVideoDuration(fileItem.file);
-          const formattedDuration = isImage
-            ? '00:01:00'
-            : formatTime(durationInSeconds);
-          const newValue = {
-            ...values,
+      try {
+        const files = [];
+        const filesInfo = [];
+        for (let index = 0; index < fileList.length; index++) {
+          const fileItem = fileList[index];
+          const maxSize = 300 * 1024 * 1024; // 300MB in bytes
+          
+          if (fileItem.file.size > maxSize) {
+            message.warning(`File ${fileItem.file.name} vượt quá kích thước 300MB`);
+            continue;
+          }
+  
+          const isImage = fileItem.file.type.startsWith("image/");
+          const durationInSeconds = isImage ? 60 : await getVideoDuration(fileItem.file);
+          const formattedDuration = isImage ? "00:01:00" : formatTime(durationInSeconds);
+          files.push(fileItem.file);
+          const fileInfo = {
             TenFile: fileItem.TenFile || fileItem.TenFilegoc,
-            Loai: isImage ? '1' : '2',
+            Loai: isImage ? 1 : 2,
             ThoiLuongTrinhChieu: formattedDuration,
             KichThuoc: formatFileSize(fileItem.file.size),
             TrangThai: true,
             Tag: fileItem.ListTag,
+            ThuMucID: values.ThuMucID
           };
-          const {onCreate} = props;
-          await onCreate(newValue, fileItem.file);
-        } catch (error) {
-          console.error(`Failed to upload file ${fileItem.file.name}:`, error);
+          filesInfo.push(fileInfo);
         }
-      }
-    });
-  };
-  const onone = async (e) => {
-    e.preventDefault();
-    form.validateFields().then(async (values) => {
-      if (fileList.length < 1) {
-        message.destroy();
-        message.warning('Chưa chọn file đính kèm');
-        return;
-      }
-
-      const index = 0;
-      const fileItem = fileList[index];
-
-      try {
-        // Kiểm tra loại file và lấy thời lượng tương ứng
-        const isImage = fileItem.file.type.startsWith('image/');
-        const durationInSeconds = isImage
-          ? 60
-          : await getVideoDuration(fileItem.file);
-        const formattedDuration = isImage
-          ? '00:01:00'
-          : formatTime(durationInSeconds);
-
-        const newValue = {
-          ...values,
-          TenFile: fileItem.TenFile || fileItem.TenFilegoc,
-          Loai: isImage ? '1' : '2',
-          ThoiLuongTrinhChieu: formattedDuration,
-          KichThuoc: formatFileSize(fileItem.file.size),
-          TrangThai: true,
-          Tag: fileItem.ListTag,
-        };
-
-        const {onCreate} = props;
-        await onCreate(newValue, fileList[index].file);
-        // handleCancelFile(index);
-        setLoading(true);
+        const formData = new FormData();
+        files.forEach(file => {
+          formData.append('files', file);
+        });
+        filesInfo.forEach(info => {
+          formData.append('filesInfo', JSON.stringify(info));
+        });
+  
+        const { onCreate } = props;
+        await onCreate(filesInfo, files);
+        console.log("Uploaded successfully",filesInfo, files);
+        message.success("Tải lên thành công");
+        setLoading(false);
       } catch (error) {
-        console.error(`Failed to upload file ${fileItem.file.name}:`, error);
+        console.error("Upload failed:", error);
+        message.error("Tải lên thất bại");
+        setLoading(false);
       }
     });
   };
@@ -155,14 +127,14 @@ export default (props) => {
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = Math.floor(seconds % 60);
 
-    return `${hours.toString().padStart(2, '0')}:${minutes
+    return `${hours.toString().padStart(2, "0")}:${minutes
       .toString()
-      .padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+      .padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
   const getVideoDuration = (file) => {
     return new Promise((resolve, reject) => {
-      const video = document.createElement('video');
-      video.preload = 'metadata';
+      const video = document.createElement("video");
+      video.preload = "metadata";
       video.onloadedmetadata = () => {
         resolve(video.duration);
       };
@@ -186,7 +158,7 @@ export default (props) => {
           file,
           id: `${file.name}-${file.lastModified}`,
           TenFilegoc: file.name,
-          ListTag: '',
+          ListTag: "",
           duration: null,
         };
       })
@@ -196,8 +168,8 @@ export default (props) => {
 
     files.forEach((file) => {
       if (file) {
-        const video = document.createElement('video');
-        video.preload = 'metadata';
+        const video = document.createElement("video");
+        video.preload = "metadata";
         video.onloadedmetadata = () => {
           file.duration = video.duration;
           // Cập nhật state hoặc làm các xử lý khác tại đây
@@ -212,32 +184,21 @@ export default (props) => {
     else if (size < 1024 * 1024) return `${(size / 1024).toFixed(2)} KB`;
     else return `${(size / (1024 * 1024)).toFixed(2)} MB`;
   };
-
   const handleCancelUpload = () => {
     setFileList([]);
     form.resetFields();
-
-    // Clear the input file element's value
-    document.getElementById('fileInput').value = null;
+    document.getElementById("fileInput").value = null;
   };
   const handleCancelFile = (index) => {
     const updatedFileList = [...fileList];
     updatedFileList.splice(index, 1);
     setFileList(updatedFileList);
-
-    // Clear the input file element's value
-    document.getElementById('fileInput').value = null;
+    document.getElementById("fileInput").value = null;
   };
   const handleInputChange = (index, field, value) => {
     const updatedFileList = [...fileList];
     updatedFileList[index][field] = value;
     setFileList(updatedFileList);
-
-    // If field is 'TenFile' and its value is empty, fallback to TenFilegoc
-    // if (field === 'TenFile' && value === '') {
-    //   updatedFileList[index]['TenFile'] = updatedFileList[index]['TenFilegoc'];
-    //   setFileList(updatedFileList);
-    // }
   };
   const generateTreeSelectData = (data) => {
     return data.map((item) => ({
@@ -250,51 +211,35 @@ export default (props) => {
           : undefined,
     }));
   };
-
   const treeSelectData = generateTreeSelectData(DanhSachThuMuc);
-  const [confirmModalVisible, setConfirmModalVisible] = useState(false);
   const handleCancelModal = () => {
     ModalAnt.confirm({
-      title: 'Hoàn tất',
-      content: 'Bạn có chắc chắn muốn hoàn tất thêm mới media này không?',
-      cancelText: 'Không',
-      okText: 'Có',
+      title: "Hoàn tất",
+      content: "Bạn có chắc chắn muốn hoàn tất thêm mới media này không?",
+      cancelText: "Không",
+      okText: "Có",
       onOk: () => {
         props.onCancel();
       },
     });
   };
-  const handleCancel = () => {
-    ModalAnt.confirm({
-      title: 'Hủy',
-      content: 'Bạn có chắc chắn muốn hủy thêm mới media này không?',
-      cancelText: 'Không',
-      okText: 'Có',
-      onOk: () => {
-        props.onCancel();
-      },
-    });
-  };
+  const [selectedFolder, setSelectedFolder] = useState(null);
   return (
     <Modal
-      title={`${actionmedia === 'edit' ? 'Sửa' : 'Thêm mới'} Media`}
-      width={'80%'}
+      title={`${actionmedia === "edit" ? "Sửa" : "Thêm mới"} Media`}
+      width={"80%"}
       visible={visible}
-      onCancel={handleCancel}
+      onCancel={handleCancelModal}
       maskClosable={false}
       footer={[
         <Button
           key="back"
-          // htmlType="submit"
-          // type="primary"
-          // form="formDiSanTuLieu"
-          // loading={loading}
           onClick={handleCancelModal}
           style={{
-            color: 'white',
-            background: 'rgb(22,119,255)',
-            border: '1px solid rgb(22,119,255)',
-            borderRadius: '5px',
+            color: "white",
+            background: "rgb(22,119,255)",
+            border: "1px solid rgb(22,119,255)",
+            borderRadius: "5px",
           }}
         >
           Hoàn tất
@@ -303,107 +248,119 @@ export default (props) => {
     >
       <div
         style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginBottom: '30px',
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "30px",
         }}
       >
-        <div style={{color: 'red', fontSize: '20px', fontFamily: 'Poppins, sans-serif'}}>
+        <div
+          style={{
+            color: "red",
+            fontSize: "20px",
+            fontFamily: "Poppins, sans-serif",
+          }}
+        >
           Chú ý: Mỗi tệp đính kèm có dung lượng tối đa 300MB
         </div>
         <div>
           <input
             type="file"
             multiple
-            style={{display: 'none'}}
+            style={{ display: "none" }}
             id="fileInput"
             onChange={handleUpload}
           />
-          <Button
-            style={{
-              color: 'white',
-              background: 'rgb(40,167,69)',
-              border: '1px solid rgb(40,167,69)',
-              borderRadius: '5px',
-              marginRight: '15px',
-            }}
-            onClick={() => document.getElementById('fileInput').click()}
-          >
-            <PlusOutlined /> Thêm tệp
-          </Button>
-          <Button
-            style={{
-              color: 'white',
-              background: 'rgb(51,122,183)',
-              border: '1px solid rgb(51,122,183)',
-              borderRadius: '5px',
-              marginRight: '15px',
-            }}
-            onClick={onOk}
-          >
-            <UploadOutlined />
-            Tải lên tất cả
-          </Button>
-          <Button
-            style={{
-              color: 'white',
-              background: 'rgb(255,193,7)',
-              border: '1px solid rgb(255,193,7)',
-              borderRadius: '5px',
-              marginRight: '15px',
-            }}
-            onClick={handleCancelUpload}
-          >
-            <StopOutlined style={{color: 'black'}} />
-            Hủy tải lên
-          </Button>
-          <Button
-            style={{
-              color: 'white',
-              background: 'rgb(22,119,255)',
-              border: '1px solid rgb(22,119,255)',
-              borderRadius: '5px',
-            }}
-            onClick={handleCancelModal}
-          >
-            <CheckCircleOutlined />
-            Hoàn tất
-          </Button>
+          <div style={{ display: "flex" }}>
+            <Button
+              style={{
+                color: "white",
+                background: "rgb(40,167,69)",
+                border: "1px solid rgb(40,167,69)",
+                borderRadius: "5px",
+                marginRight: "15px",
+              }}
+              onClick={() => document.getElementById("fileInput").click()}
+            >
+              <PlusOutlined /> Thêm tệp
+            </Button>
+            <Button
+              style={{
+                color: "white",
+                background: "rgb(51,122,183)",
+                border: "1px solid rgb(51,122,183)",
+                borderRadius: "5px",
+                marginRight: "15px",
+              }}
+              onClick={onOk}
+              disabled={!selectedFolder}
+            >
+              <UploadOutlined />
+              Tải lên tất cả
+            </Button>
+            <Button
+              style={{
+                color: "white",
+                background: "rgb(255,193,7)",
+                border: "1px solid rgb(255,193,7)",
+                borderRadius: "5px",
+                marginRight: "15px",
+              }}
+              onClick={handleCancelUpload}
+            >
+              <StopOutlined style={{ color: "black" }} />
+              Hủy tải lên
+            </Button>
+            <Button
+              style={{
+                color: "white",
+                background: "rgb(22,119,255)",
+                border: "1px solid rgb(22,119,255)",
+                borderRadius: "5px",
+              }}
+              onClick={handleCancelModal}
+            >
+              <CheckCircleOutlined />
+              Hoàn tất
+            </Button>
+          </div>
         </div>
       </div>
 
-      <Form form={form} name={'formDiSanTuLieu'}>
-        {actionmedia !== 'add' && <Item name="ID" hidden {...REQUIRED}></Item>}
-        <Item label="Chọn thư mục" name={'ThuMucID'} rules={[REQUIRED]}>
+      <Form form={form} name={"formDiSanTuLieu"}>
+        {actionmedia !== "add" && <Item name="ID" hidden {...REQUIRED}></Item>}
+        <Item label="Chọn thư mục" name={"ThuMucID"} rules={[REQUIRED]}>
           <TreeSelect
             treeData={treeSelectData}
             placeholder="Chọn thư mục"
-            style={{width: '30%'}}
+            style={{ width: "30%" }}
             treeDefaultExpandAll
-            onChange={(value) => form.setFieldsValue({ThuMucID: value})}
+            onChange={(value) => {
+              form.setFieldsValue({ ThuMucID: value });
+              setSelectedFolder(value);
+            }}
           />
         </Item>
         <Row
           gutter={[20, 20]}
           style={{
-            border: '1px solid rgb(230,237,242)',
+            border: "1px solid rgb(230,237,242)",
           }}
         >
           {fileList.map((fileItem, index) => (
             <React.Fragment key={fileItem.id}>
               <Col
                 span={3}
-                className={index % 2 === 0 ? 'odd-row' : 'even-row'}
+                className={index % 2 === 0 ? "odd-row" : "even-row"}
               >
                 <Item>
                   <div>
-                    {fileItem.file.type.startsWith('image/') ? (
+                    {fileItem.file.type.startsWith("image/") ? (
                       <img
                         style={{
-                          width: '100px',
-                          height: '120px',
-                          objectFit: 'cover',
-                          marginTop: '5px',
+                          width: "100px",
+                          height: "120px",
+                          objectFit: "cover",
+                          marginTop: "5px",
                         }}
                         src={URL.createObjectURL(fileItem.file)}
                         alt={fileItem.file.name}
@@ -411,10 +368,10 @@ export default (props) => {
                     ) : (
                       <video
                         style={{
-                          width: '100px',
-                          height: '120px',
-                          objectFit: 'cover',
-                          marginTop: '5px',
+                          width: "100px",
+                          height: "120px",
+                          objectFit: "cover",
+                          marginTop: "5px",
                         }}
                         src={URL.createObjectURL(fileItem.file)}
                         controls
@@ -425,64 +382,53 @@ export default (props) => {
               </Col>
               <Col
                 span={7}
-                className={index % 2 === 0 ? 'odd-row' : 'even-row'}
+                className={index % 2 === 0 ? "odd-row" : "even-row"}
               >
                 <Item label="Tên">
                   <Input
                     value={fileItem.TenFile}
                     onChange={(e) =>
-                      handleInputChange(index, 'TenFile', e.target.value)
+                      handleInputChange(index, "TenFile", e.target.value)
                     }
                   />
                 </Item>
               </Col>
               <Col
                 span={7}
-                className={index % 2 === 0 ? 'odd-row' : 'even-row'}
+                className={index % 2 === 0 ? "odd-row" : "even-row"}
               >
                 <Item label="ListTag">
                   <Input
                     value={fileItem.ListTag}
                     onChange={(e) =>
-                      handleInputChange(index, 'ListTag', e.target.value)
+                      handleInputChange(index, "ListTag", e.target.value)
                     }
                   />
                 </Item>
               </Col>
-              <div className={index % 2 === 0 ? 'odd-row' : 'even-row'}>
+              <div className={index % 2 === 0 ? "odd-row" : "even-row"}>
                 <div key={index}>
                   <div>
                     <span>{formatFileSize(fileItem.file.size)} </span>
                     <div>{loading && <Spin />}</div>
                     <span
                       style={{
-                        display: 'inline-flex',
-                        float: 'right',
-                        marginRight: '50px',
+                        display: "inline-flex",
+                        float: "right",
+                        marginRight: "50px",
                       }}
                     >
-                      <UploadOutlined
-                        style={{
-                          color: 'white',
-                          background: 'rgb(51,122,183)',
-                          border: '1px solid rgb(51,122,183)',
-                          borderRadius: '5px',
-                          paddingLeft: '5px',
-                          height: '30px',
-                          width: '30px',
-                        }}
-                        onClick={onone}
-                      />{' '}
+                      
                       <StopOutlined
                         style={{
-                          color: 'black',
-                          background: 'rgb(255,193,7)',
-                          border: '1px solid rgb(255,193,7)',
-                          borderRadius: '5px',
-                          paddingLeft: '5px',
-                          height: '30px',
-                          width: '30px',
-                          marginLeft: '5px',
+                          color: "black",
+                          background: "rgb(255,193,7)",
+                          border: "1px solid rgb(255,193,7)",
+                          borderRadius: "5px",
+                          paddingLeft: "5px",
+                          height: "30px",
+                          width: "30px",
+                          marginLeft: "5px",
                         }}
                         onClick={() => handleCancelFile(index)}
                       />
