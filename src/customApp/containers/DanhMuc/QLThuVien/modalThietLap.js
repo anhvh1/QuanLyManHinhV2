@@ -649,7 +649,11 @@ export default (props) => {
               <InputSearch
                 placeholder="Tìm kiếm theo tên"
                 onSearch={handleSearch}
-                style={{ width: " 100% ", marginBottom: "10px", color: "#333" }}
+                style={{
+                  width: "calc(100% - 30px)",
+                  marginBottom: "10px",
+                  color: "#333",
+                }}
                 allowClear
               />
               <Button

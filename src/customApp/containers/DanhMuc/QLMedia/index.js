@@ -775,6 +775,12 @@ const DMChiTieu = (props) => {
   };
   return (
     <LayoutWrapper>
+      <PageAction>
+        <Button type="primary" onClick={showModalAddMedia}>
+          <PlusOutlined />
+          Thêm mới
+        </Button>
+      </PageAction>
       <Box>
         <BoxFilter>
           <Select
@@ -841,12 +847,6 @@ const DMChiTieu = (props) => {
             onSearch={(value) => onFilter(value, "Keyword")}
             style={{ width: 300 }}
           />
-          <PageAction>
-            <Button type="primary" onClick={showModalAddMedia}>
-              <PlusOutlined />
-              Thêm mới
-            </Button>
-          </PageAction>
         </BoxFilter>
         <div
           style={{
