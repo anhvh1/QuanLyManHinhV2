@@ -299,8 +299,8 @@ const Sidebar = (props) => {
           collapsed={collapsed}
           width={220}
           className="isomorphicSidebar"
-          // onMouseEnter={onMouseEnter}
-          // onMouseLeave={onMouseLeave}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
         >
           <div
             style={{

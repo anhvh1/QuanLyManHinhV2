@@ -127,7 +127,7 @@ const DMChiTieu = (props) => {
           .XoaChiTieu(ThuMucID, {})
           .then((response) => {
             if (response.data.Status > 0) {
-              props.getInitData(filterData); //get list
+              dispatch(actions.getInitData()); //get list
               //message success
               message.destroy();
               message.success(response.data.Message);
@@ -276,7 +276,7 @@ const DMChiTieu = (props) => {
             message.success(response.data.Message);
             //hide modal
             hideModalEdit();
-            props.getInitData(filterData); //get list
+            dispatch(actions.getInitData()); //get list
           } else {
             Modal.error({
               title: "Lỗi",
@@ -301,7 +301,7 @@ const DMChiTieu = (props) => {
             message.success(response.data.Message);
             //hide modal
             hideModalEdit();
-            props.getInitData(filterData); //get list
+            dispatch(actions.getInitData()); //get list
           } else {
             Modal.error({
               title: "Lỗi",
@@ -530,7 +530,7 @@ const DMChiTieu = (props) => {
           if (response.data.Status > 0) {
             setStatus(response.data.Status);
             message.success(response.data.Message);
-            props.getInitData(filterData); //get list
+            dispatch(actions.getInitData()); //get list
             hideModalAddEdit(); // Close modal after successful upload
           } else {
             message.destroy();
@@ -552,14 +552,20 @@ const DMChiTieu = (props) => {
     ? parseInt(filterData.PageSize)
     : getDefaultPageSize();
   const onTableChange = (pagination, filters, sorter) => {
-    //get filter data
-    let oldFilterData = { ...filterData };
+    let oldFilterData = filterData;
     let onOrder = { pagination, filters, sorter };
     let newFilterData = getFilterData(oldFilterData, null, onOrder);
-    //get filter data
+
     setFilterData(newFilterData);
+    setSelectedRowsKey([]);
   };
-  //modaledit
+  const onTableChange1 = (PageNumber, PageSize) => {
+    setFilterData({
+      ...filterData,
+      PageNumber: PageNumber,
+      PageSize: PageSize,
+    });
+  };
   const [visibleModalEdit, setVisibleModalEdit] = useState(false);
   const [actionedit, setActionEdit] = useState("");
   const [confirmLoadingEdit, setConfirmLoadingEdit] = useState(false);
@@ -951,19 +957,14 @@ const DMChiTieu = (props) => {
           }}
         >
           <Pagination
-            showSizeChanger={false}
+            showSizeChanger={true}
             showTotal={(total, range) =>
               `Từ ${range[0]} đến ${range[1]} trên ${total} kết quả`
             }
             total={TotalRow}
             current={PageNumber}
             pageSize={PageSize}
-            onChange={(page, pageSize) => {
-              onTableChange({ current: page, pageSize }, null, null);
-            }}
-            onShowSizeChange={(current, size) => {
-              onTableChange({ current: 1, pageSize: size }, null, null);
-            }}
+            onChange={(page, pageSize) => onTableChange1(page, pageSize)}
           />
         </div>
       </Box>

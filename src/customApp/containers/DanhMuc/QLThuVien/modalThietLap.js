@@ -637,7 +637,6 @@ export default (props) => {
           <div
             style={{
               maxHeight: "calc(100vh - 250px)",
-              minHeight: "calc(100vh - 250px)",
               overflowY: "auto",
               msOverflowStyle: "none" /* IE and Edge */,
               scrollbarWidth: "thin" /* Firefox */,
@@ -876,8 +875,8 @@ export default (props) => {
           </h3>
           <div
             style={{
-              maxHeight: "calc(100vh - 250px)",
-              minHeight: "calc(100vh - 250px)",
+              maxHeight: "calc(100vh - 290px)",
+              minHeight: "calc(100vh - 290px)",
               overflowY: "auto",
               msOverflowStyle: "none" /* IE and Edge */,
               scrollbarWidth: "thin" /* Firefox */,
