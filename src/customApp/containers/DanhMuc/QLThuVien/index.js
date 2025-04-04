@@ -69,6 +69,13 @@ const QLThuVien = (props) => {
     setFilterData(newFilterData);
     setSelectedRowsKey([]);
   };
+  const onTableChange1 = (PageNumber, PageSize) => {
+    setFilterData({
+      ...filterData,
+      PageNumber: PageNumber,
+      PageSize: PageSize,
+    });
+  };
   const onFilter = (value, property) => {
     let oldFilterData = filterData;
     let onFilter = { value, property };
@@ -501,19 +508,17 @@ const QLThuVien = (props) => {
           }}
         >
           <Pagination
-            showSizeChanger={false}
+            showSizeChanger={true}
             showTotal={(total, range) =>
               `Từ ${range[0]} đến ${range[1]} trên ${total} kết quả`
             }
             total={TotalRow}
             current={PageNumber}
             pageSize={PageSize}
-            onChange={(page, pageSize) => {
-              onTableChange({ current: page, pageSize }, null, null);
-            }}
-            onShowSizeChange={(current, size) => {
-              onTableChange({ current: 1, pageSize: size }, null, null);
-            }}
+            onChange={(page, pageSize) => onTableChange1(page, pageSize)}
+            // onShowSizeChange={(current, size) => {
+            //   onTableChange({ current: 1, pageSize: size }, null, null);
+            // }}
           />
         </div>
       </Box>

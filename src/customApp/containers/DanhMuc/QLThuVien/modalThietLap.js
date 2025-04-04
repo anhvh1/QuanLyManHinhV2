@@ -42,6 +42,22 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 const { TreeNode } = Tree;
+const customScrollbarStyle = `
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #4a6cf7;
+    border-radius: 4px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #3a5ce5;
+  }
+`;
 export default (props) => {
   const [form] = useForm();
   const [expandedKeys, setExpandedKeys] = useState([]);
@@ -570,7 +586,11 @@ export default (props) => {
         actionthietlap === "edit" ? "CẬP NHẬT" : "THIẾT LẬP"
       } DANH SÁCH PHÁT`}
       width={"100%"}
-      height={"auto"}
+      bodyStyle={{
+        maxHeight: "calc(100vh - 188px)",
+        overflowY: "auto",
+        padding: "16px",
+      }}
       visible={visible}
       onCancel={props.onCancel}
       maskClosable={false}
@@ -583,14 +603,23 @@ export default (props) => {
         </Button>,
       ]}
     >
-      <LayoutWrapper>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          flexWrap: "wrap",
+          gap: "20px",
+          height: "100%",
+        }}
+      >
         <Box
           style={{
-            float: "left",
-            width: "28%",
-            // minHeight: "740px",
-            // maxHeight: "740px",
+            flex: "1 1 300px",
+            minWidth: "300px",
             borderRadius: "20px",
+            display: "flex",
+            flexDirection: "column",
+            maxHeight: "calc(100vh - 250px)",
           }}
         >
           <h3
@@ -606,46 +635,57 @@ export default (props) => {
             Media của bạn
           </h3>
           <div
-            key={treeKey}
             style={{
-              userSelect: "none",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              color: "gray",
-              whiteSpace: "nowrap",
-              marginTop: "20px",
+              maxHeight: "calc(100vh - 250px)",
+              overflowY: "auto",
+              msOverflowStyle: "none" /* IE and Edge */,
+              scrollbarWidth: "thin" /* Firefox */,
+              // scrollbarColor: "#4a6cf7 #f1f1f1" /* Firefox */,
             }}
-            className="mg-top"
+            className="custom-scrollbar"
           >
-            <Select
-              placeholder="Chọn thư mục"
-              style={{
-                width: "100%",
-                marginBottom: "10px",
-                color: "#333",
-              }}
-              onChange={(value) => {
-                setFilterParams((prev) => ({
-                  ...prev,
-                  ThuMucID: value === "all" ? null : value,
-                }));
-                setSelectAllFolders(value === "all");
-              }}
-              value={
-                selectAllFolders ? "all" : filterParams.ThuMucID || undefined
-              }
-              allowClear
-              dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
-            >
-              <Option value="all" style={{ fontWeight: "bold" }}>
-                Tất cả thư mục
-              </Option>
-              {DSFilter &&
-                DSFilter.map((folder) => renderSelectOptions(folder))}
-            </Select>
-          </div>
-          <div>
             <BoxFilter>
+              <div
+                key={treeKey}
+                style={{
+                  userSelect: "none",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  color: "gray",
+                  whiteSpace: "nowrap",
+                  marginTop: "20px",
+                }}
+                className="mg-top"
+              >
+                <Select
+                  placeholder="Chọn thư mục"
+                  style={{
+                    width: "100%",
+                    marginBottom: "10px",
+                    color: "#333",
+                  }}
+                  onChange={(value) => {
+                    setFilterParams((prev) => ({
+                      ...prev,
+                      ThuMucID: value === "all" ? null : value,
+                    }));
+                    setSelectAllFolders(value === "all");
+                  }}
+                  value={
+                    selectAllFolders
+                      ? "all"
+                      : filterParams.ThuMucID || undefined
+                  }
+                  allowClear
+                  dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
+                >
+                  <Option value="all" style={{ fontWeight: "bold" }}>
+                    Tất cả thư mục
+                  </Option>
+                  {DSFilter &&
+                    DSFilter.map((folder) => renderSelectOptions(folder))}
+                </Select>
+              </div>
               <InputSearch
                 placeholder="Tìm kiếm theo tên"
                 onSearch={handleSearch}
@@ -656,7 +696,7 @@ export default (props) => {
                 }}
                 allowClear
               />
-              <div style={{ display: "flex"}}>
+              <div style={{ display: "flex" }}>
                 <Button
                   type={filterParams.Loai === "" ? "primary" : "default"}
                   onClick={() => handleSelectChange("")}
@@ -682,9 +722,7 @@ export default (props) => {
             </BoxFilter>
             <div
               style={{
-                overflowY: "auto",
                 marginTop: "20px",
-                maxHeight: "480px",
               }}
             >
               {DanhSachMauPhieuSuggest?.map((item, index) => (
@@ -816,11 +854,12 @@ export default (props) => {
         </Box>
         <Box
           style={{
-            float: "left",
-            width: "70%",
-            // height: "740px",
+            flex: "2 1 500px",
             borderRadius: "20px",
-            margin: "0 0 0 2%",
+            display: "flex",
+            flexDirection: "column",
+
+            maxHeight: "calc(100vh - 250px)",
           }}
         >
           <h3
@@ -836,104 +875,118 @@ export default (props) => {
           </h3>
           <div
             style={{
-              padding: "10px",
-              color: "#333",
-              display: "flex",
-              backgroundColor: "#f5f5f5",
-              borderBottom: "1px solid #eee",
-              gap: "20px",
-              margin: "15px 0px 10px 0px",
+              maxHeight: "calc(100vh - 290px)",
+              minHeight: "calc(100vh - 290px)",
+              overflowY: "auto",
+              msOverflowStyle: "none" /* IE and Edge */,
+              scrollbarWidth: "thin" /* Firefox */,
+              // scrollbarColor: "#4a6cf7 #f1f1f1" /* Firefox */,
             }}
+            className="custom-scrollbar"
           >
-            <span>
-              {" "}
-              <FontAwesomeIcon
-                icon={faPhotoVideo}
-                style={{ color: "#4a6cf7" }}
-              />{" "}
-              {dataSource.length}
-            </span>
-            <span style={{ marginRight: "30px" }}>
-              <ClockCircleOutlined
-                style={{ marginRight: "5px", color: "#4a6cf7" }}
-              />
-              {calculateTotalDuration(dataSource)}
-            </span>{" "}
-          </div>
-          <div>
-            <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-              <SortableContext
-                items={dataSource.map((i) => i.ThuTu)}
-                strategy={verticalListSortingStrategy}
-              >
-                <div
-                  style={{ minHeight: "300px" }}
-                  onDrop={(event) => {
-                    event.preventDefault();
-                    if (dataSource.length === 0) {
-                      const item = JSON.parse(
-                        event.dataTransfer.getData("text/plain")
-                      );
-                      const newItem = {
-                        ID: item.ID,
-                        TenFile: item.TenFile,
-                        UrlFile: item.UrlFile,
-                        ThoiLuongTrinhChieu: item.ThoiLuongTrinhChieu,
-                        ThuTu: 1,
-                      };
-                      setDataSource([newItem]);
-                    }
-                  }}
-                  onDragOver={(event) => event.preventDefault()}
+            <div
+              style={{
+                padding: "10px",
+                color: "#333",
+                display: "flex",
+                backgroundColor: "#f5f5f5",
+                borderBottom: "1px solid #eee",
+                gap: "20px",
+                margin: "15px 0px 10px 0px",
+              }}
+            >
+              <span>
+                {" "}
+                <FontAwesomeIcon
+                  icon={faPhotoVideo}
+                  style={{ color: "#4a6cf7" }}
+                />{" "}
+                {dataSource.length}
+              </span>
+              <span style={{ marginRight: "30px" }}>
+                <ClockCircleOutlined
+                  style={{ marginRight: "5px", color: "#4a6cf7" }}
+                />
+                {calculateTotalDuration(dataSource)}
+              </span>{" "}
+            </div>
+            <div>
+              <DndContext sensors={sensors} onDragEnd={onDragEnd}>
+                <SortableContext
+                  items={dataSource.map((i) => i.ThuTu)}
+                  strategy={verticalListSortingStrategy}
                 >
-                  <BoxTable
-                    components={{
-                      body: {
-                        row: Row,
-                      },
+                  <div
+                    style={{ minHeight: "300px" }}
+                    onDrop={(event) => {
+                      event.preventDefault();
+                      if (dataSource.length === 0) {
+                        const item = JSON.parse(
+                          event.dataTransfer.getData("text/plain")
+                        );
+                        const newItem = {
+                          ID: item.ID,
+                          TenFile: item.TenFile,
+                          UrlFile: item.UrlFile,
+                          ThoiLuongTrinhChieu: item.ThoiLuongTrinhChieu,
+                          ThuTu: 1,
+                        };
+                        setDataSource([newItem]);
+                      }
                     }}
-                    rowKey="ThuTu"
-                    columns={columns}
-                    dataSource={dataSource}
-                    pagination={false}
-                    onRow={(record, index) => ({
-                      onDrop: (event) => handleDrop(event, index),
-                      onDragOver: (event) => handleDragOver(event, index),
-                    })}
-                    locale={{
-                      emptyText: (
-                        <div
-                          style={{
-                            padding: "40px 0",
-                            textAlign: "center",
-                            borderRadius: "8px",
-                            margin: "20px 0",
-                            color: "#999",
-                            fontSize: "14px",
-                            // border: "3px dashed #ddd",
-                            // backgroundColor: "#f9f9f9",
-                            cursor: "pointer",
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faPhotoVideo}
+                    onDragOver={(event) => event.preventDefault()}
+                  >
+                    <BoxTable
+                      components={{
+                        body: {
+                          row: Row,
+                        },
+                      }}
+                      rowKey="ThuTu"
+                      columns={columns}
+                      dataSource={dataSource}
+                      pagination={false}
+                      onRow={(record, index) => ({
+                        onDrop: (event) => handleDrop(event, index),
+                        onDragOver: (event) => handleDragOver(event, index),
+                      })}
+                      locale={{
+                        emptyText: (
+                          <div
                             style={{
-                              color: "#ddd",
-                              fontSize: "3rem",
-                              marginBottom: "10px",
+                              padding: "40px 0",
+                              textAlign: "center",
+                              borderRadius: "8px",
+                              margin: "20px 0",
+                              color: "#999",
+                              fontSize: "14px",
+                              // border: "3px dashed #ddd",
+                              // backgroundColor: "#f9f9f9",
+                              cursor: "pointer",
                             }}
-                          />
-                          <p>Kéo và thả media từ danh sách bên trái vào đây</p>
-                        </div>
-                      ),
-                    }}
-                  />
-                </div>
-              </SortableContext>
-            </DndContext>
+                          >
+                            <FontAwesomeIcon
+                              icon={faPhotoVideo}
+                              style={{
+                                color: "#ddd",
+                                fontSize: "3rem",
+                                marginBottom: "10px",
+                              }}
+                            />
+                            <p>
+                              Kéo và thả media từ danh sách bên trái vào đây
+                            </p>
+                          </div>
+                        ),
+                      }}
+                    />
+                  </div>
+                </SortableContext>
+              </DndContext>
+            </div>
           </div>
         </Box>
-      </LayoutWrapper>
+      </div>
     </Modal>
   );
 };

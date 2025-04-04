@@ -4,10 +4,9 @@ import queryString from "query-string";
 import actions from "../../../redux/DanhMuc/QLMedia/actions";
 import api, { apiUrl } from "./config";
 import Constants from "../../../../settings/constants";
+import PageWrap from "../../../../components/utility/PageWrap";
 import Select, { Option } from "../../../../components/uielements/select";
-import BoxTable from "../../../../components/utility/boxTable";
 import LayoutWrapper from "../../../../components/utility/layoutWrapper";
-import PageHeader from "../../../../components/utility/pageHeader";
 import PageAction from "../../../../components/utility/pageAction";
 import Box from "../../../../components/utility/box";
 import BoxFilter from "../../../../components/utility/boxFilter";
@@ -18,14 +17,11 @@ import ModalEdit from "./modalAddEdit";
 import {
   Modal,
   message,
-  Input,
   Tree,
   Menu,
   Dropdown,
   Tooltip,
-  Checkbox,
   Pagination,
-  Image,
 } from "antd";
 import Button from "../../../../components/uielements/button";
 import {
@@ -40,9 +36,7 @@ import {
   PlusOutlined,
   FolderOpenOutlined,
   HomeOutlined,
-  EyeOutlined,
 } from "@ant-design/icons";
-import PageWrap from "../../../../components/utility/PageWrap";
 import ModalAddEditMedia from "./modalAddEditMedi";
 import { useSelector, useDispatch } from "react-redux";
 import { InputSearch } from "../../../../components/uielements/input";
@@ -53,7 +47,6 @@ import {
   getInfoFromToken,
   getLocalKey,
 } from "../../../../helpers/utility";
-const { DirectoryTree } = Tree;
 const { TreeNode } = Tree;
 const DMChiTieu = (props) => {
   document.title = "Quản Lý Media";
@@ -82,7 +75,6 @@ const DMChiTieu = (props) => {
   });
   const { DanhSachMedia, TotalRow, DanhSachThuMuc } = props;
   const dispatch = useDispatch();
-  const [DanhSachCacCap, setDanhSachCacCap] = useState([]);
   const {
     confirmLoading,
     visibleModalAddEdit,
@@ -91,17 +83,9 @@ const DMChiTieu = (props) => {
     modalKey,
   } = stateModalAddEdit;
   const { treeKey, key } = keyState;
-  const danhSachCacCap = async () => {
-    try {
-      const res = await api.danhSachCacCapDonVi();
-      setDanhSachCacCap(res.data.Data);
-    } catch (error) {}
-  };
-
   useEffect(() => {
     props.getInitData(filterData);
     dispatch(actions.getInitData());
-    danhSachCacCap();
     dispatch(actionsCoQuan.getInitData());
     setFilterData([]);
   }, []);
@@ -143,7 +127,7 @@ const DMChiTieu = (props) => {
           .XoaChiTieu(ThuMucID, {})
           .then((response) => {
             if (response.data.Status > 0) {
-              props.getInitData(filterData); //get list
+              dispatch(actions.getInitData()); //get list
               //message success
               message.destroy();
               message.success(response.data.Message);
@@ -292,7 +276,7 @@ const DMChiTieu = (props) => {
             message.success(response.data.Message);
             //hide modal
             hideModalEdit();
-            props.getInitData(filterData); //get list
+            dispatch(actions.getInitData()); //get list
           } else {
             Modal.error({
               title: "Lỗi",
@@ -317,7 +301,7 @@ const DMChiTieu = (props) => {
             message.success(response.data.Message);
             //hide modal
             hideModalEdit();
-            props.getInitData(filterData); //get list
+            dispatch(actions.getInitData()); //get list
           } else {
             Modal.error({
               title: "Lỗi",
@@ -379,7 +363,6 @@ const DMChiTieu = (props) => {
   const access_token = getLocalKey("access_token");
   const dataUnzip = getInfoFromToken(access_token);
   const ListNguoiDung = dataUnzip?.NguoiDung?.NguoiDungID;
-  const hideSelect = ListNguoiDung !== 18;
   const renderTreeNodes = (data) =>
     data?.map((item) => {
       let isMenuOpen = openMenuKey === item.ThuMucID; // Kiểm tra xem menu có nên được mở không
@@ -500,130 +483,6 @@ const DMChiTieu = (props) => {
       return <EmptyTable loading={props.TableLoading} />;
     }
   };
-  const columns = [
-    {
-      title: "STT",
-      align: "center",
-      width: "5%",
-      render: (text, record, index) => (
-        <span>{(PageNumber - 1) * PageSize + (index + 1)}</span>
-      ),
-    },
-    {
-      title: "Tên",
-      dataIndex: "TenFile",
-      width: "20%",
-    },
-    {
-      title: "Thumbnail",
-      dataIndex: "UrlFile",
-      align: "center",
-      width: "5%",
-      render: (url) => {
-        if (url) {
-          if (url.startsWith("http") || url.startsWith("https")) {
-            if (
-              url.toLowerCase().endsWith(".mp4") ||
-              url.toLowerCase().endsWith(".webm")
-            ) {
-              return (
-                <video
-                  src={url}
-                  style={{ width: "60%", height: "60px" }}
-                  controls
-                />
-              );
-            } else {
-              return (
-                <img
-                  src={url}
-                  style={{ width: "60%", height: "60px", objectFit: "cover" }}
-                  alt="Thumbnail"
-                />
-              );
-            }
-          } else {
-            return null; // Handle non-URL cases if needed
-          }
-        } else {
-          return null; // Handle cases where UrlFile is null or undefined
-        }
-      },
-    },
-    {
-      title: "Loại",
-      dataIndex: "Loai",
-      align: "center",
-      width: "7%",
-      render: (Loai) => {
-        if (Loai === 1) {
-          return <span>Hình ảnh</span>;
-        } else if (Loai === 2) {
-          return <span>Video</span>;
-        }
-      },
-    },
-    {
-      title: "Thời lượng trình chiếu",
-      dataIndex: "ThoiLuongTrinhChieu",
-      align: "center",
-      width: "10%",
-    },
-    {
-      title: "Kích thước",
-      dataIndex: "KichThuoc",
-      align: "center",
-      width: "12%",
-    },
-    {
-      title: "Trạng thái sử dụng",
-      dataIndex: "TrangThai",
-      align: "center",
-      width: "12%",
-      render: (TrangThai) => {
-        if (TrangThai === true) {
-          return <span>Đã sử dụng</span>;
-        } else if (TrangThai === false) {
-          return <span>Không sử dụng</span>;
-        } else {
-          return <span>Trạng thái khác</span>; // Handle any other values if necessary
-        }
-      },
-    },
-    {
-      title: "Tags",
-      dataIndex: "ListTag",
-      width: "10%",
-      render: (tags) => (
-        <div style={{ padding: "5px", borderRadius: "5px" }}>
-          {tags.map((tag, index) => (
-            <div
-              key={index}
-              style={{
-                border: "1px solid rgb(242, 242, 242)",
-                textAlign: "center",
-                marginRight: "5px",
-                background: "rgb(242, 242, 242)",
-                marginTop: "10px",
-                borderRadius: "10px",
-              }}
-            >
-              {tag}
-            </div>
-          ))}
-        </div>
-      ),
-    },
-
-    {
-      title: "Thao tác",
-      width: "10%",
-      align: "center",
-      margin: "10px",
-      render: (text, record) => renderThaoTac(record),
-    },
-  ];
-
   const [actionmedia, setActionMedia] = useState("");
   const [visibleModalAddEditMedia, setVisibleModalAddEditMedia] =
     useState(false);
@@ -671,7 +530,7 @@ const DMChiTieu = (props) => {
           if (response.data.Status > 0) {
             setStatus(response.data.Status);
             message.success(response.data.Message);
-            props.getInitData(filterData); //get list
+            dispatch(actions.getInitData()); //get list
             hideModalAddEdit(); // Close modal after successful upload
           } else {
             message.destroy();
@@ -693,14 +552,20 @@ const DMChiTieu = (props) => {
     ? parseInt(filterData.PageSize)
     : getDefaultPageSize();
   const onTableChange = (pagination, filters, sorter) => {
-    //get filter data
-    let oldFilterData = { ...filterData };
+    let oldFilterData = filterData;
     let onOrder = { pagination, filters, sorter };
     let newFilterData = getFilterData(oldFilterData, null, onOrder);
-    //get filter data
+
     setFilterData(newFilterData);
+    setSelectedRowsKey([]);
   };
-  //modaledit
+  const onTableChange1 = (PageNumber, PageSize) => {
+    setFilterData({
+      ...filterData,
+      PageNumber: PageNumber,
+      PageSize: PageSize,
+    });
+  };
   const [visibleModalEdit, setVisibleModalEdit] = useState(false);
   const [actionedit, setActionEdit] = useState("");
   const [confirmLoadingEdit, setConfirmLoadingEdit] = useState(false);
@@ -783,26 +648,16 @@ const DMChiTieu = (props) => {
       },
     });
   };
-  const renderThaoTac = (record) => {
-    return (
-      <div className={"action-btn"}>
-        <Tooltip title={"Sửa"}>
-          <EditOutlined onClick={() => showModalEditEdit(record.ID)} />
-        </Tooltip>
-        <Tooltip title={"Xóa"}>
-          <DeleteOutlined onClick={() => deleteModalAddEdit(record.ID)} />
-        </Tooltip>
-      </div>
-    );
-  };
   return (
     <LayoutWrapper>
-      <PageAction>
-        <Button type="primary" onClick={showModalAddMedia}>
-          <PlusOutlined />
-          Thêm mới
-        </Button>
-      </PageAction>
+      <PageWrap>
+        <PageAction>
+          <Button type="primary" onClick={showModalAddMedia}>
+            <PlusOutlined />
+            Thêm mới
+          </Button>
+        </PageAction>
+      </PageWrap>
       <Box>
         <BoxFilter>
           <Select
@@ -891,6 +746,20 @@ const DMChiTieu = (props) => {
                   width: "320px",
                   transition: "all 0.3s ease",
                   background: "#fff",
+                  ":hover": {
+                    boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+                    transform: "translateY(-5px)",
+                  },
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    "0 8px 16px rgba(0,0,0,0.15)";
+                  e.currentTarget.style.transform = "translateY(-5px)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow =
+                    "0 2px 8px rgba(0,0,0,0.09)";
+                  e.currentTarget.style.transform = "translateY(0)";
                 }}
               >
                 <div
@@ -1029,6 +898,7 @@ const DMChiTieu = (props) => {
                           justifyContent: "center",
                           width: "28px",
                           height: "28px",
+                          fontSize: "25px",
                           borderRadius: "4px",
                           cursor: "pointer",
                           transition: "all 0.3s ease",
@@ -1055,6 +925,7 @@ const DMChiTieu = (props) => {
                           justifyContent: "center",
                           width: "28px",
                           height: "28px",
+                          fontSize: "25px",
                           borderRadius: "4px",
                           cursor: "pointer",
                           transition: "all 0.3s ease",
@@ -1086,19 +957,14 @@ const DMChiTieu = (props) => {
           }}
         >
           <Pagination
-            showSizeChanger={false}
+            showSizeChanger={true}
             showTotal={(total, range) =>
               `Từ ${range[0]} đến ${range[1]} trên ${total} kết quả`
             }
             total={TotalRow}
             current={PageNumber}
             pageSize={PageSize}
-            onChange={(page, pageSize) => {
-              onTableChange({ current: page, pageSize }, null, null);
-            }}
-            onShowSizeChange={(current, size) => {
-              onTableChange({ current: 1, pageSize: size }, null, null);
-            }}
+            onChange={(page, pageSize) => onTableChange1(page, pageSize)}
           />
         </div>
       </Box>
