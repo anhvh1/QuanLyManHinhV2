@@ -126,7 +126,9 @@ const Sidebar = (props) => {
             <span className="isoMenuHolder" data_key={MaChucNang}>
               <div className="wrapper-content__item">
                 {/* <img src={Icon} /> */}
-                <span className="nav-text" style={{padding:"20px 10px"}}>{TenChucNang}</span>
+                <span className="nav-text" style={{ padding: "20px 10px" }}>
+                  {TenChucNang}
+                </span>
               </div>
             </span>
           }
@@ -242,6 +244,7 @@ const Sidebar = (props) => {
 
   const { toggleOpenDrawer, customizedTheme, height } = props;
   const collapsed = clone(app.collapsed) && !clone(app.openDrawer);
+  console.log(collapsed);
   const { openDrawer } = app;
   const mode = collapsed === true ? "vertical" : "inline";
   const onMouseEnter = () => {
@@ -285,8 +288,8 @@ const Sidebar = (props) => {
       <SidebarWrapper
         style={{
           userSelect: "none",
-          gridTemplateColumns:
-            ListChild && ListChild.length > 0 ? "80px 210px" : "75px",
+          // gridTemplateColumns:
+          //   ListChild && ListChild.length > 0 ? "80px 210px" : "75px",
           background: "#fff",
         }}
       >
@@ -307,6 +310,17 @@ const Sidebar = (props) => {
               overflowX: "hidden",
             }}
           >
+            <MenuOutlined
+              style={{
+                fontSize: "20px",
+                margin: "10px",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                props.toggleCollapsed();
+                props.toggleOpenDrawer();
+              }}
+            />
             <img
               src={Go}
               alt={""}
@@ -318,7 +332,12 @@ const Sidebar = (props) => {
               }}
             />
 
-            <h2 className={"triggerHeader"}>Go Smart Signage</h2>
+            <h2
+              className={"triggerHeader"}
+              style={{ display: collapsed ? "none" : "block" }}
+            >
+              Go Smart Signage
+            </h2>
             <Menu
               onClick={handleClick}
               theme="light"
