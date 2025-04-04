@@ -1,10 +1,10 @@
-import React from 'react';
-import {Table, Empty} from 'antd';
-import PropTypes from 'prop-types';
+import React from "react";
+import { Table, Empty } from "antd";
+import PropTypes from "prop-types";
 
 class TableCustom extends React.PureComponent {
   render() {
-    const {dataSource, keyword, onSearch} = this.props;
+    const { dataSource, keyword, onSearch } = this.props;
     let localeDefault = {
       emptyText: (
         <Empty
@@ -17,15 +17,15 @@ class TableCustom extends React.PureComponent {
     let props = {
       scroll: this.props.scroll
         ? this.props.scroll
-        : {y: 'calc(100vh - 390px)', x: 900},
+        : { y: "calc(100vh - 430px)", x: 500 },
       ...this.props,
       locale: {
         ...localeDefault,
         ...this.props.locale,
       },
     };
-
-    if (typeof onSearch === 'function') {
+    console.log(props, "props");
+    if (typeof onSearch === "function") {
       const _dataSource = onSearch(dataSource ? dataSource : [], keyword);
       props = {
         ...this.props,
@@ -40,7 +40,7 @@ TableCustom.propTypes = {
   keyword: PropTypes.string,
 };
 TableCustom.defaultProps = {
-  keyword: '',
+  keyword: "",
 };
 
 export default TableCustom;

@@ -314,6 +314,7 @@ const QuanLyManHinh = (props) => {
         </BoxFilter>
         <BoxTable
           columns={columns}
+          // scroll={{ y: 500 }}
           dataSource={DanhSachManHinh}
           onChange={onTableChange}
           pagination={{

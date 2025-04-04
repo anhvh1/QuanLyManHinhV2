@@ -1,30 +1,17 @@
-// import {Chart as ChartJS} from 'chart.js/auto';
-import {
-  Chart as ChartJS,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  Legend,
-  Tooltip as TooltipChart,
-  BarElement,
-  RadialLinearScale,
-  ArcElement,
-} from "chart.js";
 import { Modal, Table, Tooltip, message, Row, Col, Spin } from "antd";
 import React, { useState, useEffect, useRef } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import actions from "../../redux/DashBoard/action";
 import LayoutWrapper from "../../../components/utility/layoutWrapper";
-import PageHeader from "../../../components/utility/pageHeader";
-import PageAction from "../../../components/utility/pageAction";
+import {
+  FaCheckCircle,
+  FaChevronLeft,
+  FaChevronRight,
+  FaDesktop,
+  FaPauseCircle,
+  FaTimesCircle,
+} from "react-icons/fa";
 import Box from "../../../components/utility/box";
-import BoxFilter from "../../../components/utility/boxFilter";
-import BoxTable from "../../../components/utility/boxTable";
-import Checkbox from "../../../components/uielements/checkbox";
-import ChartDataLabels from "chartjs-plugin-datalabels";
-import { Bar } from "react-chartjs-2";
-import { PolarArea } from "react-chartjs-2";
 
 import {
   Button,
@@ -38,1199 +25,644 @@ import {
   getFilterData,
   getRoleByKey,
 } from "../../../helpers/utility";
-import { useKey } from "../../CustomHook/useKey";
-import queryString from "query-string";
-import api from "./config";
-import { CheckboxGroup } from "../../../components/uielements/checkbox";
-import { getTotalMonthsOfYear } from "../../../helpers/utility";
-import moment from "moment";
-import Wrapper from "./styled";
-import { Redirect } from "react-router";
-import actionsAuth from "../../../redux/auth/actions";
-import ModalFilterData from "./ModalFilterData";
-// import {Swiper, SwiperSlide} from 'swiper/react';
-// import {Navigation, Pagination} from 'swiper';
-import { push } from "react-router-redux";
-// import 'swiper/css';
-// import 'swiper/css/pagination';
-// import 'swiper/css/navigation';
-import FilterImage from "../../../../src/image/filter-white.png";
-import Reception from "../../../../src/image/reception_white.png";
-import Process from "../../../../src/image/process_white.png";
-import CheckList from "../../../../src/image/to-do-list-wihte.png";
-import Skills from "../../../../src/image/skills-white.png";
-// import api from './config';
-import { getConfigLocal } from "../../../helpers/utility";
-import { handleTextLong } from "../../../helpers/utility";
-import WarningRed from "../../../../src/image/warning-red.png";
-import WarningBlue from "../../../../src/image/warning-blue.png";
-import { Link } from "react-router-dom";
-import LineChart from "./LineChart";
-import dayjs from "dayjs";
-ChartJS.register(
-  RadialLinearScale,
-  ArcElement,
-  LineElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  BarElement,
-  Legend,
-  TooltipChart,
-  ChartDataLabels
-);
 
-const ListCapID = getConfigLocal("ListCapID", []);
-
-const stripTrailingSlash = (str) => {
-  if (str.substr(-1) === "/") {
-    return str.substr(0, str.length - 1);
-  }
-  return str;
-};
-
-const { logout } = actionsAuth;
+import { Modals } from "./modalStates";
+import DeviceListModal from "./DeviceListModal";
+import DeviceDetailModal from "./DeviceDetailModal";
+import ScheduleDetailModal from "./ScheduleDetailModal";
 const DashBoard = (props) => {
   document.title = "Dashboard";
-  const [filterData, setFilterData] = useState(
-    queryString.parse(props.location.search)
-  );
-  const {
-    DuLieuChart,
-    loadingChart,
-    SoLieuCanhBao,
-    DanhSachLoaiKhieuTo,
-    loadingCanhBao,
-  } = useSelector((state) => state.DashBoard);
-  const [DataChart, setDataChart] = useState({});
-  const [visibleModalFilter, setVisibleModalFilter] = useState(false);
-  const [keyModalFilter, setKeyModalFilter] = useState(0);
-  const [isFirstActiveCap, setIsFirstActiveCap] = useState(true);
-  const [DanhSachCacCap, setDanhSachCap] = useState([]);
-  const { DanhSachPhanLoaiVuViec } = props;
-  const [TinhDenNgay, setTinhDenNgay] = useState(null);
-  const [PhanLoaiVuViec, setPhanLoaiVuViec] = useState(null);
-  const [dataUpdate, setDataUpdate] = useState({});
-  const [data, setData] = useState({
-    // CapID: 12,
-    Data: 2,
-    LoaiThoiGianID: 3,
-    Nam: 2023,
-    Type: 3,
+  const [currentMonth, setCurrentMonth] = useState(() => {
+    const now = new Date();
+    return `Tháng ${now.getMonth() + 1}, ${now.getFullYear()}`;
+  });
+  const deviceStatusChartRef = useRef(null);
+  const deviceGroupsChartRef = useRef(null);
+
+  // Modal states
+  const [deviceListModalVisible, setDeviceListModalVisible] = useState(false);
+  const [deviceDetailModalVisible, setDeviceDetailModalVisible] =
+    useState(false);
+  const [scheduleDetailModalVisible, setScheduleDetailModalVisible] =
+    useState(false);
+
+  // Modal data states
+  const [deviceListTitle, setDeviceListTitle] = useState("");
+  const [deviceList, setDeviceList] = useState([]);
+  const [deviceDetail, setDeviceDetail] = useState({
+    name: "",
+    status: "",
+    location: "",
+    code: "",
+    mac: "",
+  });
+  const [scheduleDetail, setScheduleDetail] = useState({
+    title: "",
+    date: "",
+    events: [],
   });
 
-  const dispatch = useDispatch();
-  const [height, setHeight] = useState(0);
-  const [DanhSachCoQuan, setDanhSachCoQuan] = useState([]);
-  const [loadingFilterChart, setLoadingFilterChart] = useState({
-    loading: false,
-    isInit: false,
-  });
+  // Calendar data
+  const [calendarDays, setCalendarDays] = useState([]);
+  const [calendarEvents, setCalendarEvents] = useState({});
 
   useEffect(() => {
-    changeUrlFilter(filterData);
-  }, [filterData]);
+    // Initialize charts when component mounts
+    if (typeof window !== "undefined") {
+      initializeCharts();
+      generateCalendarData();
+    }
+  }, [currentMonth]);
 
-  if (filterData?.isDangXuat) {
-    // localStorage.clear();
-    // if (localStorage.length === 0) {
-    //   push('/');
-    // }
-    dispatch(actionsAuth.logout());
-  }
-
-  const url = window.location.origin;
-
-  useEffect(() => {
-    setDataChart(DuLieuChart);
-  }, [DuLieuChart]);
-
-  const formatDataRequest = (data) => {
-    let namBC = data.Nam;
-    let thangBC = data.Data.toString();
-    let quyBC = data.Data;
-    // var quyBC = $("#ddlQuy").val();
-
-    let tuNgay = "01/01/" + namBC;
-    let denNgay = "31/12/" + namBC;
-    if (data.Type === 1 || data.Type === 2) {
-      var dsThang30 = ",04,06,09,11";
-      if (thangBC == "00") {
-        tuNgay = "01/01/" + namBC;
-        denNgay = "31/12/" + namBC;
-      } else if (thangBC == "17") {
-        tuNgay = "01/01/" + namBC;
-        denNgay = "30/06/" + namBC;
-      } else if (thangBC == "18") {
-        tuNgay = "01/07/" + namBC;
-        denNgay = "31/12/" + namBC;
-      } else if (thangBC == "19") {
-        tuNgay = "01/01/" + namBC;
-        denNgay = "30/09/" + namBC;
-      } else if (thangBC == "20") {
-        tuNgay = "01/01/" + namBC;
-        denNgay = "31/12/" + namBC;
-      } else if (thangBC == "02") {
-        if (namBC % 4 == 0) {
-          tuNgay = "01/02/" + namBC;
-          denNgay = "29/02/" + namBC;
-        } else {
-          tuNgay = "01/02/" + namBC;
-          denNgay = "28/02/" + namBC;
-        }
-      } else if (dsThang30.includes(thangBC)) {
-        tuNgay = "01/" + thangBC + "/" + namBC;
-        denNgay = "30/" + thangBC + "/" + namBC;
-      } else {
-        tuNgay = "01/" + thangBC + "/" + namBC;
-        denNgay = "31/" + thangBC + "/" + namBC;
+  const initializeCharts = () => {
+    // Device Status Chart
+    const deviceStatusCtx = document
+      .getElementById("deviceStatusChart")
+      ?.getContext("2d");
+    if (deviceStatusCtx) {
+      if (deviceStatusChartRef.current) {
+        deviceStatusChartRef.current.destroy();
       }
+      deviceStatusChartRef.current = new Chart(deviceStatusCtx, {
+        type: "doughnut",
+        data: {
+          labels: ["Hoạt động", "Tạm dừng", "Hết hạn"],
+          datasets: [
+            {
+              data: [2, 2, 1],
+              backgroundColor: ["#4CAF50", "#FF9800", "#F44336"],
+              borderWidth: 0,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: "70%",
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+        },
+      });
     }
 
-    if (data.Type === 3) {
-      if (quyBC == 1) {
-        tuNgay = "01/01/" + namBC;
-        denNgay = "31/03/" + namBC;
-      } else if (quyBC == 2) {
-        tuNgay = "01/04/" + namBC;
-        denNgay = "30/06/" + namBC;
-      } else if (quyBC == 3) {
-        tuNgay = "01/07/" + namBC;
-        denNgay = "30/09/" + namBC;
+    // Device Groups Chart
+    const deviceGroupsCtx = document
+      .getElementById("deviceGroupsChart")
+      ?.getContext("2d");
+    if (deviceGroupsCtx) {
+      if (deviceGroupsChartRef.current) {
+        deviceGroupsChartRef.current.destroy();
       }
-      if (quyBC == 4) {
-        tuNgay = "01/10/" + namBC;
-        denNgay = "31/12/" + namBC;
-      }
+      deviceGroupsChartRef.current = new Chart(deviceGroupsCtx, {
+        type: "bar",
+        data: {
+          labels: ["Nhóm Đông", "Nhóm Tây", "Nhóm Nam", "Nhóm Bắc"],
+          datasets: [
+            {
+              label: "Số thiết bị",
+              data: [1, 2, 1, 1],
+              backgroundColor: "#3498db",
+              borderRadius: 5,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                precision: 0,
+              },
+            },
+          },
+        },
+      });
     }
-    const dataRequest = {
-      TuNgay: tuNgay,
-      DenNgay: denNgay,
-      CapIDSelect: filterData?.CapID,
-    };
-
-    return dataRequest;
   };
 
-  useEffect(() => {
-    setFilterData({ ...filterData, Cap: 12 });
-    // initFilter
-    const dataRequest = formatDataRequest(data);
-    dispatch(actions.getData(dataRequest));
-    dispatch(actions.getSoLieuCanhBao());
-    const checkHeightContent = () => {
-      const topFilter = document.getElementById("wrapper-top");
-    };
-    window.addEventListener("resize", checkHeightContent);
-    return () => {
-      window.removeEventListener("resize", checkHeightContent);
-    };
-  }, []);
+  // Generate calendar data based on current month
+  const generateCalendarData = () => {
+    // Parse month and year from currentMonth string
+    const monthMatch = currentMonth.match(/Tháng (\d+), (\d+)/);
+    if (!monthMatch) return;
 
-  useEffect(() => {
-    const newDanhSachCacCap = [...DanhSachCacCap];
-    const DanhSachCacCapDefault = [
+    const month = parseInt(monthMatch[1], 10) - 1; // 0-based month
+    const year = parseInt(monthMatch[2], 10);
+
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay(); // 0 = Sunday
+
+    const days = [];
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDay; i++) {
+      days.push({ day: "", events: [] });
+    }
+
+    // Add days of the month
+    for (let i = 1; i <= daysInMonth; i++) {
+      days.push({ day: i, events: [] });
+    }
+
+    // Add mock events - in a real app, you would fetch events for the specific month
+    const mockEvents = getMockEventsForMonth(month, year);
+
+    // Add events to days
+    for (const [day, events] of Object.entries(mockEvents)) {
+      const dayIndex = parseInt(day) + startingDay - 1;
+      if (dayIndex >= 0 && dayIndex < days.length) {
+        days[dayIndex].events = events;
+      }
+    }
+
+    setCalendarDays(days);
+  };
+
+  // Helper function to get mock events for a specific month
+  const getMockEventsForMonth = (month, year) => {
+    // Different events for different months
+    const eventsMap = {
+      // January
+      0: {
+        5: [
+          {
+            title: "Lịch phát quảng cáo tháng 1",
+            time: "08:00 - 17:00",
+            color: "#4CAF50",
+          },
+        ],
+        12: [
+          { title: "Sự kiện đầu năm", time: "09:00 - 11:30", color: "#2196F3" },
+        ],
+        25: [
+          {
+            title: "Lịch phát thông báo",
+            time: "08:00 - 21:00",
+            color: "#E91E63",
+          },
+        ],
+      },
+      // February
+      1: {
+        3: [
+          {
+            title: "Lịch phát quảng cáo tháng 2",
+            time: "08:00 - 17:00",
+            color: "#4CAF50",
+          },
+        ],
+        14: [
+          {
+            title: "Sự kiện Valentine",
+            time: "09:00 - 23:00",
+            color: "#E91E63",
+          },
+        ],
+        20: [
+          {
+            title: "Lịch phát thông báo",
+            time: "08:00 - 21:00",
+            color: "#2196F3",
+          },
+        ],
+      },
+      // March
+      2: {
+        8: [
+          {
+            title: "Lịch phát quảng cáo tháng 3",
+            time: "08:00 - 17:00",
+            color: "#4CAF50",
+          },
+        ],
+        15: [
+          {
+            title: "Sự kiện mùa xuân",
+            time: "09:00 - 11:30",
+            color: "#2196F3",
+          },
+        ],
+        28: [
+          {
+            title: "Lịch phát thông báo",
+            time: "08:00 - 21:00",
+            color: "#E91E63",
+          },
+        ],
+      },
+      // April
+      3: {
+        3: [
+          {
+            title: "Lịch phát quảng cáo tháng 4",
+            time: "08:00 - 17:00",
+            color: "#4CAF50",
+          },
+        ],
+        10: [
+          {
+            title: "Lịch phát sự kiện",
+            time: "09:00 - 11:30",
+            color: "#2196F3",
+          },
+        ],
+        15: [
+          { title: "Meeting", time: "9:00 - 10:30", color: "#2196F3" },
+          { title: "Presentation", time: "13:00 - 14:00", color: "#4CAF50" },
+        ],
+        30: [
+          {
+            title: "Lịch phát thông báo sự kiện",
+            time: "08:00 - 21:00",
+            color: "#E91E63",
+          },
+        ],
+      },
+      // May
+      4: {
+        1: [
+          {
+            title: "Lịch phát quảng cáo tháng 5",
+            time: "08:00 - 17:00",
+            color: "#4CAF50",
+          },
+        ],
+        12: [
+          { title: "Sự kiện mùa hè", time: "09:00 - 11:30", color: "#2196F3" },
+        ],
+        25: [
+          {
+            title: "Lịch phát thông báo",
+            time: "08:00 - 21:00",
+            color: "#E91E63",
+          },
+        ],
+      },
+    };
+
+    return eventsMap[month] || {};
+  };
+
+  // Function to navigate to previous month
+  const goToPreviousMonth = () => {
+    const monthMatch = currentMonth.match(/Tháng (\d+), (\d+)/);
+    if (!monthMatch) return;
+
+    let month = parseInt(monthMatch[1], 10);
+    let year = parseInt(monthMatch[2], 10);
+
+    month--;
+    if (month < 1) {
+      month = 12;
+      year--;
+    }
+
+    setCurrentMonth(`Tháng ${month}, ${year}`);
+  };
+
+  // Function to navigate to next month
+  const goToNextMonth = () => {
+    const monthMatch = currentMonth.match(/Tháng (\d+), (\d+)/);
+    if (!monthMatch) return;
+
+    let month = parseInt(monthMatch[1], 10);
+    let year = parseInt(monthMatch[2], 10);
+
+    month++;
+    if (month > 12) {
+      month = 1;
+      year++;
+    }
+
+    setCurrentMonth(`Tháng ${month}, ${year}`);
+  };
+
+  // Functions to show modals
+  const showDeviceListModal = (status) => {
+    const statusText =
+      status === "active"
+        ? "đang hoạt động"
+        : status === "paused"
+        ? "tạm dừng"
+        : "hết hạn";
+
+    // Mock data for demonstration with more details matching the image
+    const mockDevices = [
       {
-        Title: "Toàn tỉnh",
-        ID: 12,
-        STT: 1,
+        id: 1,
+        name: "Go 1 - Màn hình 65",
+        status: status,
+        location: "55 Tô Ngọc Vân, P12/Q3, Tp.HCM",
+        temperature: "38°C",
+        ram: "4GB",
+        storage: "32GB",
       },
       {
-        Title: "UBND Cấp Tỉnh",
-        ID: 4,
-        STT: 2,
-      },
-      {
-        Title: "Sở, ngành",
-        ID: 1,
-        STT: 3,
-      },
-      {
-        Title: "Cấp huyện",
-        ID: 2,
-        STT: 4,
-      },
-      {
-        Title: "Cấp phòng ban",
-        ID: 11,
-        STT: 5,
-      },
-      {
-        Title: "Cấp xã",
-        ID: 3,
-        STT: 6,
+        id: 2,
+        name: "Go 2 - Màn hình 55",
+        status: status,
+        location: "123 Nguyễn Văn Linh, P.Tân Phong, Q7, Tp.HCM",
+        temperature: "36°C",
+        ram: "4GB",
+        storage: "32GB",
       },
     ];
 
-    if (DataChart && DataChart?.ListCapID) {
-      DataChart?.ListCapID.forEach((item, index) => {
-        const obj = DanhSachCacCapDefault.find(
-          (itemCap) => itemCap.ID === item
-        );
-        if (obj && !newDanhSachCacCap.find((item) => item.ID === obj.ID)) {
-          newDanhSachCacCap.push(obj);
-        }
-      });
-      newDanhSachCacCap.sort(function (a, b) {
-        return a.STT - b.STT;
-      });
-    }
-    setDanhSachCap(newDanhSachCacCap);
-  }, [DataChart]);
-
-  useEffect(() => {
-    if (DataChart && DanhSachCacCap.length > 0 && isFirstActiveCap) {
-      setData({
-        ...data,
-        Cap: DanhSachCacCap[0]?.ID,
-      });
-      setFilterData({
-        ...filterData,
-        Cap: DanhSachCacCap[0]?.ID,
-      });
-      setIsFirstActiveCap(false);
-    }
-  }, [DanhSachCacCap]);
-
-  const dataFiler = queryString.parse(props.location.search);
-
-  const ListImage = [
-    {
-      image: Reception,
-      index: 1,
-    },
-    {
-      image: Process,
-      index: 2,
-    },
-    {
-      image: CheckList,
-      index: 3,
-    },
-    {
-      image: CheckList,
-      index: 4,
-    },
-    {
-      image: Skills,
-      index: 5,
-    },
-    {
-      image: Reception,
-      index: 6,
-    },
-  ];
-
-  const listColor = [
-    {
-      backgroundColor: "#36A2EB",
-      borderColor: "#36A2EB",
-    },
-    {
-      backgroundColor: "#FFCD56",
-      borderColor: "#FFCD56",
-    },
-    {
-      backgroundColor: "#4BC0C0",
-      borderColor: "#36A2EB",
-    },
-    {
-      backgroundColor: "#FF6384",
-      borderColor: "#FF6384",
-    },
-    {
-      backgroundColor: "#C9CBCF",
-      borderColor: "#C9CBCF",
-    },
-  ];
-
-  const ListBackgroundPoleChart = [
-    {
-      backgroundColor: "#FFCD56",
-      borderColor: "#FFCD56",
-    },
-    {
-      backgroundColor: "#FF6384",
-      borderColor: "#FF6384",
-    },
-    {
-      backgroundColor: "#4BC0C0",
-      borderColor: "#4BC0C0",
-    },
-  ];
-
-  const renderListTitleChartPole = (List) => {
-    if (List) {
-      const chartTitle = [...List];
-      return (
-        chartTitle &&
-        chartTitle.map((item, index) => (
-          <div
-            className="subtitle_item"
-            style={{
-              backgroundColor: ListBackgroundPoleChart[index].backgroundColor,
-              borderColor: ListBackgroundPoleChart[index].borderColor,
-            }}
-          >
-            {item.Key}
-          </div>
-        ))
-      );
-    }
+    setDeviceListTitle(`Thiết bị ${statusText}`);
+    setDeviceList(mockDevices);
+    setDeviceListModalVisible(true);
   };
 
-  const renderListTileChart = () => {
-    if (DataChart && DataChart.SoLieuBieuDoCot) {
-      const dataBieuDoCot = [...DataChart.SoLieuBieuDoCot];
-      const arrTitle = [];
-      dataBieuDoCot.forEach((item) => {
-        if (item && item.Data) {
-          item.Data.forEach((itemTitle) => {
-            if (!arrTitle.find((item) => item.label === itemTitle.Key)) {
-              arrTitle.push({
-                label: itemTitle.Key,
-              });
-            }
-          });
-        }
-      });
-      return (
-        arrTitle &&
-        arrTitle.map((item, index) => (
-          <div
-            className="subtitle_item"
-            style={{
-              backgroundColor: listColor[index].backgroundColor,
-              borderColor: listColor[index].borderColor,
-            }}
-          >
-            {item.label}
-          </div>
-        ))
-      );
-    }
+  const showDeviceDetailModal = (deviceId) => {
+    // In a real app, you would fetch device details here based on deviceId
+    // For now, we'll use mock data that matches the selected device
+    const selectedDevice =
+      deviceList.find((device) => device.id === deviceId) || deviceList[0];
+
+    const mockDevice = {
+      name: selectedDevice?.name || "Go 1 - Màn hình 65",
+      status: selectedDevice?.status || "active",
+      location: selectedDevice?.location || "55 Tô Ngọc Vân, P12/Q3, Tp.HCM",
+      code: "MH001",
+      mac: "00:1B:44:11:3A:B7",
+      temperature: selectedDevice?.temperature || "38°C",
+      ram: selectedDevice?.ram || "4GB",
+      storage: selectedDevice?.storage || "32GB",
+    };
+
+    setDeviceDetail(mockDevice);
+    setDeviceDetailModalVisible(true);
   };
 
-  const handleRenderLineChart = (type) => {
-    const dataOrigin = [];
-    if (DataChart?.SoLieuBieuDoCot) {
-      const dataChart = [...DataChart?.SoLieuBieuDoCot].filter(
-        (item) => item.CapID === Number(filterData.Cap)
-      );
-      dataChart.forEach((item, index) => {
-        dataOrigin[index] = {};
-        dataOrigin[index].Title = item.TenCot;
-        dataOrigin[index].DataArr = [];
-        dataOrigin[index].CapID = item.CapID;
-        if (item.Data) {
-          item.Data.forEach((item) => {
-            dataOrigin[index].DataArr.push({
-              label: item.Key,
-              Data: item.Value,
-            });
-          });
-        }
-      });
-    }
-
-    const arrTitle = [];
-
-    const newData = [];
-    dataOrigin.forEach((item) => arrTitle.push(item.Title));
-    dataOrigin.forEach((item, indexParent) => {
-      item.DataArr.forEach((itemChild, indexChild) => {
-        const objConstant = newData.find(
-          (itemArr) => itemArr.label === itemChild.label
-        );
-        if (newData.find((itemArr) => itemArr.label === itemChild.label)) {
-          let index = newData.indexOf(objConstant);
-          newData[index].data.push(itemChild.Data);
-        } else {
-          newData.push({
-            ...itemChild,
-            label: itemChild.label,
-            data: [itemChild.Data],
-            backgroundColor: listColor[indexChild].backgroundColor,
-            borderColor: listColor[indexChild].borderColor,
-            pointBorderColor: "aqua",
-            fill: true,
-          });
-        }
-      });
+  const showScheduleDetailModal = (date, events) => {
+    setScheduleDetail({
+      title: `Lịch phát ngày ${date}`,
+      date: date,
+      events: events,
     });
-
-    let Nam = arrTitle;
-    const data = {
-      labels: Nam,
-      datasets: newData,
-    };
-
-    const options = {
-      // indexAxis: indexAxis,
-      maintainAspectRatio: false,
-      barPercentage: 0.4,
-      plugins: {
-        tooltip: {
-          // This more specific font property overrides the global property
-          titleFont: {
-            size: 18,
-          },
-          bodyFont: {
-            size: 15,
-          },
-          footerFont: {
-            size: 20, // there is no footer by default
-          },
-        },
-        // tooltip: handleTooltip(),
-        legend: {
-          display: false,
-          labels: {
-            // This more specific font property overrides the global property
-            font: {
-              size: 14,
-            },
-          },
-        },
-        datalabels: {
-          display: true,
-          color: "#000", // Màu chữ
-          font: {
-            size: 14, // Kích thước chữ
-            weight: "bold", // Độ đậm của chữ
-          },
-          textAlign: "center",
-          anchor: "end",
-          padding: {
-            bottom: 50,
-          },
-
-          rotation: -90, // Góc xoay văn bản
-          formatter: function (value) {
-            // Hàm format văn bản trước khi hiển thị
-            return value;
-          },
-        },
-      },
-    };
-
-    const optionsY = {
-      // indexAxis: indexAxis,
-      maintainAspectRatio: false,
-      barPercentage: 0.4,
-      plugins: {
-        tooltip: {
-          // This more specific font property overrides the global property
-          titleFont: {
-            size: 18,
-          },
-          bodyFont: {
-            size: 15,
-          },
-          footerFont: {
-            size: 20, // there is no footer by default
-          },
-        },
-        // tooltip: handleTooltip(),
-        legend: {
-          display: false,
-          labels: {
-            // This more specific font property overrides the global property
-            font: {
-              size: 14,
-            },
-          },
-        },
-        datalabels: {
-          display: true,
-          color: "#000", // Màu chữ
-          font: {
-            size: 14, // Kích thước chữ
-            weight: "bold", // Độ đậm của chữ
-          },
-          // textAlign: 'center',
-          anchor: "end",
-          padding: {
-            bottom: 50,
-          },
-
-          // rotation: -90, // Góc xoay văn bản
-          formatter: function (value) {
-            // Hàm format văn bản trước khi hiển thị
-            return value;
-          },
-        },
-      },
-    };
-    return <LineChart data={data} options={options} optionsY={optionsY} />;
+    setScheduleDetailModalVisible(true);
   };
-
-  const onFilter = (value, property) => {
-    let oldFilterData = filterData;
-    let onFilter = { value, property };
-    let newfilterData = getFilterData(oldFilterData, onFilter, null);
-    setFilterData(newfilterData);
-  };
-
-  const handleRenderPoleAreaChart = (Data) => {
-    const labels = [];
-    const datasets = [];
-    const dataItem = {
-      data: [],
-      backgroundColor: [],
-      borderColor: [],
-    };
-    if (Data) {
-      Data.forEach((item) => labels.push(item.Key));
-      Data.forEach((item, index) => {
-        dataItem.data.push(item.Value);
-        dataItem.backgroundColor.push(
-          ListBackgroundPoleChart[index].backgroundColor
-        );
-        dataItem.borderColor.push(ListBackgroundPoleChart[index].borderColor);
-      });
-    }
-    datasets.push(dataItem);
-    const data = {
-      labels: labels,
-      datasets: datasets,
-    };
-
-    const optionsPoleArea = {
-      plugins: {
-        tooltip: {
-          // This more specific font property overrides the global property
-          titleFont: {
-            size: 18,
-          },
-          bodyFont: {
-            size: 15,
-          },
-          footerFont: {
-            size: 20, // there is no footer by default
-          },
-          callbacks: {
-            label: function (context) {
-              let label = context.label;
-              let value = context.formattedValue;
-              return `${label}: ${value}%`;
-              // let label = context.dataset.label || '';
-
-              // if (label) {
-              //     label += ': ';
-              // }
-              // if (context.parsed.y !== null) {
-              //     label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
-              // }
-              // return label;
-            },
-          },
-        },
-        // tooltip: handleTooltip(),
-        legend: {
-          display: false,
-          labels: {
-            // This more specific font property overrides the global property
-            font: {
-              size: 14,
-            },
-          },
-        },
-        legend: {
-          display: false,
-          labels: {
-            font: {
-              size: 14,
-            },
-          },
-        },
-        datalabels: {
-          clip: true,
-          backgroundColor: null,
-          borderColor: null,
-          borderRadius: 4,
-          borderWidth: 1,
-          color: "#000",
-          anchor: "center",
-          align: "center",
-          // offset: 10,
-          // padding: {
-          //   left: 10,
-          //   right: 10,
-          //   top: 5,
-          //   bottom: 5,
-          // },
-          font: {
-            size: 17,
-            weight: 600,
-          },
-          offset: function (context) {
-            let value = context.dataset.data[context.dataIndex];
-            return value > 0 ? 10 : -10;
-          },
-          textAlign: "center",
-          padding: 0,
-          formatter: function (value, context) {
-            context.textAlign = "center";
-            // ${context.chart.data.labels[context.dataIndex]}\n${value}%
-            return `${value}%`;
-          },
-        },
-      },
-      responsive: true,
-      // maintainAspectRatio: false,
-    };
-    return <PolarArea options={optionsPoleArea} data={data} />;
-  };
-
-  const handleShowModalFilter = () => {
-    setVisibleModalFilter(true);
-  };
-
-  const closeModalFilter = () => {
-    setVisibleModalFilter(false);
-    const newKey = keyModalFilter + 1;
-    setKeyModalFilter(newKey);
-  };
-
-  const getDanhSachCoQuanByCapID = (PhamViID) => {
-    api
-      .GetCoQuanByPhamViID({ PhamViID })
-      .then((res) => {
-        if (res.data.Status > 0) {
-          setDanhSachCoQuan(res.data.Data);
-        } else {
-          message.destroy();
-          message.warning(res.data.Data);
-        }
-      })
-      .catch((err) => {
-        message.destroy();
-        message.warning(err.toString());
-      });
-  };
-
-  const submitModalFilter = (data, isGetInit = false) => {
-    const dataRequest = formatDataRequest(data);
-    setLoadingFilterChart(true);
-    api
-      .DanhSachData(dataRequest)
-      .then((res) => {
-        setVisibleModalFilter(false);
-        setLoadingFilterChart(false);
-        if (res.data.Status > 0) {
-          setDataChart(res.data.Data);
-        } else {
-          message.destroy();
-          message.warning(res.data.Data);
-        }
-      })
-      .catch((err) => {
-        setLoadingFilterChart(false);
-        setVisibleModalFilter(false);
-        message.destroy();
-        message.warning(err.toString());
-      });
-  };
-
-  const handleChangeData = (key, value, Type, resetData = false) => {
-    const newData = { ...data };
-    newData[key] = value;
-    if (Type) {
-      newData["Type"] = Type;
-    }
-    if (resetData) {
-      newData["Data"] = null;
-      newData["Nam"] = null;
-    }
-    if (key === "CapID" && data?.CoQuanID) {
-      newData.CoQuanID = null;
-    }
-    if (key === "LoaiThoiGianID" && value) {
-      const currentMonth = moment().month() + 1;
-      const currentYear = moment().year();
-      // const localTimeStart = timeStart.local();
-      const quater = moment().quarter();
-
-      const obj = {};
-      if (value === 1) {
-        newData.Data = currentMonth;
-        newData.Type = 1;
-      } else if (value === 2) {
-        /// check time current < 6 months or larger return first 6 months is 17 or latest 6 months is 18
-        newData.Data = currentMonth < 6 ? 17 : 18;
-        newData.Type = 2;
-      } else if (value === 3) {
-        newData.Data = quater;
-        newData.Type = 3;
-      }
-      setData({
-        ...newData,
-        Nam: currentYear,
-      });
-    } else if (key === "Nam" && !value) {
-      setData({
-        ...newData,
-        Data: null,
-      });
-    } else {
-      setData({
-        ...newData,
-      });
-    }
-  };
-
-  const handleCaculateYearFromYear = (fromYear) => {
-    const startYear = moment(fromYear, "YYYY");
-    const endYear = moment(); // Lấy ngày hiện tại
-    const ListYears = [];
-    let year = moment(startYear);
-
-    while (year.isSameOrBefore(endYear)) {
-      ListYears.push({
-        Title: year.format("YYYY"),
-        Value: year.format("YYYY"),
-      });
-      year.add(1, "year");
-    }
-    ListYears.sort(function (a, b) {
-      return b.Value - a.Value;
-    });
-    // ListYears.sort(item => i)
-    return ListYears;
-  };
-
-  const UpdateWarning = () => {
-    // const newObj = {...filterData, PhanLoaiVuViec, TinhDenNgay};
-    dispatch(actions.getSoLieuCanhBao(dataUpdate));
-  };
-
-  const namTrienKhai = getConfigLocal("namTrienKhai", "2018");
-  const ListYears = handleCaculateYearFromYear(namTrienKhai.toString());
-
-  const ListMonths = [];
-  const totalYear = Math.ceil(getTotalMonthsOfYear(moment().year()));
-  for (let i = 1; i <= 12; i++) {
-    ListMonths.push({
-      Title: `Tháng ${i}`,
-      Value: i,
-    });
-  }
-
-  const ListQuarter = [
-    {
-      Title: "Quý 1",
-      Value: 1,
-    },
-    {
-      Title: "Quý 2",
-      Value: 2,
-    },
-    {
-      Title: "Quý 3",
-      Value: 3,
-    },
-    {
-      Title: "Quý 4",
-      Value: 4,
-    },
-  ];
-
-  const ListFilterYeas = [
-    {
-      Title: "6 tháng đầu năm",
-      Value: 17,
-    },
-    {
-      Title: "9 tháng đầu năm",
-      Value: 19,
-    },
-    {
-      Title: "6 tháng cuối",
-      Value: 18,
-    },
-    {
-      Title: "Cả năm",
-      Value: 20,
-    },
-  ];
-
-  const indexCap = DanhSachCacCap.indexOf(
-    DanhSachCacCap.find((item) => item.ID === data.CapID)
-  );
-  const indexMonths = ListMonths.indexOf(
-    ListMonths.find((item) => Number(item.Value) === Number(data.Data))
-  );
-
-  const indexQuaters = ListQuarter.indexOf(
-    ListQuarter.find((item) => item.Value === data.Data)
-  );
-
-  const indexYears = ListFilterYeas.indexOf(
-    ListFilterYeas.find((item) => item.Value === data.Data)
-  );
-
-  const indexCoQuan = DanhSachCoQuan.indexOf(
-    DanhSachCoQuan.find((item) => item.CoQuanID === data.CoQuanID)
-  );
-
-  const isDashBoard = true;
-
-  const urlMatch = props?.match?.url;
 
   return (
-    <Wrapper>
+    <>
       <LayoutWrapper>
-        {/* <PageHeader>{DataChart?.ListCapID ? 'Dashboard' : ''}</PageHeader> */}
         <Box>
-          <div className="wrapper-box">
-            {loadingChart ? (
-              <div className="loading-spin_antd">
-                <Spin></Spin>
-              </div>
-            ) : null}
-            {DataChart?.ListCapID ? (
-              <>
-                <BoxFilter isDashBoard={isDashBoard}>
-                  <div className="wrapper-top" id="wrapper-top">
-                    <Row gutter={[18, 18]} className="row-top">
-                      <div className="swiper-wrapper">
-                        {/* <Swiper
-                          slidesPerView={1}
-                          breakpoints={{
-                            0: {
-                              slidesPerView: 1,
-                              spaceBetween: 20,
-                            },
-                            660: {
-                              slidesPerView: 2,
-                              spaceBetween: 20,
-                            },
-                            850: {
-                              slidesPerView: 3,
-                              spaceBetween: 20,
-                            },
-                            1100: {
-                              slidesPerView: 4,
-                              spaceBetween: 30,
-                            },
-                            1500: {
-                              slidesPerView: 5,
-                              spaceBetween: 30,
-                            },
-                            1750: {
-                              slidesPerView: 7,
-                              spaceBetween: 0,
-                            },
-                          }}
-                          pagination={{
-                            clickable: true,
-                          }}
-                          // navigation={true}
-                          navigation={{
-                            nextEl: '.swiper-button-next',
-                            prevEl: '.swiper-button-prev',
-                          }}
-                          // slidesOffsetBefore={20}
-                          // slidesOffsetAfter={20}
-                          modules={[Pagination, Navigation]}
-                          className="toolbar"
-                        >
-                          <SwiperSlide>
-                            <div className="toolbar-item">
-                              <div className="toolbar-item__content">
-                                <p className="item__content__title"></p>
-                                <div className="item_data_filter">
-                                  {data?.Nam ? (
-                                    <Tooltip title={data?.Nam}>
-                                      <p>{data?.Nam}</p>
-                                    </Tooltip>
-                                  ) : null}
-                                  {data.Type === 1 ? (
-                                    ListMonths[indexMonths]?.Title ? (
-                                      <Tooltip
-                                        title={ListMonths[indexMonths]?.Title}
-                                      >
-                                        <p>
-                                          {handleTextLong(
-                                            ListMonths[indexMonths]?.Title,
-                                            7,
-                                          )}
-                                        </p>
-                                      </Tooltip>
-                                    ) : null
-                                  ) : data.Type === 2 ? (
-                                    ListFilterYeas[indexYears]?.Title ? (
-                                      <Tooltip
-                                        title={
-                                          ListFilterYeas[indexYears]?.Title
-                                        }
-                                      >
-                                        <p>
-                                          {handleTextLong(
-                                            ListFilterYeas[indexYears]?.Title,
-                                            7,
-                                          )}
-                                        </p>
-                                      </Tooltip>
-                                    ) : null
-                                  ) : data.Type === 3 ? (
-                                    ListQuarter[indexQuaters]?.Title ? (
-                                      <Tooltip
-                                        title={ListQuarter[indexQuaters]?.Title}
-                                      >
-                                        <p>
-                                          {handleTextLong(
-                                            ListQuarter[indexQuaters]?.Title,
-                                            7,
-                                          )}
-                                        </p>
-                                      </Tooltip>
-                                    ) : null
-                                  ) : null}
-                                </div>
-                              </div>
-                              <div
-                                className="toolbar-item__icon"
-                                onClick={handleShowModalFilter}
-                              >
-                                <img src={FilterImage} alt={'filter'} />
-                                <p className="item__content__title">Bộ lọc</p>
-                              </div>
-                            </div>
-                          </SwiperSlide>
-                          {DataChart?.SoLieuTongHop &&
-                            DataChart?.SoLieuTongHop.map((item, index) => (
-                              <SwiperSlide>
-                                <div className="toolbar-item" key={item.Value}>
-                                  <div className="toolbar-item__content">
-                                    <p className="item__content__data">
-                                      {item?.Value}
-                                    </p>
-                                    <p className="item__content__title">
-                                      {item?.Key}
-                                    </p>
-                                  </div>
-                                  <div className="toolbar-item__icon">
-                                    <img
-                                      src={ListImage[index].image}
-                                      alt={ListImage[index].image}
-                                    />
-                                  </div>
-                                </div>
-                              </SwiperSlide>
-                            ))}
-                        </Swiper> */}
-                      </div>
-                    </Row>
-                    <div className="swiper-button-next"></div>
-                    <div className="swiper-button-prev"></div>
-                  </div>
-                </BoxFilter>
-                <div className="dashboard-wrapper">
-                  <div className="dashboard-filter">
-                    <div className="dashboard-filter__items">
-                      <p>Tính đến ngày: </p>
-                      <DatePicker
-                        format="DD/MM/YYYY"
-                        placeholder=""
-                        onChange={(value) =>
-                          setDataUpdate((prevData) => ({
-                            ...prevData,
-                            DenNgay: dayjs(value).format("MM/DD/YYYY"),
-                          }))
-                        }
-                      />
-                    </div>
-                    <div className="dashboard-filter__items">
-                      <p>Phân loại vụ việc: </p>
-                      <Select
-                        style={{ width: "200px" }}
-                        onChange={(value) =>
-                          setDataUpdate((prevData) => ({
-                            ...prevData,
-                            LoaiKhieuToID: value,
-                          }))
-                        }
-                      >
-                        {DanhSachLoaiKhieuTo
-                          ? DanhSachLoaiKhieuTo.map((item) => (
-                              <Option value={item.LoaiKhieuToID}>
-                                {item.TenLoaiKhieuTo}
-                              </Option>
-                            ))
-                          : null}
-                      </Select>
-                    </div>
-                    <div className="dashboard-filter__items">
-                      <Button className="btn-danger" onClick={UpdateWarning}>
-                        Cập nhật cảnh báo
-                      </Button>
-                    </div>
-                  </div>
-                  <div
-                    className={`dashboard-wrapper__card ${
-                      SoLieuCanhBao && SoLieuCanhBao.length > 3
-                        ? "dashboard-wrapper__more"
-                        : ""
-                    }`}
-                  >
-                    {loadingCanhBao ? (
-                      <div className="loading-wrapper">
-                        <Spin></Spin>
-                      </div>
-                    ) : null}
-                    {SoLieuCanhBao
-                      ? SoLieuCanhBao.map((item, index) => (
-                          <Link
-                            className="card-link"
-                            to={`${urlMatch}/${item?.MaChucNang}`}
-                          >
-                            <div className="card-item">
-                              <div className="card-item_top">
-                                <div className="icon">
-                                  <img
-                                    src={
-                                      index % 2 === 0 ? WarningRed : WarningBlue
-                                    }
-                                    alt="warning"
-                                  />
-                                </div>
-                                <div className="title">{item.TenCanhBao}</div>
-                              </div>
-                              <div className="card-item_body">
-                                {item &&
-                                  item?.Data?.map((item) => (
-                                    <div className="item__desc">
-                                      <p>{item.Key}:</p>
-                                      <p className="item__desc__circle">
-                                        {item.Value}
-                                      </p>
-                                    </div>
-                                  ))}
-                              </div>
-                            </div>
-                          </Link>
-                        ))
-                      : null}
-                  </div>
-
-                  {/* <Row
-                    gutter={[18, 18]}
-                    justify={'center'}
-                    className="row-container"
-                  >
-                    <Col xs={24} xl={17}>
-                      <div className="wrapper_content">
-                        <div className="wrapper_dashboard">
-                          <div className="title-chart">
-                            <p>
-                              Tổng hợp tình tình tiếp dân, xử lý đơn, giải quyết
-                              SMARTSIGNAGE
-                            </p>
-                          </div>
-                          <div className="filter_chart">
-                            {DanhSachCacCap &&
-                              DanhSachCacCap.map((item) => {
-                                return (
-                                  <button
-                                    key={item.ID}
-                                    className={
-                                      Number(filterData?.Cap) ===
-                                      Number(item.ID)
-                                        ? 'active-btn chart-btn'
-                                        : 'chart-btn'
-                                    }
-                                    onClick={() => onFilter(item.ID, 'Cap')}
-                                  >
-                                    {item.Title}
-                                  </button>
-                                );
-                              })}
-                          </div>
-                          <div className="bar_chart">
-                            <div className="chart">
-                              {handleRenderLineChart()}
-                            </div>
-                            <div className="subtitle">
-                              {renderListTileChart()}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Col>
-                    <Col md={12} xl={7} xs={24}>
-                      <div className="wrapper_content">
-                        <div className="wrapper_dashboard">
-                          <div className="title-chart">
-                            <p>Tỷ lệ đơn thư trong kỳ</p>
-                          </div>
-                          <div class="polearea_chart">
-                            <div className="subtitle">
-                              {renderListTitleChartPole(
-                                DataChart?.SoLieuBieuTron,
-                              )}
-                            </div>
-                            <div className="chart">
-                              {handleRenderPoleAreaChart(
-                                DataChart?.SoLieuBieuTron,
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Col>
-                    <Col md={12} xl={0} xs={24}>
-                      <div className="wrapper_content">
-                        <div className="wrapper_dashboard">
-                          <div className="title-chart">
-                            <p>Tỷ lệ đơn thư cùng kỳ</p>
-                          </div>
-                          <div class="polearea_chart">
-                            <div className="subtitle">
-                              {renderListTitleChartPole(
-                                DataChart?.SoLieuBieuDoTronCungKy,
-                              )}
-                            </div>
-                            <div className="chart">
-                              {handleRenderPoleAreaChart(
-                                DataChart?.SoLieuBieuDoTronCungKy,
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </Col>
-                  </Row> */}
+          <div className="dashboard-content">
+            {/* Stats Overview - Responsive */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-5 ">
+              <div className="bg-white rounded-lg p-5 flex items-center shadow-md hover:translate-y-[-5px] hover:shadow-lg transition duration-300">
+                <div className="w-[50px] h-[50px] rounded-full flex items-center justify-center mr-4 text-xl text-white bg-blue-500">
+                  {/* <i className="fas fa-desktop"></i> */}
+                  <FaDesktop />
                 </div>
-              </>
-            ) : null}
+                <div>
+                  <h3 className="text-2xl font-semibold m-0 mb-1">5</h3>
+                  <p className="m-0 text-gray-600 text-sm">Tổng thiết bị</p>
+                </div>
+              </div>
+
+              <div
+                className="bg-white rounded-lg p-5 flex items-center shadow-md hover:translate-y-[-5px] hover:shadow-lg transition duration-300 cursor-pointer"
+                onClick={() => showDeviceListModal("active")}
+              >
+                <div className="w-[50px] h-[50px] rounded-full flex items-center justify-center mr-4 text-xl text-white bg-green-500">
+                  {/* <i className="fas fa-check-circle"></i> */}
+                  <FaCheckCircle />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold m-0 mb-1">2</h3>
+                  <p className="m-0 text-gray-600 text-sm">Đang hoạt động</p>
+                </div>
+              </div>
+
+              <div
+                className="bg-white rounded-lg p-5 flex items-center shadow-md hover:translate-y-[-5px] hover:shadow-lg transition duration-300 cursor-pointer"
+                onClick={() => showDeviceListModal("paused")}
+              >
+                <div className="w-[50px] h-[50px] rounded-full flex items-center justify-center mr-4 text-xl text-white bg-orange-500">
+                  <FaPauseCircle />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold m-0 mb-1">2</h3>
+                  <p className="m-0 text-gray-600 text-sm">Tạm dừng</p>
+                </div>
+              </div>
+
+              <div
+                className="bg-white rounded-lg p-5 flex items-center shadow-md hover:translate-y-[-5px] hover:shadow-lg transition duration-300 cursor-pointer"
+                onClick={() => showDeviceListModal("expired")}
+              >
+                <div className="w-[50px] h-[50px] rounded-full flex items-center justify-center mr-4 text-xl text-white bg-red-500">
+                  <FaTimesCircle />
+                </div>
+                <div>
+                  <h3 className="text-2xl font-semibold m-0 mb-1">1</h3>
+                  <p className="m-0 text-gray-600 text-sm">Hết hạn</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Charts Section - Responsive */}
+            {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5"> */}
+            {/* Device Status Chart */}
+            {/* <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                  <h2 className="m-0 text-lg font-medium">
+                    Trạng thái thiết bị
+                  </h2>
+                  <div>
+                    <button className="bg-transparent border-0 cursor-pointer text-gray-600 text-base">
+                      <i className="fas fa-ellipsis-v"></i>
+                    </button>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <div className="h-[250px] relative">
+                    <canvas id="deviceStatusChart"></canvas>
+                  </div>
+                  <div className="flex justify-center mt-4 flex-wrap">
+                    <div className="flex items-center mx-2.5">
+                      <span className="w-3 h-3 rounded bg-green-500 mr-1.5"></span>
+                      <span className="text-sm text-gray-600">
+                        Hoạt động (2)
+                      </span>
+                    </div>
+                    <div className="flex items-center mx-2.5">
+                      <span className="w-3 h-3 rounded bg-orange-500 mr-1.5"></span>
+                      <span className="text-sm text-gray-600">
+                        Tạm dừng (2)
+                      </span>
+                    </div>
+                    <div className="flex items-center mx-2.5">
+                      <span className="w-3 h-3 rounded bg-red-500 mr-1.5"></span>
+                      <span className="text-sm text-gray-600">Hết hạn (1)</span>
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+
+            {/* Device Groups Chart */}
+            {/* <div className="bg-white rounded-lg shadow-md overflow-hidden">
+                <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                  <h2 className="m-0 text-lg font-medium">
+                    Thiết bị theo nhóm
+                  </h2>
+                  <div>
+                    <button className="bg-transparent border-0 cursor-pointer text-gray-600 text-base">
+                      <i className="fas fa-ellipsis-v"></i>
+                    </button>
+                  </div>
+                </div>
+                <div className="p-5">
+                  <div className="h-[250px] relative">
+                    <canvas id="deviceGroupsChart"></canvas>
+                  </div>
+                </div>
+              </div> */}
+            {/* </div> */}
+
+            {/* Schedule Calendar */}
+            <div className="bg-white rounded-lg shadow-md  overflow-hidden">
+              <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 className="m-0 text-lg font-medium">
+                  Lịch phát trong tháng
+                </h2>
+                <div className="flex items-center gap-2.5">
+                  <button
+                    className="bg-transparent border-0 cursor-pointer text-gray-600 text-sm w-[30px] h-[30px] rounded-full flex items-center justify-center hover:bg-gray-100"
+                    onClick={goToPreviousMonth}
+                  >
+                    <FaChevronLeft />
+                  </button>
+                  <span className="text-base font-medium">{currentMonth}</span>
+                  <button
+                    className="bg-transparent border-0 cursor-pointer text-gray-600 text-sm w-[30px] h-[30px] rounded-full flex items-center justify-center hover:bg-gray-100"
+                    onClick={goToNextMonth}
+                  >
+                    <FaChevronRight />
+                  </button>
+                </div>
+              </div>
+              <div className="relative p-4">
+                <div className="grid grid-cols-7 gap-1 mb-1">
+                  <div className="p-2 text-center font-medium text-gray-700 bg-gray-50 rounded">
+                    CN
+                  </div>
+                  <div className="p-2 text-center font-medium text-gray-700 bg-gray-50 rounded">
+                    T2
+                  </div>
+                  <div className="p-2 text-center font-medium text-gray-700 bg-gray-50 rounded">
+                    T3
+                  </div>
+                  <div className="p-2 text-center font-medium text-gray-700 bg-gray-50 rounded">
+                    T4
+                  </div>
+                  <div className="p-2 text-center font-medium text-gray-700 bg-gray-50 rounded">
+                    T5
+                  </div>
+                  <div className="p-2 text-center font-medium text-gray-700 bg-gray-50 rounded">
+                    T6
+                  </div>
+                  <div className="p-2 text-center font-medium text-gray-700 bg-gray-50 rounded">
+                    T7
+                  </div>
+                </div>
+                <div className="grid grid-cols-7 gap-1" id="calendarGrid">
+                  {calendarDays.map((day, index) => (
+                    <div
+                      key={index}
+                      className={`relative p-2 border border-gray-200 rounded-md min-h-[90px] ${
+                        day.day
+                          ? "cursor-pointer hover:bg-gray-50 hover:shadow-sm transition-all duration-200"
+                          : "bg-gray-50/30"
+                      } ${day.events.length > 0 ? "shadow-sm" : ""}`}
+                      onClick={() =>
+                        day.day && day.events.length > 0
+                          ? showScheduleDetailModal(
+                              `${day.day}/${
+                                currentMonth.match(/Tháng (\d+), (\d+)/)[1]
+                              }/${currentMonth.match(/Tháng (\d+), (\d+)/)[2]}`,
+                              day.events
+                            )
+                          : null
+                      }
+                    >
+                      <div
+                        className={`text-center font-medium ${
+                          day.day
+                            ? index % 7 === 0
+                              ? ""
+                              : ""
+                            : "text-gray-300"
+                        }`}
+                      >
+                        {day.day}
+                      </div>
+                      {day.events.length > 0 && (
+                        <div className="relative mt-2 flex flex-col gap-1">
+                          {day.events.map((event, eventIndex) => (
+                            <div
+                              key={eventIndex}
+                              className="py-1 px-2 rounded text-xs text-white cursor-pointer overflow-hidden text-ellipsis whitespace-nowrap shadow-sm z-10 hover:brightness-110 transition-all"
+                              style={{ backgroundColor: event.color }}
+                            >
+                              <div className="font-medium overflow-hidden text-ellipsis">
+                                {event.title}
+                              </div>
+                              <div className="text-[10px] opacity-90">
+                                {event.time}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* Import modals from separate files */}
+          <DeviceListModal
+            visible={deviceListModalVisible}
+            onCancel={() => setDeviceListModalVisible(false)}
+            title={deviceListTitle}
+            devices={deviceList}
+            onViewDeviceDetail={showDeviceDetailModal}
+          />
+
+          <DeviceDetailModal
+            visible={deviceDetailModalVisible}
+            onCancel={() => setDeviceDetailModalVisible(false)}
+            device={deviceDetail}
+          />
+
+          <ScheduleDetailModal
+            visible={scheduleDetailModalVisible}
+            onCancel={() => setScheduleDetailModalVisible(false)}
+            schedule={scheduleDetail}
+          />
         </Box>
       </LayoutWrapper>
-      <ModalFilterData
-        visible={visibleModalFilter}
-        onCancel={closeModalFilter}
-        onCreate={submitModalFilter}
-        onChangeData={handleChangeData}
-        onGetDanhSachCoQuan={getDanhSachCoQuanByCapID}
-        data={data}
-        setData={setData}
-        ListQuarter={ListQuarter}
-        ListYears={ListYears}
-        ListMonths={ListMonths}
-        ListCap={DanhSachCacCap}
-        DanhSachCoQuan={DanhSachCoQuan}
-        ListFilterYeas={ListFilterYeas}
-        loading={loadingFilterChart}
-      />
-    </Wrapper>
+    </>
   );
 };
 
 function mapStateToProps(state) {
   return {
-    role: getRoleByKey(state.Auth.role, "quan-ly-nam-hoc"),
+    role: getRoleByKey(state.Auth.role, "dashboard"),
   };
 }
 
