@@ -637,6 +637,7 @@ export default (props) => {
           <div
             style={{
               maxHeight: "calc(100vh - 250px)",
+              minHeight: "calc(100vh - 250px)",
               overflowY: "auto",
               msOverflowStyle: "none" /* IE and Edge */,
               scrollbarWidth: "thin" /* Firefox */,
@@ -858,6 +859,7 @@ export default (props) => {
             borderRadius: "20px",
             display: "flex",
             flexDirection: "column",
+
             maxHeight: "calc(100vh - 250px)",
           }}
         >
@@ -874,101 +876,115 @@ export default (props) => {
           </h3>
           <div
             style={{
-              padding: "10px",
-              color: "#333",
-              display: "flex",
-              backgroundColor: "#f5f5f5",
-              borderBottom: "1px solid #eee",
-              gap: "20px",
-              margin: "15px 0px 10px 0px",
+              maxHeight: "calc(100vh - 250px)",
+              minHeight: "calc(100vh - 250px)",
+              overflowY: "auto",
+              msOverflowStyle: "none" /* IE and Edge */,
+              scrollbarWidth: "thin" /* Firefox */,
+              // scrollbarColor: "#4a6cf7 #f1f1f1" /* Firefox */,
             }}
+            className="custom-scrollbar"
           >
-            <span>
-              {" "}
-              <FontAwesomeIcon
-                icon={faPhotoVideo}
-                style={{ color: "#4a6cf7" }}
-              />{" "}
-              {dataSource.length}
-            </span>
-            <span style={{ marginRight: "30px" }}>
-              <ClockCircleOutlined
-                style={{ marginRight: "5px", color: "#4a6cf7" }}
-              />
-              {calculateTotalDuration(dataSource)}
-            </span>{" "}
-          </div>
-          <div>
-            <DndContext sensors={sensors} onDragEnd={onDragEnd}>
-              <SortableContext
-                items={dataSource.map((i) => i.ThuTu)}
-                strategy={verticalListSortingStrategy}
-              >
-                <div
-                  style={{ minHeight: "300px" }}
-                  onDrop={(event) => {
-                    event.preventDefault();
-                    if (dataSource.length === 0) {
-                      const item = JSON.parse(
-                        event.dataTransfer.getData("text/plain")
-                      );
-                      const newItem = {
-                        ID: item.ID,
-                        TenFile: item.TenFile,
-                        UrlFile: item.UrlFile,
-                        ThoiLuongTrinhChieu: item.ThoiLuongTrinhChieu,
-                        ThuTu: 1,
-                      };
-                      setDataSource([newItem]);
-                    }
-                  }}
-                  onDragOver={(event) => event.preventDefault()}
+            <div
+              style={{
+                padding: "10px",
+                color: "#333",
+                display: "flex",
+                backgroundColor: "#f5f5f5",
+                borderBottom: "1px solid #eee",
+                gap: "20px",
+                margin: "15px 0px 10px 0px",
+              }}
+            >
+              <span>
+                {" "}
+                <FontAwesomeIcon
+                  icon={faPhotoVideo}
+                  style={{ color: "#4a6cf7" }}
+                />{" "}
+                {dataSource.length}
+              </span>
+              <span style={{ marginRight: "30px" }}>
+                <ClockCircleOutlined
+                  style={{ marginRight: "5px", color: "#4a6cf7" }}
+                />
+                {calculateTotalDuration(dataSource)}
+              </span>{" "}
+            </div>
+            <div>
+              <DndContext sensors={sensors} onDragEnd={onDragEnd}>
+                <SortableContext
+                  items={dataSource.map((i) => i.ThuTu)}
+                  strategy={verticalListSortingStrategy}
                 >
-                  <BoxTable
-                    components={{
-                      body: {
-                        row: Row,
-                      },
+                  <div
+                    style={{ minHeight: "300px" }}
+                    onDrop={(event) => {
+                      event.preventDefault();
+                      if (dataSource.length === 0) {
+                        const item = JSON.parse(
+                          event.dataTransfer.getData("text/plain")
+                        );
+                        const newItem = {
+                          ID: item.ID,
+                          TenFile: item.TenFile,
+                          UrlFile: item.UrlFile,
+                          ThoiLuongTrinhChieu: item.ThoiLuongTrinhChieu,
+                          ThuTu: 1,
+                        };
+                        setDataSource([newItem]);
+                      }
                     }}
-                    rowKey="ThuTu"
-                    columns={columns}
-                    dataSource={dataSource}
-                    pagination={false}
-                    onRow={(record, index) => ({
-                      onDrop: (event) => handleDrop(event, index),
-                      onDragOver: (event) => handleDragOver(event, index),
-                    })}
-                    locale={{
-                      emptyText: (
-                        <div
-                          style={{
-                            padding: "40px 0",
-                            textAlign: "center",
-                            borderRadius: "8px",
-                            margin: "20px 0",
-                            color: "#999",
-                            fontSize: "14px",
-                            // border: "3px dashed #ddd",
-                            // backgroundColor: "#f9f9f9",
-                            cursor: "pointer",
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            icon={faPhotoVideo}
+                    onDragOver={(event) => event.preventDefault()}
+                  >
+                    <BoxTable
+                      components={{
+                        body: {
+                          row: Row,
+                        },
+                      }}
+                      rowKey="ThuTu"
+                      columns={columns}
+                      dataSource={dataSource}
+                      pagination={false}
+                      onRow={(record, index) => ({
+                        onDrop: (event) => handleDrop(event, index),
+                        onDragOver: (event) => handleDragOver(event, index),
+                      })}
+                      locale={{
+                        emptyText: (
+                          <div
                             style={{
-                              color: "#ddd",
-                              fontSize: "3rem",
-                              marginBottom: "10px",
+                              padding: "40px 0",
+                              textAlign: "center",
+                              borderRadius: "8px",
+                              margin: "20px 0",
+                              color: "#999",
+                              fontSize: "14px",
+                              // border: "3px dashed #ddd",
+                              // backgroundColor: "#f9f9f9",
+                              cursor: "pointer",
                             }}
-                          />
-                          <p>Kéo và thả media từ danh sách bên trái vào đây</p>
-                        </div>
-                      ),
-                    }}
-                  />
-                </div>
-              </SortableContext>
-            </DndContext>
+                          >
+                            <FontAwesomeIcon
+                              icon={faPhotoVideo}
+                              style={{
+                                color: "#ddd",
+                                fontSize: "3rem",
+                                marginBottom: "10px",
+                              }}
+                            />
+                            <p>
+                              Kéo và thả media từ danh sách bên trái vào đây
+                            </p>
+                          </div>
+                        ),
+                      }}
+                    />
+                  </div>
+                </SortableContext>
+              </DndContext>
+            </div>
           </div>
         </Box>
       </div>
