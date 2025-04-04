@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Form,
-  Row,
-  Col,
-  TreeSelect,
-  Spin,
-  message,
-} from "antd";
+import { Form, Row, Col, TreeSelect, Spin, message } from "antd";
 import { Modal as ModalAnt } from "antd";
 import {
   Button,
@@ -67,8 +60,12 @@ export default (props) => {
   );
   const [loading, setLoading] = useState(false);
   const onOk = async (e) => {
-    setLoading(true);
     e.preventDefault();
+    if (!selectedFolder) {
+      message.warning("Vui lòng chọn thư mục trước khi tải lên");
+      return;
+    }
+    setLoading(true);
     form.validateFields().then(async (values) => {
       if (fileList.length < 1) {
         message.warning("Chưa chọn file đính kèm");
@@ -80,16 +77,22 @@ export default (props) => {
         const filesInfo = [];
         for (let index = 0; index < fileList.length; index++) {
           const fileItem = fileList[index];
-          const maxSize = 300 * 1024 * 1024; // 300MB in bytes
-          
+          const maxSize = 10000 * 1024 * 1024; // 10GB in bytes
+
           if (fileItem.file.size > maxSize) {
-            message.warning(`File ${fileItem.file.name} vượt quá kích thước 300MB`);
+            message.warning(
+              `File ${fileItem.file.name} vượt quá kích thước 10GB`
+            );
             continue;
           }
-  
+
           const isImage = fileItem.file.type.startsWith("image/");
-          const durationInSeconds = isImage ? 60 : await getVideoDuration(fileItem.file);
-          const formattedDuration = isImage ? "00:01:00" : formatTime(durationInSeconds);
+          const durationInSeconds = isImage
+            ? 60
+            : await getVideoDuration(fileItem.file);
+          const formattedDuration = isImage
+            ? "00:01:00"
+            : formatTime(durationInSeconds);
           files.push(fileItem.file);
           const fileInfo = {
             TenFile: fileItem.TenFile || fileItem.TenFilegoc,
@@ -98,22 +101,21 @@ export default (props) => {
             KichThuoc: formatFileSize(fileItem.file.size),
             TrangThai: true,
             Tag: fileItem.ListTag,
-            ThuMucID: values.ThuMucID
+            ThuMucID: values.ThuMucID,
           };
           filesInfo.push(fileInfo);
         }
         const formData = new FormData();
-        files.forEach(file => {
-          formData.append('files', file);
+        files.forEach((file) => {
+          formData.append("files", file);
         });
-        filesInfo.forEach(info => {
-          formData.append('filesInfo', JSON.stringify(info));
+        filesInfo.forEach((info) => {
+          formData.append("filesInfo", JSON.stringify(info));
         });
-  
+
         const { onCreate } = props;
         await onCreate(filesInfo, files);
-        console.log("Uploaded successfully",filesInfo, files);
-        message.success("Tải lên thành công");
+        console.log("Uploaded successfully", filesInfo, files);
         setLoading(false);
       } catch (error) {
         console.error("Upload failed:", error);
@@ -147,11 +149,11 @@ export default (props) => {
 
   const [fileList, setFileList] = useState([]);
   const handleUpload = (event) => {
-    const maxSize = 300 * 1024 * 1024; // 300MB in bytes
+    const maxSize = 10000 * 1024 * 1024; // 10GB in bytes
     const files = Array.from(event.target.files)
       .map((file) => {
         if (file.size > maxSize) {
-          message.warning(`File ${file.name} vượt quá kích thước 300MB`);
+          message.warning(`File ${file.name} vượt quá kích thước 10GB`);
           return null;
         }
         return {
@@ -213,15 +215,19 @@ export default (props) => {
   };
   const treeSelectData = generateTreeSelectData(DanhSachThuMuc);
   const handleCancelModal = () => {
-    ModalAnt.confirm({
-      title: "Hoàn tất",
-      content: "Bạn có chắc chắn muốn hoàn tất thêm mới media này không?",
-      cancelText: "Không",
-      okText: "Có",
-      onOk: () => {
-        props.onCancel();
-      },
-    });
+    if (fileList.length > 0) {
+      ModalAnt.confirm({
+        title: "Thông báo",
+        content: "Bạn chưa tải file lên, bạn có chắc chắn muốn hoàn tất không?",
+        cancelText: "Không",
+        okText: "Có",
+        onOk: () => {
+          props.onCancel();
+        },
+      });
+    } else {
+      props.onCancel();
+    }
   };
   const [selectedFolder, setSelectedFolder] = useState(null);
   return (
@@ -242,6 +248,7 @@ export default (props) => {
             borderRadius: "5px",
           }}
         >
+          <CheckCircleOutlined />
           Hoàn tất
         </Button>,
       ]}
@@ -255,13 +262,11 @@ export default (props) => {
       >
         <div
           style={{
-            color: "red",
+            color: "#333",
             fontSize: "20px",
             fontFamily: "Poppins, sans-serif",
           }}
-        >
-          Chú ý: Mỗi tệp đính kèm có dung lượng tối đa 300MB
-        </div>
+        ></div>
         <div>
           <input
             type="file"
@@ -278,6 +283,17 @@ export default (props) => {
                 border: "1px solid rgb(40,167,69)",
                 borderRadius: "5px",
                 marginRight: "15px",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgb(33,136,56)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgb(40,167,69)";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
               }}
               onClick={() => document.getElementById("fileInput").click()}
             >
@@ -290,9 +306,20 @@ export default (props) => {
                 border: "1px solid rgb(51,122,183)",
                 borderRadius: "5px",
                 marginRight: "15px",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "rgb(40,96,144)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "rgb(51,122,183)";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
               }}
               onClick={onOk}
-              disabled={!selectedFolder}
+              disabled={fileList.length === 0}
             >
               <UploadOutlined />
               Tải lên tất cả
@@ -300,27 +327,27 @@ export default (props) => {
             <Button
               style={{
                 color: "white",
-                background: "rgb(255,193,7)",
-                border: "1px solid rgb(255,193,7)",
+                background: "#ff4d4f",
+                border: "1px solid #ff4d4f",
                 borderRadius: "5px",
                 marginRight: "15px",
+                transition: "all 0.3s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = "#ff1f22";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "#ff4d4f";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "none";
               }}
               onClick={handleCancelUpload}
+              disabled={fileList.length === 0}
             >
-              <StopOutlined style={{ color: "black" }} />
+              <StopOutlined />
               Hủy tải lên
-            </Button>
-            <Button
-              style={{
-                color: "white",
-                background: "rgb(22,119,255)",
-                border: "1px solid rgb(22,119,255)",
-                borderRadius: "5px",
-              }}
-              onClick={handleCancelModal}
-            >
-              <CheckCircleOutlined />
-              Hoàn tất
             </Button>
           </div>
         </div>
@@ -408,7 +435,9 @@ export default (props) => {
               </Col>
               <div className={index % 2 === 0 ? "odd-row" : "even-row"}>
                 <div key={index}>
-                  <div>
+                  <div
+                    style={{ display: "flex", justifyContent: "space-around" }}
+                  >
                     <span>{formatFileSize(fileItem.file.size)} </span>
                     <div>{loading && <Spin />}</div>
                     <span
@@ -418,17 +447,26 @@ export default (props) => {
                         marginRight: "50px",
                       }}
                     >
-                      
                       <StopOutlined
                         style={{
-                          color: "black",
-                          background: "rgb(255,193,7)",
-                          border: "1px solid rgb(255,193,7)",
+                          color: "white",
+
+                          background: "#ff4d4f",
+                          border: "1px solid #ff4d4f",
                           borderRadius: "5px",
-                          paddingLeft: "5px",
-                          height: "30px",
-                          width: "30px",
+                          padding: "5px",
                           marginLeft: "5px",
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = "#ff1f22";
+                          e.currentTarget.style.transform = "translateY(-2px)";
+                          e.currentTarget.style.boxShadow =
+                            "0 4px 8px rgba(0,0,0,0.2)";
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = "#ff4d4f";
+                          e.currentTarget.style.transform = "translateY(0)";
+                          e.currentTarget.style.boxShadow = "none";
                         }}
                         onClick={() => handleCancelFile(index)}
                       />
